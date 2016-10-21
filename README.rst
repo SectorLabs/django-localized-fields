@@ -82,7 +82,7 @@ You can also explicitly set a value in a certain language:
      new.title.ro = 'other romanian title'
 
 Constraints
-^^^^^^^^^^
+^^^^^^^^^^^
 By default, the following constraints apply to a ``LocalizedField``:
 
 * Only the default language is ``required``. The other languages are optional and can be ``NULL``.
@@ -91,7 +91,7 @@ By default, the following constraints apply to a ``LocalizedField``:
 At the moment it is *not* possible to specifically instruct ``LocalizedField`` to mark certain languages as required or optional.
 
 Other fields
-^^^^^^^^^^^
+^^^^^^^^^^^^
 Besides ``LocalizedField``, there's also:
 
 * ``LocalizedAutoSlugField``
