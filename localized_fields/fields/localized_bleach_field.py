@@ -1,6 +1,6 @@
+import bleach
 from django.conf import settings
 from django_bleach.utils import get_bleach_default_options
-import bleach
 
 from .localized_field import LocalizedField
 

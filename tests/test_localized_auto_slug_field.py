@@ -5,7 +5,8 @@ from django.db.migrations.executor import MigrationExecutor
 from django.test import TestCase
 from django.utils.text import slugify
 
-from ..fields import LocalizedAutoSlugField, LocalizedField, LocalizedValue
+from localized_fields.fields import (LocalizedAutoSlugField, LocalizedField,
+                                     LocalizedValue)
 
 
 class LocalizedAutoSlugFieldTestCase(TestCase):

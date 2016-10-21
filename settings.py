@@ -21,5 +21,6 @@ LANGUAGES = (
 )
 
 INSTALLED_APPS = [
-    'localized_fields'
+    'localized_fields',
+    'tests'
 ]
