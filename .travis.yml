@@ -1,5 +1,5 @@
 env:
- - DJANGO_SETTINGS_MODULE=settings
+ - DJANGO_SETTINGS_MODULE=config.settings.test
 sudo: true
 before_install:
   - sudo apt-get update -qq
@@ -13,6 +13,9 @@ python:
 - "3.5"
 services:
  - postgresql
+ - redis-server
 install: "pip install -r requirements/test.txt"
 script:
     - coverage run manage.py test
+notifications:
+    slack: sectorlabs:OOGt0rCplfNeAs1E2FR4UwxE
