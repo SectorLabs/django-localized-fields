@@ -1,3 +1,5 @@
+import dj_database_url
+
 DEBUG = True
 TEMPLATE_DEBUG = True
 
@@ -6,11 +8,7 @@ SECRET_KEY = 'this is my secret key'
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'localized_fields',
-        'HOST': 'localhost'
-    }
+    'default': dj_database_url.config(default='postgres:///localized_fields')
 }
 
 LANGUAGE_CODE = 'en'
