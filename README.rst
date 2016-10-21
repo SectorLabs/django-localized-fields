@@ -1,13 +1,16 @@
 django-localized-fields
 =======================
 
-``django-localized-fields`` is an implementation of a field class for Django models that allows the field's value to be set in multiple languages. It does this by utilizing the ``hstore`` type (PostgreSQL specific), which is available as ``models.HStoreField`` in Django 1.10.
+.. image:: https://scrutinizer-ci.com/g/SectorLabs/django-localized-fields/badges/quality-score.png?b=master
+    :target: https://scrutinizer-ci.com/g/SectorLabs/django-localized-fields/
 
-* [Usage](#usage)
-    * [Basic usage](#basic-usage)
-    * [Constraints](#constraints)
-    * [Other fields](#other-fields)
-* [Installation](#installation)
+.. image:: https://scrutinizer-ci.com/g/SectorLabs/django-localized-fields/badges/coverage.png?b=master
+    :target: https://scrutinizer-ci.com/g/SectorLabs/django-localized-fields/
+
+.. image:: https://travis-ci.com/SectorLabs/django-localized-fields.svg?token=sFgxhDFpypxkMcvhRoSz&branch=master
+    :target: https://travis-ci.com/SectorLabs/django-localized-fields
+
+``django-localized-fields`` is an implementation of a field class for Django models that allows the field's value to be set in multiple languages. It does this by utilizing the ``hstore`` type (PostgreSQL specific), which is available as ``models.HStoreField`` in Django 1.10.
 
 Usage
 -----
