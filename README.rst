@@ -3,8 +3,17 @@ django-localized-fields
 
 ``django-localized-fields`` is an implementation of a field class for Django models that allows the field's value to be set in multiple languages. It does this by utilizing the ``hstore`` type (PostgreSQL specific), which is available as ``models.HStoreField`` in Django 1.10.
 
+* [Usage](#usage)
+    * [Basic usage](#basic-usage)
+    * [Constraints](#constraints)
+    * [Other fields](#other-fields)
+* [Installation](#installation)
+
+Usage
+-----
+
 Basic usage
------------------
+^^^^^^^^^^^
 Declare fields on your model as ``LocalizedField``:
 
 .. code-block:: python
@@ -68,7 +77,7 @@ You can also explicitly set a value in a certain language:
      new.title.ro = 'other romanian title'
 
 Constraints
-------------
+^^^^^^^^^^
 By default, the following constraints apply to a ``LocalizedField``:
 
 * Only the default language is ``required``. The other languages are optional and can be ``NULL``.
@@ -77,7 +86,7 @@ By default, the following constraints apply to a ``LocalizedField``:
 At the moment it is *not* possible to specifically instruct ``LocalizedField`` to mark certain languages as required or optional.
 
 Other fields
-------------
+^^^^^^^^^^^
 Besides ``LocalizedField``, there's also:
 
 * ``LocalizedAutoSlugField``
