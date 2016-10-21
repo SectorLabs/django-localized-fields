@@ -11,7 +11,7 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     license='MIT License',
-    description='Implementation of localized model fields using PostgreSQL HStore fields.'
+    description='Implementation of localized model fields using PostgreSQL HStore fields.',
     long_description=README,
     url='http://sectorlabs.ro/',
     author='Sector Labs',
