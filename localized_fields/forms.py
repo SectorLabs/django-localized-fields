@@ -1,8 +1,8 @@
+from typing import List
+
 from django import forms
 from django.conf import settings
 from django.forms import MultiWidget
-
-from typing import List
 
 from .fields.localized_value import LocalizedValue
 
