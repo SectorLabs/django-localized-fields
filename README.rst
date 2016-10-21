@@ -10,7 +10,7 @@ By declaring fields on your model as `LocalizedField`:
 .. code-block:: python
 
      from django.db import models
-     from localized_fields import LocalizedField
+     from localized_fields.fields import LocalizedField
 
 
      class MyModel(models.Model):
