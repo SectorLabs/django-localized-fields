@@ -1,11 +1,11 @@
 django-localized-fields
 =======================
 
-`django-localized-fields` is an implementation of a field class for Django models that allows the field's value to be set in multiple languages. It does this by utilizing the `hstore` type (PostgreSQL specific), which is available as `models.HStoreField` in Django 1.10.
+``django-localized-fields`` is an implementation of a field class for Django models that allows the field's value to be set in multiple languages. It does this by utilizing the ``hstore`` type (PostgreSQL specific), which is available as ``models.HStoreField`` in Django 1.10.
 
 Basic usage
 -----------------
-Declare fields on your model as `LocalizedField`:
+Declare fields on your model as ``LocalizedField``:
 
 .. code-block:: python
 
@@ -17,7 +17,7 @@ Declare fields on your model as `LocalizedField`:
          title = LocalizedField()
 
 
-During migration, the field type will be changed to `hstore`. From now on you can store multi-language content in this field:
+During migration, the field type will be changed to ``hstore``. From now on you can store multi-language content in this field:
 
 .. code-block:: python
 
@@ -27,7 +27,7 @@ During migration, the field type will be changed to `hstore`. From now on you ca
      new.title.ro = 'romanian title'
      new.save()
 
-`django-localized-fields` integrates with Django's i18n system, in order for certain languages to be available you have to correctly configure the `LANGUAGES` and `LANGUAGE_CODE` settings:
+``django-localized-fields`` integrates with Django's i18n system, in order for certain languages to be available you have to correctly configure the ``LANGUAGES`` and ``LANGUAGE_CODE`` settings:
 
 .. code-block:: python
 
@@ -69,18 +69,18 @@ You can also explicitly set a value in a certain language:
 
 Constraints
 ------------
-By default, the following constraints apply to a `LocalizedField`:
+By default, the following constraints apply to a ``LocalizedField``:
 
-* Only the default language is `required`. The other languages are optional and can be `NULL`.
-* If `null=True` is specified on the `LocalizedField`, then none of the languages are required.
+* Only the default language is ``required``. The other languages are optional and can be ``NULL``.
+* If ``null=True`` is specified on the ``LocalizedField``, then none of the languages are required.
 
-At the moment it is *not* possible to specifically instruct `LocalizedField` to mark certain languages as required or optional.
+At the moment it is *not* possible to specifically instruct ``LocalizedField`` to mark certain languages as required or optional.
 
 Other fields
 ------------
-Besides `LocalizedField`, there's also:
+Besides ``LocalizedField``, there's also:
 
-* `LocalizedAutoSlugField`
+* ``LocalizedAutoSlugField``
      Automatically creates a slug for every language from the specified field. Depends upon:
           * django-autoslug
 
@@ -96,7 +96,7 @@ Besides `LocalizedField`, there's also:
                    title = LocalizedField()
                    slug = LocalizedAutoSlugField(populate_from='title')
 
-* `LocalizedBleachField`
+* ``LocalizedBleachField``
      Automatically bleaches the content of the field.
           * django-bleach
 
@@ -120,7 +120,7 @@ Installation
 
         $ pip install django-localized-fields
 
-2. Add `localized_fields` to your `INSTALLED_APPS`:
+2. Add ``localized_fields`` to your ``INSTALLED_APPS``:
 
      .. code-block:: bash
 
