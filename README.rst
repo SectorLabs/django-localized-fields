@@ -3,9 +3,9 @@ django-localized-fields
 
 `django-localized-fields` is an implementation of a field class for Django models that allows the field's value to be set in multiple languages. It does this by utilizing the `hstore` type (PostgreSQL specific), which is available as `models.HStoreField` in Django 1.10.
 
-How does it work?
+Basic usage
 -----------------
-By declaring fields on your model as `LocalizedField`:
+Declare fields on your model as `LocalizedField`:
 
 .. code-block:: python
 
@@ -67,6 +67,50 @@ You can also explicitly set a value in a certain language:
 
      new.title.ro = 'other romanian title'
 
+Constraints
+------------
+By default, the following constraints apply to a `LocalizedField`:
+
+* Only the default language is `required`. The other languages are optional and can be `NULL`.
+* If `null=True` is specified on the `LocalizedField`, then none of the languages are required.
+
+At the moment it is *not* possible to specifically instruct `LocalizedField` to mark certain languages as required or optional.
+
+Other fields
+------------
+Besides `LocalizedField`, there's also:
+
+* `LocalizedAutoSlugField`
+     Automatically creates a slug for every language from the specified field. Depends upon:
+          * django-autoslug
+
+     Currently only supports `populate_from`. Example usage:
+
+          .. code-block:: python
+
+              from django.db import models
+              from localized_fields.fields import (LocalizedField,
+                                                   LocalizedAutoSlugField)
+
+              class MyModel(models.Model):
+                   title = LocalizedField()
+                   slug = LocalizedAutoSlugField(populate_from='title')
+
+* `LocalizedBleachField`
+     Automatically bleaches the content of the field.
+          * django-bleach
+
+     Example usage:
+
+           .. code-block:: python
+
+              from django.db import models
+              from localized_fields.fields import (LocalizedField,
+                                                   LocalizedBleachField)
+
+              class MyModel(models.Model):
+                   title = LocalizedField()
+                   description = LocalizedBleachField()
 
 Installation
 ------------
