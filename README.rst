@@ -14,6 +14,24 @@ django-localized-fields
 
 ``django-localized-fields`` is an implementation of a field class for Django models that allows the field's value to be set in multiple languages. It does this by utilizing the ``hstore`` type (PostgreSQL specific), which is available as ``models.HStoreField`` in Django 1.10.
 
+Installation
+------------
+1. Install the package from PyPi:
+
+    .. code-block:: bash
+
+        $ pip install django-localized-fields
+
+2. Add ``localized_fields`` to your ``INSTALLED_APPS``:
+
+     .. code-block:: bash
+
+        INSTALLED_APPS = [
+            ....
+
+            'localized_fields'
+        ]
+
 Usage
 -----
 
@@ -125,23 +143,3 @@ Besides ``LocalizedField``, there's also:
               class MyModel(models.Model):
                    title = LocalizedField()
                    description = LocalizedBleachField()
-
-Installation
-------------
-1. Install the package from PyPi:
-
-    .. code-block:: bash
-
-        $ pip install django-localized-fields
-
-2. Add ``localized_fields`` to your ``INSTALLED_APPS``:
-
-     .. code-block:: bash
-
-        INSTALLED_APPS = [
-            ....
-
-            'localized_fields'
-        ]
-
-You're good to go! Happy hacking!
