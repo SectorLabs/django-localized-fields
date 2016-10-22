@@ -17,6 +17,9 @@ class LocalizedField(HStoreField):
     def __init__(self, *args, **kwargs):
         """Initializes a new instance of :see:LocalizedValue."""
 
+        if 'default' not in kwargs:
+            kwargs['default'] = LocalizedValue()
+
         super(LocalizedField, self).__init__(*args, **kwargs)
 
     @staticmethod

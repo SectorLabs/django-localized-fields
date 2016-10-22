@@ -236,6 +236,33 @@ class LocalizedFieldTestCase(TestCase):
         assert not LocalizedField().clean(['huh'])
 
     @staticmethod
+    def test_default_value():
+        """Tests whether the default value is a :see:LocalizedValue
+        instance."""
+
+        field = LocalizedField()
+
+        assert field.default
+        assert isinstance(field.default, LocalizedValue)
+
+        for lang_code, _ in settings.LANGUAGES:
+            assert not field.default.get(lang_code)
+
+    @staticmethod
+    def test_default_value_override():
+        """Tests whether the default value of a field
+        can correctly be overriden."""
+
+        default_value = LocalizedValue(get_init_values())
+        field = LocalizedField(default=default_value)
+
+        assert field.default
+        assert isinstance(field.default, LocalizedValue)
+
+        for lang_code, _ in settings.LANGUAGES:
+            assert default_value.get(lang_code) == field.default.get(lang_code)
+
+    @staticmethod
     def test_formfield():
         """Tests whether the :see:formfield function
         correctly returns a valid form."""
