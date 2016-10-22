@@ -20,7 +20,7 @@ django-localized-fields
 This package requires Python 3.5 or newer and Django 1.10 or newer.
 
 In the pipeline
-------------
+---------------
 We're working on making this easier to setup and use. Any feedback is apreciated. Here's a short list of things we're working to improve:
 
 * Make it unnecesarry to add anything to your `INSTALLED_APPS`.
