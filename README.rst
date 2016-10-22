@@ -17,6 +17,8 @@ django-localized-fields
 
 ``django-localized-fields`` is an implementation of a field class for Django models that allows the field's value to be set in multiple languages. It does this by utilizing the ``hstore`` type (PostgreSQL specific), which is available as ``models.HStoreField`` in Django 1.10.
 
+This package requires Python 3.5 or newer and Django 1.10 or newer.
+
 Installation
 ------------
 1. Install the package from PyPi:
