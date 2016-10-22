@@ -50,7 +50,7 @@ Installation
      .. code-block:: python
 
          LANGUAGE_CODE = 'en' # default language
-         LANGUAGEs = (
+         LANGUAGES = (
              ('en', 'English'),
              ('nl', 'Dutch'),
              ('ro', 'Romanian')
@@ -94,7 +94,7 @@ Then apply the migration using ``python manage.py migrate``.
 .. code-block:: python
 
      LANGUAGE_CODE = 'en' # default language
-     LANGUAGEs = (
+     LANGUAGES = (
           ('en', 'English'),
           ('nl', 'Dutch'),
           ('ro', 'Romanian')
