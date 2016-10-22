@@ -19,6 +19,13 @@ django-localized-fields
 
 This package requires Python 3.5 or newer and Django 1.10 or newer.
 
+In the pipeline
+------------
+We're working on making this easier to setup and use. Any feedback is apreciated. Here's a short list of things we're working to improve:
+
+* Make it unnecesarry to add anything to your `INSTALLED_APPS`.
+* Make it unnecesarry to modify your migrations manually to enable the PostgreSQL HStore extension.
+
 Installation
 ------------
 1. Install the package from PyPi:
@@ -27,20 +34,32 @@ Installation
 
         $ pip install django-localized-fields
 
-2. Add ``localized_fields`` to your ``INSTALLED_APPS``:
+2. Add ``localized_fields`` and ``django.contrib.postgres`` to your ``INSTALLED_APPS``:
 
      .. code-block:: bash
 
         INSTALLED_APPS = [
             ....
 
+            'django.contrib.postgres',
             'localized_fields'
         ]
+
+3. Set ``LANGUAGES` and `LANGUAGE_CODE`` in your settings:
+
+.. code-block:: python
+
+     LANGUAGE_CODE = 'en' # default language
+     LANGUAGEs = (
+          ('en', 'English'),
+          ('nl', 'Dutch'),
+          ('ro', 'Romanian')
+     )
 
 Usage
 -----
 
-Basic usage
+Preparation
 ^^^^^^^^^^^
 Declare fields on your model as ``LocalizedField``:
 
@@ -54,15 +73,21 @@ Declare fields on your model as ``LocalizedField``:
          title = LocalizedField()
 
 
-During migration, the field type will be changed to ``hstore``. From now on you can store multi-language content in this field:
+Create your migrations using ``python manage.py makemigrations``. Open the generated migration in your favorite editor and setup the HStore extension before the first ``CreateModel`` or ``AddField`` operation by adding a migration with the `HStoreExtension` operation. For example:
 
 .. code-block:: python
 
-     new = MyModel()
-     new.title.en = 'english title'
-     new.title.nl = 'dutch title'
-     new.title.ro = 'romanian title'
-     new.save()
+    from django.contrib.postgres.operations import HStoreExtension
+
+    class Migration(migrations.Migration):
+        ...
+
+        operations = [
+            HStoreExtension(),
+            ...
+        ]
+
+Then apply the migration using ``python manage.py migrate``.
 
 ``django-localized-fields`` integrates with Django's i18n system, in order for certain languages to be available you have to correctly configure the ``LANGUAGES`` and ``LANGUAGE_CODE`` settings:
 
@@ -74,6 +99,16 @@ During migration, the field type will be changed to ``hstore``. From now on you 
           ('nl', 'Dutch'),
           ('ro', 'Romanian')
      )
+
+Basic usage
+^^^^^^^^^^^
+.. code-block:: python
+
+     new = MyModel()
+     new.title.en = 'english title'
+     new.title.nl = 'dutch title'
+     new.title.ro = 'romanian title'
+     new.save()
 
 By changing the active language you can control which language is presented:
 
