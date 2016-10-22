@@ -47,14 +47,14 @@ Installation
 
 3. Set ``LANGUAGES` and `LANGUAGE_CODE`` in your settings:
 
-.. code-block:: python
+     .. code-block:: python
 
-     LANGUAGE_CODE = 'en' # default language
-     LANGUAGEs = (
-          ('en', 'English'),
-          ('nl', 'Dutch'),
-          ('ro', 'Romanian')
-     )
+         LANGUAGE_CODE = 'en' # default language
+         LANGUAGEs = (
+             ('en', 'English'),
+             ('nl', 'Dutch'),
+             ('ro', 'Romanian')
+         )
 
 Usage
 -----
