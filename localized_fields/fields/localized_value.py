@@ -50,6 +50,17 @@ class LocalizedValue:
         setattr(self, language, value)
         return self
 
+    def deconstruct(self) -> dict:
+        """Deconstructs this value into a primitive type.
+
+        Returns:
+            A dictionary with all the localized values
+            contained in this instance.
+        """
+
+        path = 'localized_fields.fields.LocalizedValue'
+        return path, [self.__dict__], {}
+
     def __str__(self) -> str:
         """Gets the value in the current language, or falls
         back to the primary language if there's no value
