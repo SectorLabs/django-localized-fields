@@ -37,6 +37,10 @@ class LocalizedFieldWidget(MultiWidget):
 
         for lang_code, _ in settings.LANGUAGES:
             result.append(value.get(lang_code))
+            if value:
+                result.append(value.get(lang_code))
+            else:
+                result.append(None)
 
         return result
 
