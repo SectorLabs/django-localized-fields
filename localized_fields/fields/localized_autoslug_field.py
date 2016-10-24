@@ -1,8 +1,10 @@
 from typing import Callable
 
+from django import forms
 from django.conf import settings
 from django.utils.text import slugify
 
+from ..forms import LocalizedFieldForm
 from .localized_field import LocalizedField
 from .localized_value import LocalizedValue
 
@@ -27,6 +29,24 @@ class LocalizedAutoSlugField(LocalizedField):
         kwargs['populate_from'] = self.populate_from
 
         return name, path, args, kwargs
+
+    def formfield(self, **kwargs):
+        """Gets the form field associated with this field.
+
+        Because this is a slug field which is automatically
+        populated, it should be hidden from the form.
+        """
+
+        defaults = {
+            'form_class': LocalizedFieldForm
+        }
+
+        defaults.update(kwargs)
+
+        form_field = super().formfield(**defaults)
+        form_field.widget = forms.HiddenInput()
+
+        return form_field
 
     def pre_save(self, instance, add: bool):
         """Ran just before the model is saved, allows us to built

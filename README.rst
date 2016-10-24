@@ -61,15 +61,15 @@ Usage
 
 Preparation
 ^^^^^^^^^^^
-Declare fields on your model as ``LocalizedField``:
+Inherit your model from ``LocalizedModel`` and declare fields on your model as ``LocalizedField``:
 
 .. code-block:: python
 
-     from django.db import models
+     from localized_fields.models import LocalizedModel
      from localized_fields.fields import LocalizedField
 
 
-     class MyModel(models.Model):
+     class MyModel(LocalizedModel):
          title = LocalizedField()
 
 
@@ -160,11 +160,11 @@ Besides ``LocalizedField``, there's also:
 
           .. code-block:: python
 
-              from django.db import models
+              from localized_fields.models import LocalizedModel
               from localized_fields.fields import (LocalizedField,
                                                    LocalizedAutoSlugField)
 
-              class MyModel(models.Model):
+              class MyModel(LocalizedModel):
                    title = LocalizedField()
                    slug = LocalizedAutoSlugField(populate_from='title')
 
@@ -176,10 +176,10 @@ Besides ``LocalizedField``, there's also:
 
            .. code-block:: python
 
-              from django.db import models
+              from localized_fields.models import LocalizedModel
               from localized_fields.fields import (LocalizedField,
                                                    LocalizedBleachField)
 
-              class MyModel(models.Model):
+              class MyModel(LocalizedModel):
                    title = LocalizedField()
                    description = LocalizedBleachField()

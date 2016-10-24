@@ -1,12 +1,10 @@
 from django.conf import settings
-from django.contrib.postgres.operations import HStoreExtension
-from django.db import connection, migrations, models
-from django.db.migrations.executor import MigrationExecutor
 from django.test import TestCase
 from django.utils.text import slugify
 
-from localized_fields.fields import (LocalizedAutoSlugField, LocalizedField,
-                                     LocalizedValue)
+from localized_fields.fields import LocalizedAutoSlugField
+
+from .fake_model import get_fake_model
 
 
 class LocalizedAutoSlugFieldTestCase(TestCase):
@@ -20,39 +18,7 @@ class LocalizedAutoSlugFieldTestCase(TestCase):
 
         super(LocalizedAutoSlugFieldTestCase, cls).setUpClass()
 
-        class TestModel(models.Model):
-            """Model used for testing the :see:LocalizedAutoSlugField."""
-
-            app_label = 'localized_fields'
-
-            def __init__(self, *args, **kwargs):
-                super().__init__(*args, **kwargs)
-
-                self.title = self.title or LocalizedValue()
-                self.slug = self.slug or LocalizedValue()
-
-            title = LocalizedField()
-            slug = LocalizedAutoSlugField(populate_from='title')
-
-        class TestProject:
-
-            def clone(self, *args, **kwargs):
-                return self
-
-        class TestMigration(migrations.Migration):
-            operations = [
-                HStoreExtension()
-            ]
-
-        with connection.schema_editor() as schema_editor:
-            migration_executor = MigrationExecutor(schema_editor.connection)
-            migration_executor.apply_migration(
-                TestProject(),
-                TestMigration('eh', 'localized_fields')
-            )
-            schema_editor.create_model(TestModel)
-
-        cls.TestModel = TestModel
+        cls.TestModel = get_fake_model()
 
     def test_populate(self):
         """Tests whether the :see:LocalizedAutoSlugField's
