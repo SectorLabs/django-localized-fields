@@ -130,6 +130,18 @@ class LocalizedValueTestCase(TestCase):
         # there's no actual value
         assert localized_value.get(other_language) != test_value
 
+    @staticmethod
+    def test_deconstruct():
+        """Tests whether the :see:LocalizedValue
+        class's :see:deconstruct function works properly."""
+
+        keys = get_init_values()
+        value = LocalizedValue(keys)
+
+        path, args, kwargs = value.deconstruct()
+
+        assert args[0] == keys
+
 
 class LocalizedFieldTestCase(TestCase):
     """Tests the :see:LocalizedField class."""

@@ -41,6 +41,19 @@ class LocalizedBleachFieldTestCase(TestCase):
         bleached_value = field.pre_save(model, False)
         assert not bleached_value
 
+    def test_pre_save_none_values(self):
+        """Tests whether the :see:pre_save function
+        works properly when one of the languages has
+        no text and is None."""
+
+        value = self._get_test_value()
+        value.set(settings.LANGUAGE_CODE, None)
+
+        model, field = self._get_test_model(value)
+
+        bleached_value = field.pre_save(model, False)
+        self._validate(value, bleached_value)
+
     @staticmethod
     def _get_test_model(value):
         """Gets a test model and a artifically
@@ -78,6 +91,10 @@ class LocalizedBleachFieldTestCase(TestCase):
         """
 
         for lang_code, _ in settings.LANGUAGES:
+            if not non_bleached_value.get(lang_code):
+                assert not bleached_value.get(lang_code)
+                continue
+
             expected_value = bleach.clean(
                 non_bleached_value.get(lang_code),
                 get_bleach_default_options()

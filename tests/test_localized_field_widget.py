@@ -31,3 +31,14 @@ class LocalizedFieldWidgetTestCase(TestCase):
 
         for (lang_code, _), value in zip(settings.LANGUAGES, decompressed_values):
             assert localized_value.get(lang_code) == value
+
+    @staticmethod
+    def test_decompress_none():
+        """Tests whether the :see:LocalizedFieldWidget correctly
+        handles :see:None."""
+
+        widget = LocalizedFieldWidget()
+        decompressed_values = widget.decompress(None)
+
+        for _, value in zip(settings.LANGUAGES, decompressed_values):
+            assert not value

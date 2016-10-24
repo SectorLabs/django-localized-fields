@@ -1,8 +1,10 @@
+from django import forms
 from django.conf import settings
 from django.test import TestCase
 from django.utils.text import slugify
 
 from localized_fields.fields import LocalizedAutoSlugField
+from localized_fields.forms import LocalizedFieldForm
 
 from .fake_model import get_fake_model
 
@@ -69,3 +71,14 @@ class LocalizedAutoSlugFieldTestCase(TestCase):
 
         assert 'populate_from' in kwargs
         assert kwargs['populate_from'] == field.populate_from
+
+    @staticmethod
+    def test_formfield():
+        """Tests whether the :see:formfield method
+        returns a valid form field that is hidden."""
+
+        field = LocalizedAutoSlugField(populate_from='title')
+        form_field = field.formfield()
+
+        assert isinstance(form_field, LocalizedFieldForm)
+        assert isinstance(form_field.widget, forms.HiddenInput)
