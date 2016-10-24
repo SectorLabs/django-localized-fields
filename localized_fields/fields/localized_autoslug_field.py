@@ -38,7 +38,8 @@ class LocalizedAutoSlugField(LocalizedField):
         """
 
         defaults = {
-            'form_class': LocalizedFieldForm
+            'form_class': forms.CharField,
+            'required': False
         }
 
         defaults.update(kwargs)

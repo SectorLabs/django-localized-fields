@@ -80,5 +80,5 @@ class LocalizedAutoSlugFieldTestCase(TestCase):
         field = LocalizedAutoSlugField(populate_from='title')
         form_field = field.formfield()
 
-        assert isinstance(form_field, LocalizedFieldForm)
+        assert isinstance(form_field, forms.CharField)
         assert isinstance(form_field.widget, forms.HiddenInput)
