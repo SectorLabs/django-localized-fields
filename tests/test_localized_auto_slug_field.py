@@ -3,8 +3,7 @@ from django.conf import settings
 from django.test import TestCase
 from django.utils.text import slugify
 
-from localized_fields.fields import LocalizedAutoSlugField
-from localized_fields.forms import LocalizedFieldForm
+from localized_fields import LocalizedAutoSlugField
 
 from .fake_model import get_fake_model
 

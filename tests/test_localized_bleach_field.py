@@ -1,9 +1,9 @@
-import bleach
 from django.conf import settings
 from django.test import TestCase
 from django_bleach.utils import get_bleach_default_options
+import bleach
 
-from localized_fields.fields import LocalizedBleachField, LocalizedValue
+from localized_fields import LocalizedBleachField, LocalizedValue
 
 
 class TestModel:

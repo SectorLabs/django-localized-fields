@@ -2,8 +2,8 @@ from django.contrib.postgres.operations import HStoreExtension
 from django.db import connection, migrations
 from django.db.migrations.executor import MigrationExecutor
 
-from localized_fields.fields import LocalizedAutoSlugField, LocalizedField
-from localized_fields.models import LocalizedModel
+from localized_fields import (LocalizedAutoSlugField, LocalizedField,
+                              LocalizedModel)
 
 MODEL = None
 
