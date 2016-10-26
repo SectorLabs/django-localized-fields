@@ -33,7 +33,7 @@ class LocalizedBleachField(LocalizedField):
 
             localized_value.set(
                 lang_code,
-                bleach.clean(value, get_bleach_default_options())
+                bleach.clean(value, **get_bleach_default_options())
             )
 
         return localized_value
