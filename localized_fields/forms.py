@@ -16,7 +16,7 @@ class LocalizedFieldWidget(MultiWidget):
         widgets = []
 
         for _ in settings.LANGUAGES:
-            widgets.append(forms.TextInput())
+            widgets.append(forms.Textarea())
 
         super(LocalizedFieldWidget, self).__init__(widgets, *args, **kwargs)
 
