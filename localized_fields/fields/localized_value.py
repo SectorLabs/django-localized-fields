@@ -15,9 +15,12 @@ class LocalizedValue:
                 different language.
         """
 
-        for lang_code, _ in settings.LANGUAGES:
-            value = keys.get(lang_code) if keys else None
-            setattr(self, lang_code, value)
+        if isinstance(keys, str):
+            setattr(self, settings.LANGUAGE_CODE, keys)
+        else:
+            for lang_code, _ in settings.LANGUAGES:
+                value = keys.get(lang_code) if keys else None
+                setattr(self, lang_code, value)
 
     def get(self, language: str=None) -> str:
         """Gets the underlying value in the specified or
