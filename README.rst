@@ -128,7 +128,7 @@ Or get it in a specific language:
 
      print(new.title.get('en')) # prints 'english title'
      print(new.title.get('ro')) # prints 'romanian title'
-     print(new.title.get()) # whatever language is the currently active one
+     print(new.title.get()) # whatever language is the primary one
 
 You can also explicitly set a value in a certain language:
 
