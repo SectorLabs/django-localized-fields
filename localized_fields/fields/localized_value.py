@@ -36,7 +36,7 @@ class LocalizedValue:
             was specified.
         """
 
-        language = language or translation.get_language()
+        language = language or settings.LANGUAGE_CODE
         return getattr(self, language, None)
 
     def set(self, language: str, value: str):
@@ -69,7 +69,8 @@ class LocalizedValue:
         back to the primary language if there's no value
         in the current language."""
 
-        value = self.get()
+        value = self.get(translation.get_language())
+
         if not value:
             value = self.get(settings.LANGUAGE_CODE)
 

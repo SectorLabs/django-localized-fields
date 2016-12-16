@@ -18,7 +18,6 @@ LANGUAGES = (
     ('nl', 'Dutch')
 )
 
-INSTALLED_APPS = [
-    'localized_fields',
-    'tests'
-]
+INSTALLED_APPS = (
+    'tests',
+)

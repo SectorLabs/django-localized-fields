@@ -64,17 +64,17 @@ class LocalizedValueTestCase(TestCase):
             assert localized_value.get(language) == value
 
     @staticmethod
-    def test_get_current_language():
+    def test_get_default_language():
         """Tests whether the :see:LocalizedValue
         class's see:get function properly
-        gets the value in the current language."""
+        gets the value in the default language."""
 
         keys = get_init_values()
         localized_value = LocalizedValue(keys)
 
-        for language, value in keys.items():
+        for language, _ in keys.items():
             translation.activate(language)
-            assert localized_value.get() == value
+            assert localized_value.get() == keys[settings.LANGUAGE_CODE]
 
     @staticmethod
     def test_set():
