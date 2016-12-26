@@ -3,7 +3,8 @@ from django.db.utils import IntegrityError
 from django.test import TestCase
 from django.utils import translation
 
-from localized_fields import LocalizedField, LocalizedFieldForm, LocalizedValue
+from localized_fields.fields import LocalizedField, LocalizedValue
+from localized_fields.forms import LocalizedFieldForm
 
 
 def get_init_values() -> dict:

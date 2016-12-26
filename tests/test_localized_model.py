@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from localized_fields import LocalizedValue
+from localized_fields.fields import LocalizedValue
 
 from .fake_model import get_fake_model
 
