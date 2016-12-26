@@ -183,3 +183,21 @@ Besides ``LocalizedField``, there's also:
               class MyModel(LocalizedModel):
                    title = LocalizedField()
                    description = LocalizedBleachField()
+
+Django Admin Integration
+^^^^^^^^^^^^^^^^^^^^^^^^
+To enable widgets in the admin, you need to inherit from
+``LocalizedFieldsAdminMixin``:
+
+.. code-block:: python
+
+    from django.contrib import admin
+    from myapp.models import MyLocalizedModel
+    
+    from localized_fields.admin import LocalizedFieldsAdminMixin
+
+
+    class MyLocalizedModelAdmin(LocalizedFieldsAdminMixin, admin.ModelAdmin):
+        """Any admin options you need go here"""
+
+    admin.site.register(MyLocalizedModel, MyLocalizedModelAdmin)
