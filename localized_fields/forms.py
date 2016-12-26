@@ -66,7 +66,8 @@ class LocalizedFieldForm(forms.MultiValueField):
 
         super(LocalizedFieldForm, self).__init__(
             fields,
-            require_all_fields=False
+            require_all_fields=False,
+            *args, **kwargs
         )
 
     def compress(self, value: List[str]) -> LocalizedValue:
