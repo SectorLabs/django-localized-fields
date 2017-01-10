@@ -78,7 +78,7 @@ class LocalizedAutoSlugField(LocalizedField):
                 """Gets whether the specified slug is unique."""
 
                 unique_filter = {
-                    '%s__%s__contains' % (self.name, language): slug
+                    '%s__%s' % (self.name, language): slug
                 }
 
                 return not type(instance).objects.filter(**unique_filter).exists()
