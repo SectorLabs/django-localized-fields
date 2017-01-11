@@ -3,7 +3,7 @@ from typing import List
 from django import forms
 from django.conf import settings
 
-from .widgets import LocalizedFieldWidget
+from .widgets import LocalizedFieldWidget, LocalizedCharFieldWidget
 from .fields.localized_value import LocalizedValue
 
 
@@ -12,7 +12,7 @@ class LocalizedFieldForm(forms.MultiValueField):
     """Form for a localized field, allows editing
     the field in multiple languages."""
 
-    widget = LocalizedFieldWidget()
+    widget = LocalizedFieldWidget
 
     def __init__(self, *args, **kwargs):
         """Initializes a new instance of :see:LocalizedFieldForm."""
@@ -53,3 +53,8 @@ class LocalizedFieldForm(forms.MultiValueField):
             localized_value.set(lang_code, value)
 
         return localized_value
+
+
+class LocalizedCharFieldForm(LocalizedFieldForm):
+
+    widget = LocalizedCharFieldWidget

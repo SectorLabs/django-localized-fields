@@ -69,13 +69,6 @@ class LocalizedField(HStoreField):
     Internally this is stored as a :see:HStoreField where there
     is a key for every language."""
 
-    Meta = None
-
-    def __init__(self, *args, **kwargs):
-        """Initializes a new instance of :see:LocalizedValue."""
-
-        super(LocalizedField, self).__init__(*args, **kwargs)
-
     # The class to wrap instance attributes in. Accessing to field attribute in
     # model instance will always return an instance of attr_class.
     attr_class = LocalizedValue
@@ -119,7 +112,6 @@ class LocalizedField(HStoreField):
             A :see:LocalizedValue instance containing the
             data extracted from the database.
         """
-        
         value = super(LocalizedField, self).to_python(value)
         if not value or not isinstance(value, dict):
             return self.attr_class()
@@ -133,7 +125,7 @@ class LocalizedField(HStoreField):
         if isinstance(value, LocalizedValue):
             return json.dumps(value.__dict__)
         return super(LocalizedField, self).value_to_string(obj)
-        
+
     def get_prep_value(self, value: LocalizedValue) -> dict:
         """Turns the specified value into something the database
         can store.
@@ -188,7 +180,10 @@ class LocalizedField(HStoreField):
         # are any of the language fiels None/empty?
         is_all_null = True
         for lang_code, _ in settings.LANGUAGES:
-            if value.get(lang_code):
+            # NOTE(seroy): use check for None, instead of
+            # `bool(value.get(lang_code))==True` condition, cause in this way
+            # we can not save '' or False values
+            if value.get(lang_code) is not None:
                 is_all_null = False
                 break
 
@@ -215,8 +210,9 @@ class LocalizedField(HStoreField):
             return
 
         primary_lang_val = getattr(value, settings.LANGUAGE_CODE)
-
-        if not primary_lang_val:
+        # NOTE(seroy): use check for None, instead of `not primary_lang_val`
+        # condition, cause in this way we can not save '' or False values
+        if primary_lang_val is None:
             raise IntegrityError(
                 'null value in column "%s.%s" violates not-null constraint' % (
                     self.name,

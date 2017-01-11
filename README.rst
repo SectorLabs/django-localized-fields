@@ -116,12 +116,6 @@ By changing the active language you can control which language is presented:
      from django.utils import translation
 
      translation.activate('nl')
-     new.title = 'dutch title'
-
-     translation.activate('en')     
-     new.title = 'english title'
-
-     translation.activate('nl')
      print(new.title) # prints 'dutch title'
 
      translation.activate('en')
@@ -143,6 +137,19 @@ You can also explicitly set a value in a certain language:
      new.title.set('nl', 'other dutch title')
 
      new.title.ro = 'other romanian title'
+
+Or set a value for current active language:
+
+.. code-block:: python
+
+     translation.activate('nl')
+     new.title = 'other dutch title'
+
+     translation.activate('en')
+     new.title = 'other english title'
+
+     new.save()
+
 
 Constraints
 ^^^^^^^^^^^
@@ -186,6 +193,25 @@ Besides ``LocalizedField``, there's also:
               class MyModel(models.Model):
                    title = LocalizedField()
                    description = LocalizedBleachField()
+
+* ``LocalizedCharField`` and ``LocalizedTextField``
+     Instead of ``LocalizedField`` save empty strings as '', this is a 
+     `Django convention <https://docs.djangoproject.com/en/dev/ref/models/fields/#null>`_.
+    
+     ``LocalizedCharField`` uses ``form.TextInput`` widget. 
+
+     Example usage:
+
+           .. code-block:: python
+
+              from localized_fields.fields import (LocalizedCharField,
+                                                   LocalizedTextField)
+                                                   
+
+              class MyModel(models.Model):
+                   title = LocalizedCharField()
+                   content = LocalizedTextField()
+
 
 Django Admin Integration
 ^^^^^^^^^^^^^^^^^^^^^^^^

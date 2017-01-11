@@ -3,6 +3,7 @@ from typing import List
 from django import forms
 from django.conf import settings
 from django.forms import MultiWidget
+from django.contrib.admin import widgets
 from django.template.loader import render_to_string
 
 from .fields.localized_value import LocalizedValue
@@ -46,8 +47,13 @@ class LocalizedFieldWidget(MultiWidget):
         return result
 
 
+class LocalizedCharFieldWidget(LocalizedFieldWidget):
+    """Widget that has an input box for every language."""
+    widget = forms.TextInput
+
+
 class AdminLocalizedFieldWidget(LocalizedFieldWidget):
-    widget = forms.Textarea
+    widget = widgets.AdminTextareaWidget
     template = 'localized_fields/admin/widget.html'
 
     def render(self, name, value, attrs=None):
@@ -76,3 +82,7 @@ class AdminLocalizedFieldWidget(LocalizedFieldWidget):
             'available_languages': settings.LANGUAGES
         }
         return render_to_string(self.template, context)
+
+
+class AdminLocalizedCharFieldWidget(AdminLocalizedFieldWidget):
+    widget = widgets.AdminTextInputWidget
