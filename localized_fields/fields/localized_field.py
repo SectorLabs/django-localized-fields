@@ -1,3 +1,5 @@
+import json
+
 from django.conf import settings
 from django.contrib.postgres.fields import HStoreField
 from django.db.utils import IntegrityError
@@ -117,12 +119,21 @@ class LocalizedField(HStoreField):
             A :see:LocalizedValue instance containing the
             data extracted from the database.
         """
-
+        
+        value = super(LocalizedField, self).to_python(value)
         if not value or not isinstance(value, dict):
             return self.attr_class()
 
         return self.attr_class(value)
 
+    def value_to_string(self, obj):
+        """Converts obj to a string. Used to serialize the value of the field.
+        """
+        value = self.value_from_object(obj)
+        if isinstance(value, LocalizedValue):
+            return json.dumps(value.__dict__)
+        return super(LocalizedField, self).value_to_string(obj)
+        
     def get_prep_value(self, value: LocalizedValue) -> dict:
         """Turns the specified value into something the database
         can store.
