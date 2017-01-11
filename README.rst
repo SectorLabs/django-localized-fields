@@ -61,15 +61,14 @@ Usage
 
 Preparation
 ^^^^^^^^^^^
-Inherit your model from ``LocalizedModel`` and declare fields on your model as ``LocalizedField``:
+Declare fields on your model as ``LocalizedField``:
 
 .. code-block:: python
 
-     from localized_fields.models import LocalizedModel
      from localized_fields.fields import LocalizedField
 
 
-     class MyModel(LocalizedModel):
+     class MyModel(models.Model):
          title = LocalizedField()
 
 
@@ -117,6 +116,12 @@ By changing the active language you can control which language is presented:
      from django.utils import translation
 
      translation.activate('nl')
+     new.title = 'dutch title'
+
+     translation.activate('en')     
+     new.title = 'english title'
+
+     translation.activate('nl')
      print(new.title) # prints 'dutch title'
 
      translation.activate('en')
@@ -160,11 +165,10 @@ Besides ``LocalizedField``, there's also:
 
           .. code-block:: python
 
-              from localized_fields.models import LocalizedModel
               from localized_fields.fields import (LocalizedField,
                                                    LocalizedAutoSlugField)
 
-              class MyModel(LocalizedModel):
+              class MyModel(models.Model):
                    title = LocalizedField()
                    slug = LocalizedAutoSlugField(populate_from='title')
 
@@ -176,11 +180,10 @@ Besides ``LocalizedField``, there's also:
 
            .. code-block:: python
 
-              from localized_fields.models import LocalizedModel
               from localized_fields.fields import (LocalizedField,
                                                    LocalizedBleachField)
 
-              class MyModel(LocalizedModel):
+              class MyModel(models.Model):
                    title = LocalizedField()
                    description = LocalizedBleachField()
 

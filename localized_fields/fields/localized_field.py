@@ -1,9 +1,64 @@
 from django.conf import settings
 from django.contrib.postgres.fields import HStoreField
 from django.db.utils import IntegrityError
+from django.utils import translation
+from django.utils import six
 
 from ..forms import LocalizedFieldForm
 from .localized_value import LocalizedValue
+
+
+class LocalizedValueDescriptor(object):
+    """
+    The descriptor for the localized value attribute on the model instance.
+    Returns a :see:LocalizedValue when accessed so you can do stuff like::
+
+        >>> from myapp.models import MyModel
+        >>> instance = MyModel()
+        >>> instance.value.en = 'English value'
+
+    Assigns a strings to active language key in :see:LocalizedValue on
+    assignment so you can do::
+
+        >>> from django.utils import translation
+        >>> from myapp.models import MyModel
+
+        >>> translation.activate('nl')
+        >>> instance = MyModel()
+        >>> instance.title = 'dutch title'
+        >>> print(instance.title.nl) # prints 'dutch title'
+    """
+    def __init__(self, field):
+        self.field = field
+
+    def __get__(self, instance, cls=None):
+        if instance is None:
+            return self
+
+        # This is slightly complicated, so worth an explanation.
+        # `instance.localizedvalue` needs to ultimately return some instance of
+        # `LocalizedValue`, probably a subclass.
+
+        # The instance dict contains whatever was originally assigned
+        # in __set__.
+        if self.field.name in instance.__dict__:
+            value = instance.__dict__[self.field.name]
+        else:
+            instance.refresh_from_db(fields=[self.field.name])
+            value = getattr(instance, self.field.name)
+
+        if value is None:
+            attr = self.field.attr_class()
+            instance.__dict__[self.field.name] = attr
+
+        return instance.__dict__[self.field.name]
+
+    def __set__(self, instance, value):
+        if isinstance(value, six.string_types):
+            self.__get__(instance).set(translation.get_language() or
+                                       settings.LANGUAGE_CODE, value)
+        else:
+            instance.__dict__[self.field.name] = value
 
 
 class LocalizedField(HStoreField):
@@ -19,8 +74,18 @@ class LocalizedField(HStoreField):
 
         super(LocalizedField, self).__init__(*args, **kwargs)
 
-    @staticmethod
-    def from_db_value(value, *_):
+    # The class to wrap instance attributes in. Accessing to field attribute in
+    # model instance will always return an instance of attr_class.
+    attr_class = LocalizedValue
+
+    # The descriptor to use for accessing the attribute off of the class.
+    descriptor_class = LocalizedValueDescriptor
+
+    def contribute_to_class(self, cls, name, **kwargs):
+        super(LocalizedField, self).contribute_to_class(cls, name, **kwargs)
+        setattr(cls, self.name, self.descriptor_class(self))
+
+    def from_db_value(self, value, *_):
         """Turns the specified database value into its Python
         equivalent.
 
@@ -35,9 +100,9 @@ class LocalizedField(HStoreField):
         """
 
         if not value:
-            return LocalizedValue()
+            return self.attr_class()
 
-        return LocalizedValue(value)
+        return self.attr_class(value)
 
     def to_python(self, value: dict) -> LocalizedValue:
         """Turns the specified database value into its Python
@@ -54,9 +119,9 @@ class LocalizedField(HStoreField):
         """
 
         if not value or not isinstance(value, dict):
-            return LocalizedValue()
+            return self.attr_class()
 
-        return LocalizedValue(value)
+        return self.attr_class(value)
 
     def get_prep_value(self, value: LocalizedValue) -> dict:
         """Turns the specified value into something the database
