@@ -23,7 +23,11 @@ class LocalizedModel(models.Model):
                 continue
 
             value = getattr(self, field.name, None)
+
             if not isinstance(value, LocalizedValue):
-                value = LocalizedValue()
+                if isinstance(value, dict):
+                    value = LocalizedValue(value)
+                else:
+                    value = LocalizedValue()
 
             setattr(self, field.name, value)
