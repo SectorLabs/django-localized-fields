@@ -53,6 +53,10 @@ class LocalizedValueDescriptor(object):
             attr = self.field.attr_class()
             instance.__dict__[self.field.name] = attr
 
+        if isinstance(value, dict):
+            attr = self.field.attr_class(value)
+            instance.__dict__[self.field.name] = attr
+
         return instance.__dict__[self.field.name]
 
     def __set__(self, instance, value):

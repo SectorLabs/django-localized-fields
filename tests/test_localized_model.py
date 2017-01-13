@@ -42,3 +42,22 @@ class LocalizedModelTestCase(TestCase):
             obj.title = value
             assert obj.title.get(language) == value
             assert getattr(obj.title, language) == value
+
+    @classmethod
+    def test_model_init_kwargs(cls):
+        """Tests whether all :see:LocalizedField
+        fields are assigned an empty :see:LocalizedValue
+        instance when the model is instanitiated."""
+        data = {
+            'title': {
+                'en': 'english_title',
+                'ro': 'romanian_title',
+                'nl': 'dutch_title'
+            }
+        }
+        obj = cls.TestModel(**data)
+        print(obj.title, type(obj.title))
+        assert isinstance(obj.title, LocalizedValue)
+        assert obj.title.en == 'english_title'
+        assert obj.title.ro == 'romanian_title'
+        assert obj.title.nl == 'dutch_title'
