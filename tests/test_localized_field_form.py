@@ -22,6 +22,11 @@ class LocalizedFieldFormTestCase(TestCase):
             else:
                 assert not field.required
 
+        form = LocalizedFieldForm(required=False)
+
+        for (lang_code, _), field in zip(settings.LANGUAGES, form.fields):
+            assert not field.required
+
     @staticmethod
     def test_compress():
         """Tests whether the :see:compress function

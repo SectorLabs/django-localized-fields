@@ -74,7 +74,8 @@ class AdminLocalizedFieldWidget(LocalizedFieldWidget):
                 widget_value = None
             if id_:
                 final_attrs = dict(final_attrs, id='%s_%s' % (id_, i))
-            output.append(widget.render(name + '_%s' % i, widget_value, final_attrs))
+            widget_attrs = self.build_widget_attrs(widget, widget_value, final_attrs)
+            output.append(widget.render(name + '_%s' % i, widget_value, widget_attrs))
         context = {
             'id': final_attrs.get('id'),
             'name': name,
@@ -83,6 +84,12 @@ class AdminLocalizedFieldWidget(LocalizedFieldWidget):
         }
         return render_to_string(self.template, context)
 
+    def build_widget_attrs(self, widget, value, attrs):
+        attrs = dict(attrs)  # Copy attrs to avoid modifying the argument.
+        if (not widget.use_required_attribute(value) or not widget.is_required) \
+                and 'required' in attrs:
+            del attrs['required']
+        return attrs
 
 class AdminLocalizedCharFieldWidget(AdminLocalizedFieldWidget):
     widget = widgets.AdminTextInputWidget
