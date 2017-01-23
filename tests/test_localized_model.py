@@ -56,7 +56,6 @@ class LocalizedModelTestCase(TestCase):
             }
         }
         obj = cls.TestModel(**data)
-        print(obj.title, type(obj.title))
         assert isinstance(obj.title, LocalizedValue)
         assert obj.title.en == 'english_title'
         assert obj.title.ro == 'romanian_title'
