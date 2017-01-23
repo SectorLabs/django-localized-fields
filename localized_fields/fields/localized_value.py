@@ -75,6 +75,14 @@ class LocalizedValue:
             value = self.get(settings.LANGUAGE_CODE)
 
         return value or ''
+    
+    def __bool__(self) -> bool:
+        """Get thruthiness of the value in the current 
+        language."""
+
+        value = self.get(translation.get_language())
+
+        return bool(value)
 
     def __repr__(self):  # pragma: no cover
         """Gets a textual representation of this object."""
