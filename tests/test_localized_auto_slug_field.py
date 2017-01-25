@@ -59,6 +59,17 @@ class LocalizedAutoSlugFieldTestCase(TestCase):
 
         assert another_obj.slug.en == 'title-1'
 
+    def test_unique_slug_utf(self):
+        """Tests whether generating a slug works
+        when the value consists completely out
+        of non-ASCII characters."""
+
+        obj = self.TestModel()
+        obj.title.en = 'مكاتب للايجار بشارع بورسعيد'
+        obj.save()
+
+        assert obj.slug.en == 'مكاتب-للايجار-بشارع-بورسعيد'
+
     @staticmethod
     def test_deconstruct():
         """Tests whether the :see:deconstruct

@@ -83,7 +83,12 @@ class LocalizedAutoSlugField(LocalizedField):
 
                 return not type(instance).objects.filter(**unique_filter).exists()
 
-            slug = self._make_unique_slug(slugify(value), lang_code, is_unique)
+            slug = self._make_unique_slug(
+                slugify(value, allow_unicode=True),
+                lang_code,
+                is_unique
+            )
+
             slugs.set(lang_code, slug)
 
         setattr(instance, self.name, slugs)
