@@ -61,15 +61,14 @@ Usage
 
 Preparation
 ^^^^^^^^^^^
-Inherit your model from ``LocalizedModel`` and declare fields on your model as ``LocalizedField``:
+Declare fields on your model as ``LocalizedField``:
 
 .. code-block:: python
 
-     from localized_fields.models import LocalizedModel
      from localized_fields.fields import LocalizedField
 
 
-     class MyModel(LocalizedModel):
+     class MyModel(models.Model):
          title = LocalizedField()
 
 
@@ -139,6 +138,19 @@ You can also explicitly set a value in a certain language:
 
      new.title.ro = 'other romanian title'
 
+Or set a value for current active language:
+
+.. code-block:: python
+
+     translation.activate('nl')
+     new.title = 'other dutch title'
+
+     translation.activate('en')
+     new.title = 'other english title'
+
+     new.save()
+
+
 Constraints
 ^^^^^^^^^^^
 By default, the following constraints apply to a ``LocalizedField``:
@@ -160,11 +172,10 @@ Besides ``LocalizedField``, there's also:
 
           .. code-block:: python
 
-              from localized_fields.models import LocalizedModel
               from localized_fields.fields import (LocalizedField,
                                                    LocalizedAutoSlugField)
 
-              class MyModel(LocalizedModel):
+              class MyModel(models.Model):
                    title = LocalizedField()
                    slug = LocalizedAutoSlugField(populate_from='title')
 
@@ -176,10 +187,46 @@ Besides ``LocalizedField``, there's also:
 
            .. code-block:: python
 
-              from localized_fields.models import LocalizedModel
               from localized_fields.fields import (LocalizedField,
                                                    LocalizedBleachField)
 
-              class MyModel(LocalizedModel):
+              class MyModel(models.Model):
                    title = LocalizedField()
                    description = LocalizedBleachField()
+
+* ``LocalizedCharField`` and ``LocalizedTextField``
+     Instead of ``LocalizedField`` save empty strings as '', this is a 
+     `Django convention <https://docs.djangoproject.com/en/dev/ref/models/fields/#null>`_.
+    
+     ``LocalizedCharField`` uses ``form.TextInput`` widget. 
+
+     Example usage:
+
+           .. code-block:: python
+
+              from localized_fields.fields import (LocalizedCharField,
+                                                   LocalizedTextField)
+                                                   
+
+              class MyModel(models.Model):
+                   title = LocalizedCharField()
+                   content = LocalizedTextField()
+
+
+Django Admin Integration
+^^^^^^^^^^^^^^^^^^^^^^^^
+To enable widgets in the admin, you need to inherit from
+``LocalizedFieldsAdminMixin``:
+
+.. code-block:: python
+
+    from django.contrib import admin
+    from myapp.models import MyLocalizedModel
+    
+    from localized_fields.admin import LocalizedFieldsAdminMixin
+
+
+    class MyLocalizedModelAdmin(LocalizedFieldsAdminMixin, admin.ModelAdmin):
+        """Any admin options you need go here"""
+
+    admin.site.register(MyLocalizedModel, MyLocalizedModelAdmin)

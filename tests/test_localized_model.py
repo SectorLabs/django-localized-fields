@@ -1,12 +1,14 @@
 from django.test import TestCase
+from django.utils import translation
 
-from localized_fields import LocalizedValue
+from localized_fields.fields import LocalizedValue
 
 from .fake_model import get_fake_model
+from .test_localized_field import get_init_values
 
 
 class LocalizedModelTestCase(TestCase):
-    """Tests whether the :see:LocalizedModel class."""
+    """Tests whether the :see:LocalizedValueDescriptor class."""
 
     TestModel = None
 
@@ -28,6 +30,18 @@ class LocalizedModelTestCase(TestCase):
 
         assert isinstance(obj.title, LocalizedValue)
 
+    @classmethod
+    def test_set(cls):
+        """Tests whether the :see:LocalizedValueDescriptor
+        class's see:set function works properly."""
+
+        obj = cls.TestModel()
+
+        for language, value in get_init_values():
+            translation.activate(language)
+            obj.title = value
+            assert obj.title.get(language) == value
+            assert getattr(obj.title, language) == value
 
     @classmethod
     def test_model_init_kwargs(cls):
@@ -42,7 +56,6 @@ class LocalizedModelTestCase(TestCase):
             }
         }
         obj = cls.TestModel(**data)
-
         assert isinstance(obj.title, LocalizedValue)
         assert obj.title.en == 'english_title'
         assert obj.title.ro == 'romanian_title'

@@ -4,6 +4,7 @@ from django.utils import translation
 
 class LocalizedValue:
     """Represents the value of a :see:LocalizedField."""
+    default_value = None
 
     def __init__(self, keys: dict=None):
         """Initializes a new instance of :see:LocalizedValue.
@@ -15,12 +16,14 @@ class LocalizedValue:
                 different language.
         """
 
+        # NOTE(seroy): First fill all the keys default values,
+        # in order to attributes will be for each language
+        for lang_code, _ in settings.LANGUAGES:
+            value = keys.get(lang_code) if isinstance(keys, dict) else self.default_value
+            self.set(lang_code, value)
+
         if isinstance(keys, str):
             setattr(self, settings.LANGUAGE_CODE, keys)
-        else:
-            for lang_code, _ in settings.LANGUAGES:
-                value = keys.get(lang_code) if keys else None
-                setattr(self, lang_code, value)
 
     def get(self, language: str=None) -> str:
         """Gets the underlying value in the specified or
@@ -79,4 +82,10 @@ class LocalizedValue:
     def __repr__(self):  # pragma: no cover
         """Gets a textual representation of this object."""
 
-        return 'LocalizedValue<%s> 0x%s' % (self.__dict__, id(self))
+        return '%s<%s> 0x%s' % (self.__class__.__name__,
+                                self.__dict__, id(self))
+
+
+class LocalizedStingValue(LocalizedValue):
+    default_value = ''
+

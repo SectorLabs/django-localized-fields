@@ -1,9 +1,9 @@
 from django.contrib.postgres.operations import HStoreExtension
+from django.db import models
 from django.db import connection, migrations
 from django.db.migrations.executor import MigrationExecutor
 
-from localized_fields import (LocalizedAutoSlugField, LocalizedField,
-                              LocalizedModel)
+from localized_fields.fields import LocalizedAutoSlugField, LocalizedField
 
 MODEL = None
 
@@ -16,7 +16,7 @@ def get_fake_model():
     if MODEL:
         return MODEL
 
-    class TestModel(LocalizedModel):
+    class TestModel(models.Model):
         """Model used for testing the :see:LocalizedAutoSlugField."""
 
         app_label = 'localized_fields'

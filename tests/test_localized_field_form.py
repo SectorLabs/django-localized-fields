@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.test import TestCase
 
-from localized_fields import LocalizedFieldForm
+from localized_fields.forms import LocalizedFieldForm
 
 
 class LocalizedFieldFormTestCase(TestCase):
@@ -21,6 +21,11 @@ class LocalizedFieldFormTestCase(TestCase):
                 assert field.required
             else:
                 assert not field.required
+
+        form = LocalizedFieldForm(required=False)
+
+        for (lang_code, _), field in zip(settings.LANGUAGES, form.fields):
+            assert not field.required
 
     @staticmethod
     def test_compress():

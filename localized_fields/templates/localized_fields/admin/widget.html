@@ -1,0 +1,14 @@
+<div role="tabs" data-synctabs="translation">
+    <ul>
+        {% for key, lang in available_languages %}
+            <li>
+                <a href="#{{ id }}_{{ key }}">{{ lang|capfirst }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+    {% for key, widget in widgets %}
+        <div role="tabpanel" id="{{ id }}_{{ key }}">
+            {{ widget }}
+        </div>
+    {% endfor %}
+</div>

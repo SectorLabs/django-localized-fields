@@ -3,7 +3,8 @@ from django.db.utils import IntegrityError
 from django.test import TestCase
 from django.utils import translation
 
-from localized_fields import LocalizedField, LocalizedFieldForm, LocalizedValue
+from localized_fields.fields import LocalizedField, LocalizedValue
+from localized_fields.forms import LocalizedFieldForm
 
 
 def get_init_values() -> dict:
@@ -151,7 +152,7 @@ class LocalizedFieldTestCase(TestCase):
         produces the expected :see:LocalizedValue."""
 
         input_data = get_init_values()
-        localized_value = LocalizedField.from_db_value(input_data)
+        localized_value = LocalizedField().from_db_value(input_data)
 
         for lang_code, _ in settings.LANGUAGES:
             assert getattr(localized_value, lang_code) == input_data[lang_code]
@@ -161,7 +162,7 @@ class LocalizedFieldTestCase(TestCase):
         """Tests whether the :see:from_db_valuei function
         correctly handles None values."""
 
-        localized_value = LocalizedField.from_db_value(None)
+        localized_value = LocalizedField().from_db_value(None)
 
         for lang_code, _ in settings.LANGUAGES:
             assert localized_value.get(lang_code) is None
