@@ -8,3 +8,7 @@ __pycache__
 # Ignore coverage reports
 .coverage
 htmlcov
+
+# Ignore build results
+*.egg-info/
+dist/
