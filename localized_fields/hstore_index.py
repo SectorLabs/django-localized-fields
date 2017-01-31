@@ -1,3 +1,5 @@
+"""This module is unused, but should be contributed to Django."""
+
 from typing import List
 
 from django.db import models

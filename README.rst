@@ -24,7 +24,6 @@ In the pipeline
 We're working on making this easier to setup and use. Any feedback is apreciated. Here's a short list of things we're working to improve:
 
 * Make it unnecesarry to add anything to your `INSTALLED_APPS`.
-* Make it unnecesarry to modify your migrations manually to enable the PostgreSQL HStore extension.
 
 Installation
 ------------
@@ -44,6 +43,17 @@ Installation
             'django.contrib.postgres',
             'localized_fields'
         ]
+
+3. Set the database engine to ``localized_fields.db_backend``:
+
+    .. code-block:: python
+
+        DATABASES = {
+            'default': {
+                ...
+                'ENGINE': 'localized_fields.db_backend'
+            }
+        }
 
 3. Set ``LANGUAGES` and `LANGUAGE_CODE`` in your settings:
 
@@ -72,23 +82,6 @@ Inherit your model from ``LocalizedModel`` and declare fields on your model as `
      class MyModel(LocalizedModel):
          title = LocalizedField()
 
-
-Create your migrations using ``python manage.py makemigrations``. Open the generated migration in your favorite editor and setup the HStore extension before the first ``CreateModel`` or ``AddField`` operation by adding a migration with the `HStoreExtension` operation. For example:
-
-.. code-block:: python
-
-    from django.contrib.postgres.operations import HStoreExtension
-
-    class Migration(migrations.Migration):
-        ...
-
-        operations = [
-            HStoreExtension(),
-            ...
-        ]
-
-Then apply the migration using ``python manage.py migrate``.
-
 ``django-localized-fields`` integrates with Django's i18n system, in order for certain languages to be available you have to correctly configure the ``LANGUAGES`` and ``LANGUAGE_CODE`` settings:
 
 .. code-block:: python
@@ -99,6 +92,8 @@ Then apply the migration using ``python manage.py migrate``.
           ('nl', 'Dutch'),
           ('ro', 'Romanian')
      )
+
+All the ``LocalizedField`` you define now will be available in the configured languages.
 
 Basic usage
 ^^^^^^^^^^^
@@ -141,22 +136,70 @@ You can also explicitly set a value in a certain language:
 
 Constraints
 ^^^^^^^^^^^
-By default, the following constraints apply to a ``LocalizedField``:
 
-* Only the default language is ``required``. The other languages are optional and can be ``NULL``.
-* If ``null=True`` is specified on the ``LocalizedField``, then none of the languages are required.
+**Required/Optional**
 
-At the moment it is *not* possible to specifically instruct ``LocalizedField`` to mark certain languages as required or optional.
+At the moment, it is not possible to select two languages to be marked as required. The constraint is **not** enforced on a database level.
+
+* Make the primary language **required** and the others optional (this is the **default**):
+
+    .. code-block:: python
+
+        class MyModel(models.Model):
+            title = LocalizedField(required=True)
+
+* Make all languages optional:
+
+    .. code-block:: python
+
+        class MyModel(models.Model):
+            title = LocalizedField(null=True)
+
+**Uniqueness**
+
+By default the values stored in a ``LocalizedField`` are *not unique*. You can enforce uniqueness for certain languages. This uniqueness constraint is enforced on a database level using a ``UNIQUE INDEX``.
+
+* Enforce uniqueness for one or more languages:
+
+    .. code-block:: python
+
+        class MyModel(models.Model):
+            title = LocalizedField(uniqueness=['en', 'ro'])
+
+* Enforce uniqueness for **all** languages:
+
+    .. code-block:: python
+
+        from localized_fields import get_language_codes
+
+        class MyModel(models.Model):
+            title = LocalizedField(uniqueness=get_language_codes())
+
+* Enforce uniqueness for one ore more languages **together** (similar to Django's ``unique_together``):
+
+    .. code-block:: python
+
+        class MyModel(models.Model):
+            title = LocalizedField(uniqueness=[('en', 'ro')])
+
+* Enforce uniqueness for **all** languages **together**:
+
+    .. code-block:: python
+
+        from localized_fields import get_language_codes
+
+        class MyModel(models.Model):
+            title = LocalizedField(uniqueness=[(*get_language_codes())])
+
 
 Other fields
 ^^^^^^^^^^^^
 Besides ``LocalizedField``, there's also:
 
 * ``LocalizedAutoSlugField``
-     Automatically creates a slug for every language from the specified field. Depends upon:
-          * django-autoslug
+     Automatically creates a slug for every language from the specified field.
 
-     Currently only supports `populate_from`. Example usage:
+     Currently only supports ``populate_from``. Example usage:
 
           .. code-block:: python
 

@@ -14,10 +14,12 @@ class LocalizedField(HStoreField):
 
     Meta = None
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, uniqueness=None, **kwargs):
         """Initializes a new instance of :see:LocalizedValue."""
 
         super(LocalizedField, self).__init__(*args, **kwargs)
+
+        self.uniqueness = uniqueness
 
     @staticmethod
     def from_db_value(value, *_):
@@ -157,3 +159,14 @@ class LocalizedField(HStoreField):
 
         defaults.update(kwargs)
         return super().formfield(**defaults)
+
+    def deconstruct(self):
+        """Gets the values to pass to :see:__init__ when
+        re-creating this object."""
+
+        values = super(LocalizedField, self).deconstruct()
+        values[3].update({
+            'uniqueness': self.uniqueness
+        })
+
+        return values
