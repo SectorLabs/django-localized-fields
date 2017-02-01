@@ -9,9 +9,8 @@ from ..localized_value import LocalizedValue
 
 
 class LocalizedAutoSlugField(LocalizedField):
-    """Custom version of :see:AutoSlugField that
-    can operate on :see:LocalizedField and provides
-    unique slugs for every language."""
+    """Automatically provides slugs for a localized
+    field upon saving."""
 
     def __init__(self, *args, **kwargs):
         """Initializes a new instance of :see:LocalizedAutoSlugField."""
@@ -29,8 +28,8 @@ class LocalizedAutoSlugField(LocalizedField):
 
         name, path, args, kwargs = super(
             LocalizedAutoSlugField, self).deconstruct()
-        kwargs['populate_from'] = self.populate_from
 
+        kwargs['populate_from'] = self.populate_from
         return name, path, args, kwargs
 
     def formfield(self, **kwargs):

@@ -1,28 +1,23 @@
 from django.contrib.postgres.operations import HStoreExtension
 from django.db import connection, migrations
 from django.db.migrations.executor import MigrationExecutor
+import sys
 
 from localized_fields import (LocalizedAutoSlugField, LocalizedField,
-                              LocalizedModel)
-
-MODEL = None
+                              LocalizedModel, LocalizedMagicSlugField)
 
 
-def get_fake_model():
+def get_fake_model(name='TestModel', fields={}):
     """Creates a fake model to use during unit tests."""
 
-    global MODEL
+    attributes = {
+        'app_label': 'localized_fields',
+        '__module__': __name__,
+        '__name__': name
+    }
 
-    if MODEL:
-        return MODEL
-
-    class TestModel(LocalizedModel):
-        """Model used for testing the :see:LocalizedAutoSlugField."""
-
-        app_label = 'localized_fields'
-
-        title = LocalizedField()
-        slug = LocalizedAutoSlugField(populate_from='title')
+    attributes.update(fields)
+    TestModel = type(name, (LocalizedModel,), attributes)
 
     class TestProject:
 
@@ -43,5 +38,4 @@ def get_fake_model():
 
         schema_editor.create_model(TestModel)
 
-    MODEL = TestModel
-    return MODEL
+    return TestModel

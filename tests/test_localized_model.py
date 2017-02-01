@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from localized_fields import LocalizedValue
+from localized_fields import LocalizedField, LocalizedValue
 
 from .fake_model import get_fake_model
 
@@ -16,7 +16,12 @@ class LocalizedModelTestCase(TestCase):
 
         super(LocalizedModelTestCase, cls).setUpClass()
 
-        cls.TestModel = get_fake_model()
+        cls.TestModel = get_fake_model(
+            'LocalizedModelTestCase',
+            {
+                'title': LocalizedField()
+            }
+        )
 
     @classmethod
     def test_defaults(cls):
