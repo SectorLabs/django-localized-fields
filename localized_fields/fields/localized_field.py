@@ -2,8 +2,8 @@ from django.conf import settings
 from django.contrib.postgres.fields import HStoreField
 from django.db.utils import IntegrityError
 
-from ..forms import LocalizedFieldForm
-from .localized_value import LocalizedValue
+from localized_fields import LocalizedFieldForm
+from ..localized_value import LocalizedValue
 
 
 class LocalizedField(HStoreField):
@@ -164,9 +164,10 @@ class LocalizedField(HStoreField):
         """Gets the values to pass to :see:__init__ when
         re-creating this object."""
 
-        values = super(LocalizedField, self).deconstruct()
-        values[3].update({
-            'uniqueness': self.uniqueness
-        })
+        name, path, args, kwargs = super(
+            LocalizedField, self).deconstruct()
 
-        return values
+        if self.uniqueness:
+            kwargs['uniqueness'] = self.uniqueness
+
+        return name, path, args, kwargs

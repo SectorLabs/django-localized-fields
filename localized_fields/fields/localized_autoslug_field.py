@@ -5,7 +5,7 @@ from django.conf import settings
 from django.utils.text import slugify
 
 from .localized_field import LocalizedField
-from .localized_value import LocalizedValue
+from ..localized_value import LocalizedValue
 
 
 class LocalizedAutoSlugField(LocalizedField):
@@ -17,7 +17,11 @@ class LocalizedAutoSlugField(LocalizedField):
         """Initializes a new instance of :see:LocalizedAutoSlugField."""
 
         self.populate_from = kwargs.pop('populate_from', None)
-        super(LocalizedAutoSlugField, self).__init__(*args, **kwargs)
+
+        super(LocalizedAutoSlugField, self).__init__(
+            *args,
+            **kwargs
+        )
 
     def deconstruct(self):
         """Deconstructs the field into something the database

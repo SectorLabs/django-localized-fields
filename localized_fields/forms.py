@@ -4,7 +4,7 @@ from django import forms
 from django.conf import settings
 from django.forms import MultiWidget
 
-from .fields.localized_value import LocalizedValue
+from .localized_value import LocalizedValue
 
 
 class LocalizedFieldWidget(MultiWidget):

@@ -1,6 +1,7 @@
 from django.db import models
 
-from .fields import LocalizedField, LocalizedValue
+from .fields import LocalizedField
+from .localized_value import LocalizedValue
 
 
 class LocalizedModel(models.Model):
