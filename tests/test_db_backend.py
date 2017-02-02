@@ -1,6 +1,7 @@
 from unittest import mock
 
 from django.db import connection
+from django.apps import apps
 from django.conf import settings
 from django.test import TestCase
 from django.db.backends.base.schema import BaseDatabaseSchemaEditor
@@ -8,7 +9,6 @@ from django.db.backends.base.schema import BaseDatabaseSchemaEditor
 from localized_fields import LocalizedField, get_language_codes
 
 from .fake_model import define_fake_model
-from django.apps import apps
 
 
 class DBBackendTestCase(TestCase):

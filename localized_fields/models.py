@@ -1,5 +1,6 @@
 from django.db import models, transaction
 from django.db.utils import IntegrityError
+from django.conf import settings
 
 from .fields import LocalizedField
 from .localized_value import LocalizedValue
@@ -37,6 +38,12 @@ class LocalizedModel(models.Model):
     def save(self, *args, **kwargs):
         """Saves this model instance to the database."""
 
+        max_retries = getattr(
+            settings,
+            'LOCALIZED_FIELDS_MAX_RETRIES',
+            100
+        )
+
         if not hasattr(self, 'retries'):
             self.retries = 0
 
@@ -49,8 +56,8 @@ class LocalizedModel(models.Model):
                 # field class... we can also not only catch exceptions
                 # that apply to slug fields... so yea.. this is as
                 # retarded as it gets... i am sorry :(
-                if 'slug' not in str(ex):
-                    if self.retries >= 100:
+                if 'slug' in str(ex):
+                    if self.retries >= max_retries:
                         raise ex
 
         self.retries += 1

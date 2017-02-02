@@ -1,9 +1,11 @@
 from django import forms
 from django.conf import settings
 from django.test import TestCase
+from django.db.utils import IntegrityError
+from django.utils.text import slugify
+
 from localized_fields import (LocalizedField, LocalizedAutoSlugField,
                               LocalizedMagicSlugField)
-from django.utils.text import slugify
 
 from .fake_model import get_fake_model
 
@@ -60,6 +62,22 @@ class LocalizedSlugFieldTestCase(TestCase):
     def test_unique_slug_magic(cls):
         cls._test_unique_slug(cls.MagicSlugModel)
 
+    def test_unique_slug_magic_max_retries(self):
+        """Tests whether the magic slug implementation doesn't
+        try to find a slug forever and gives up after a while."""
+
+        title = 'mymagictitle'
+
+        obj = self.MagicSlugModel()
+        obj.title.en = title
+        obj.save()
+
+        with self.assertRaises(IntegrityError):
+            for _ in range(0, settings.LOCALIZED_FIELDS_MAX_RETRIES + 1):
+                another_obj = self.MagicSlugModel()
+                another_obj.title.en = title
+                another_obj.save()
+
     @classmethod
     def test_unique_slug_utf_auto(cls):
         cls._test_unique_slug_utf(cls.AutoSlugModel)
@@ -112,16 +130,18 @@ class LocalizedSlugFieldTestCase(TestCase):
     def _test_unique_slug(model):
         """Tests whether unique slugs are properly generated."""
 
+        title = 'mymagictitle'
+
         obj = model()
-        obj.title.en = 'title'
+        obj.title.en = title
         obj.save()
 
-        for i in range(1, 90):
+        for i in range(1, settings.LOCALIZED_FIELDS_MAX_RETRIES - 1):
             another_obj = model()
-            another_obj.title.en = 'title'
+            another_obj.title.en = title
             another_obj.save()
 
-            assert another_obj.slug.en == 'title-%d' % i
+            assert another_obj.slug.en == '%s-%d' % (title, i)
 
     @staticmethod
     def _test_unique_slug_utf(model):
