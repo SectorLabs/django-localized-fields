@@ -196,6 +196,20 @@ Other fields
 ^^^^^^^^^^^^
 Besides ``LocalizedField``, there's also:
 
+* ``LocalizedMagicSlugField``
+    Successor of ``LocalizedAutoSlugField`` that fixes concurrency issues and enforces
+    uniqueness of slugs on a database level. Usage is the exact same:
+
+          .. code-block:: python
+
+              from localized_fields.models import LocalizedModel
+              from localized_fields.fields import (LocalizedField,
+                                                   LocalizedMagicSlugField)
+
+              class MyModel(LocalizedModel):
+                   title = LocalizedField()
+                   slug = LocalizedMagicSlugField(populate_from='title')
+
 * ``LocalizedAutoSlugField``
      Automatically creates a slug for every language from the specified field.
 
@@ -210,6 +224,8 @@ Besides ``LocalizedField``, there's also:
               class MyModel(LocalizedModel):
                    title = LocalizedField()
                    slug = LocalizedAutoSlugField(populate_from='title')
+
+    **This implementation is NOT concurrency safe, prefer ``LocalizedMagicSlugField``**
 
 * ``LocalizedBleachField``
      Automatically bleaches the content of the field.
