@@ -225,7 +225,7 @@ Besides ``LocalizedField``, there's also:
                    title = LocalizedField()
                    slug = LocalizedAutoSlugField(populate_from='title')
 
-    **This implementation is NOT concurrency safe, prefer ``LocalizedMagicSlugField``**
+     This implementation is **NOT** concurrency safe, prefer ``LocalizedMagicSlugField``.
 
 * ``LocalizedBleachField``
      Automatically bleaches the content of the field.
