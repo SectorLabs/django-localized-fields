@@ -1,6 +1,5 @@
-from django.db import models
+from django.db import models, transaction
 from django.db.utils import IntegrityError
-from django.db import transaction
 
 from .fields import LocalizedField
 from .localized_value import LocalizedValue
@@ -41,7 +40,6 @@ class LocalizedModel(models.Model):
         if not hasattr(self, 'retries'):
             self.retries = 0
 
-        error = None
         with transaction.atomic():
             try:
                 return super(LocalizedModel, self).save(*args, **kwargs)
@@ -52,12 +50,8 @@ class LocalizedModel(models.Model):
                 # that apply to slug fields... so yea.. this is as
                 # retarded as it gets... i am sorry :(
                 if 'slug' not in str(ex):
-                    raise ex
-
-                error = ex
-
-        if self.retries >= 100:
-            raise error
+                    if self.retries >= 100:
+                        raise ex
 
         self.retries += 1
         return self.save()

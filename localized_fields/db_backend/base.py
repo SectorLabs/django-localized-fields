@@ -117,11 +117,8 @@ class SchemaEditor(_get_schema_editor_base()):
         )
         self.execute(sql)
 
-    def _update_hstore_constraints(self, model, old_field, new_field):
-        """Updates the UNIQUE constraints for the specified field."""
-
-        old_uniqueness = getattr(old_field, 'uniqueness', None)
-        new_uniqueness = getattr(new_field, 'uniqueness', None)
+    def _apply_hstore_constraints(self, method, model, field):
+        """Creates/drops UNIQUE constraints for a field."""
 
         def _compose_keys(constraint):
             if isinstance(constraint, str):
@@ -129,23 +126,38 @@ class SchemaEditor(_get_schema_editor_base()):
 
             return constraint
 
+        uniqueness = getattr(field, 'uniqueness', None)
+        if not uniqueness:
+            return
+
+        for keys in uniqueness:
+            method(
+                model,
+                field,
+                _compose_keys(keys)
+            )
+
+    def _update_hstore_constraints(self, model, old_field, new_field):
+        """Updates the UNIQUE constraints for the specified field."""
+
+        old_uniqueness = getattr(old_field, 'uniqueness', None)
+        new_uniqueness = getattr(new_field, 'uniqueness', None)
+
         # drop any old uniqueness constraints
         if old_uniqueness:
-            for keys in old_uniqueness:
-                self._drop_hstore_unique(
-                    model,
-                    old_field,
-                    _compose_keys(keys)
-                )
+            self._apply_hstore_constraints(
+                self._drop_hstore_unique,
+                model,
+                old_field
+            )
 
         # (re-)create uniqueness constraints
         if new_uniqueness:
-            for keys in new_uniqueness:
-                self._create_hstore_unique(
-                    model,
-                    old_field,
-                    _compose_keys(keys)
-                )
+            self._apply_hstore_constraints(
+                self._create_hstore_unique,
+                model,
+                new_field
+            )
 
     def _alter_field(self, model, old_field, new_field, *args, **kwargs):
         """Ran when the configuration on a field changed."""
@@ -170,7 +182,26 @@ class SchemaEditor(_get_schema_editor_base()):
             if not isinstance(field, LocalizedField):
                 continue
 
-            self._update_hstore_constraints(model, field, field)
+            self._apply_hstore_constraints(
+                self._create_hstore_unique,
+                model,
+                field
+            )
+
+    def delete_model(self, model):
+        """Ran when a model is being deleted."""
+
+        super().delete_model(model)
+
+        for field in model._meta.local_fields:
+            if not isinstance(field, LocalizedField):
+                continue
+
+            self._apply_hstore_constraints(
+                self._drop_hstore_unique,
+                model,
+                field
+            )
 
 
 class DatabaseWrapper(_get_backend_base()):
