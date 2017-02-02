@@ -1,9 +1,9 @@
 from django.conf import settings
-from django.db.utils import IntegrityError
 from django.test import TestCase
 from django.utils import translation
+from django.db.utils import IntegrityError
 
-from localized_fields import LocalizedField, LocalizedFieldForm, LocalizedValue
+from localized_fields import LocalizedField, LocalizedValue, LocalizedFieldForm
 
 
 def get_init_values() -> dict:
@@ -140,6 +140,14 @@ class LocalizedValueTestCase(TestCase):
         path, args, kwargs = value.deconstruct()
 
         assert args[0] == keys
+
+    @staticmethod
+    def test_construct_string():
+        """Tests whether the :see:LocalizedValue's constructor
+        assumes the primary language when passing a single string."""
+
+        value = LocalizedValue('beer')
+        assert value.get(settings.LANGUAGE_CODE) == 'beer'
 
 
 class LocalizedFieldTestCase(TestCase):
