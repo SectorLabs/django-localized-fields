@@ -12,3 +12,6 @@ htmlcov
 # Ignore build results
 *.egg-info/
 dist/
+
+# Ignore stupid .DS_Store
+.DS_Store
