@@ -56,9 +56,11 @@ class LocalizedModel(models.Model):
                 # field class... we can also not only catch exceptions
                 # that apply to slug fields... so yea.. this is as
                 # retarded as it gets... i am sorry :(
-                if 'slug' in str(ex):
-                    if self.retries >= max_retries:
-                        raise ex
+                if 'slug' not in str(ex):
+                    raise ex
+
+                if self.retries >= max_retries:
+                    raise ex
 
         self.retries += 1
         return self.save()
