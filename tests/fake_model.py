@@ -1,10 +1,7 @@
-from django.contrib.postgres.operations import HStoreExtension
 from django.db import connection, migrations
+from localized_fields import LocalizedModel
 from django.db.migrations.executor import MigrationExecutor
-import sys
-
-from localized_fields import (LocalizedAutoSlugField, LocalizedField,
-                              LocalizedModel, LocalizedMagicSlugField)
+from django.contrib.postgres.operations import HStoreExtension
 
 
 def get_fake_model(name='TestModel', fields={}):

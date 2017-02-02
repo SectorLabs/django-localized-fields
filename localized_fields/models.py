@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.utils import IntegrityError
+from django.db import transaction
 
 from .fields import LocalizedField
 from .localized_value import LocalizedValue
@@ -32,3 +34,30 @@ class LocalizedModel(models.Model):
                     value = LocalizedValue()
 
             setattr(self, field.name, value)
+
+    def save(self, *args, **kwargs):
+        """Saves this model instance to the database."""
+
+        if not hasattr(self, 'retries'):
+            self.retries = 0
+
+        error = None
+        with transaction.atomic():
+            try:
+                return super(LocalizedModel, self).save(*args, **kwargs)
+            except IntegrityError as ex:
+                # this is as retarded as it looks, there's no
+                # way we can put the retry logic inside the slug
+                # field class... we can also not only catch exceptions
+                # that apply to slug fields... so yea.. this is as
+                # retarded as it gets... i am sorry :(
+                if 'slug' not in str(ex):
+                    raise ex
+
+                error = ex
+
+        if self.retries >= 100:
+            raise error
+
+        self.retries += 1
+        return self.save()

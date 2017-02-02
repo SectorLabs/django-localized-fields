@@ -5,6 +5,8 @@ from django.core.exceptions import ImproperlyConfigured
 from django.db.backends.postgresql.base import \
     DatabaseWrapper as Psycopg2DatabaseWrapper
 
+from ..fields import LocalizedField
+
 
 def _get_backend_base():
     """Gets the base class for the custom database back-end.
@@ -153,7 +155,22 @@ class SchemaEditor(_get_schema_editor_base()):
             *args, **kwargs
         )
 
-        self._update_hstore_constraints(model, old_field, new_field)
+        is_old_field_localized = isinstance(old_field, LocalizedField)
+        is_new_field_localized = isinstance(new_field, LocalizedField)
+
+        if is_old_field_localized or is_new_field_localized:
+            self._update_hstore_constraints(model, old_field, new_field)
+
+    def create_model(self, model):
+        """Ran when a new model is created."""
+
+        super().create_model(model)
+
+        for field in model._meta.local_fields:
+            if not isinstance(field, LocalizedField):
+                continue
+
+            self._update_hstore_constraints(model, field, field)
 
 
 class DatabaseWrapper(_get_backend_base()):

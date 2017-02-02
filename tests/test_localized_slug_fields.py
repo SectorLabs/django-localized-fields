@@ -1,9 +1,9 @@
 from django import forms
 from django.conf import settings
 from django.test import TestCase
+from localized_fields import (LocalizedField, LocalizedAutoSlugField,
+                              LocalizedMagicSlugField)
 from django.utils.text import slugify
-
-from localized_fields import LocalizedField, LocalizedAutoSlugField, LocalizedMagicSlugField
 
 from .fake_model import get_fake_model
 
@@ -71,7 +71,6 @@ class LocalizedSlugFieldTestCase(TestCase):
     @classmethod
     def test_deconstruct_auto(cls):
         cls._test_deconstruct(LocalizedAutoSlugField)
-        cls._test_deconstruct(LocalizedMagicSlugField)
 
     @classmethod
     def test_deconstruct_magic(cls):
@@ -93,7 +92,7 @@ class LocalizedSlugFieldTestCase(TestCase):
         obj.title.en = 'this is my title'
         obj.save()
 
-        assert obj.slug.get('en') == slugify(obj.title.en)
+        assert obj.slug.get('en') == slugify(obj.title)
 
     @staticmethod
     def _test_populate_multiple_languages(model):
@@ -117,11 +116,12 @@ class LocalizedSlugFieldTestCase(TestCase):
         obj.title.en = 'title'
         obj.save()
 
-        another_obj = model()
-        another_obj.title.en = 'title'
-        another_obj.save()
+        for i in range(1, 90):
+            another_obj = model()
+            another_obj.title.en = 'title'
+            another_obj.save()
 
-        assert another_obj.slug.en == 'title-1'
+            assert another_obj.slug.en == 'title-%d' % i
 
     @staticmethod
     def _test_unique_slug_utf(model):

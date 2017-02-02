@@ -59,6 +59,9 @@ class LocalizedMagicSlugField(LocalizedAutoSlugField):
                 continue
 
             slug = slugify(value, allow_unicode=True)
+            if instance.retries > 0:
+                slug += '-%d' % instance.retries
+
             slugs.set(lang_code, slug)
 
         setattr(instance, self.name, slugs)
