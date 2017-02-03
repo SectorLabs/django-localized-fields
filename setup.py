@@ -7,7 +7,7 @@ with open(os.path.join(os.path.dirname(__file__), 'README.rst')) as readme:
 
 setup(
     name='django-localized-fields',
-    version='2.5',
+    version='2.6',
     packages=find_packages(),
     include_package_data=True,
     license='MIT License',
