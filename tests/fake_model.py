@@ -2,7 +2,7 @@ from django.db import connection, migrations
 from django.db.migrations.executor import MigrationExecutor
 from django.contrib.postgres.operations import HStoreExtension
 
-from localized_fields import LocalizedModel
+from localized_fields import LocalizedModel, AtomicSlugRetryMixin
 
 
 def define_fake_model(name='TestModel', fields=None):
@@ -14,7 +14,7 @@ def define_fake_model(name='TestModel', fields=None):
 
     if fields:
         attributes.update(fields)
-    model = type(name, (LocalizedModel,), attributes)
+    model = type(name, (AtomicSlugRetryMixin,LocalizedModel,), attributes)
 
     return model
 

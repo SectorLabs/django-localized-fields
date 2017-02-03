@@ -2,8 +2,9 @@ from .util import get_language_codes
 from .forms import LocalizedFieldForm, LocalizedFieldWidget
 from .fields import (LocalizedField, LocalizedBleachField,
                      LocalizedAutoSlugField, LocalizedUniqueSlugField)
-from .localized_value import LocalizedValue
+from .mixins import AtomicSlugRetryMixin
 from .models import LocalizedModel
+from .localized_value import LocalizedValue
 
 __all__ = [
     'get_language_codes',
@@ -14,5 +15,6 @@ __all__ = [
     'LocalizedBleachField',
     'LocalizedFieldWidget',
     'LocalizedFieldForm',
-    'LocalizedModel'
+    'LocalizedModel',
+    'AtomicSlugRetryMixin'
 ]

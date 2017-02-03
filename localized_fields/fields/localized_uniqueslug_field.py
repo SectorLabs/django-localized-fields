@@ -1,9 +1,11 @@
 from django.conf import settings
 from django.utils.text import slugify
+from django.core.exceptions import ImproperlyConfigured
 
+from ..util import get_language_codes
+from ..mixins import AtomicSlugRetryMixin
 from ..localized_value import LocalizedValue
 from .localized_autoslug_field import LocalizedAutoSlugField
-from ..util import get_language_codes
 
 
 class LocalizedUniqueSlugField(LocalizedAutoSlugField):
@@ -17,6 +19,8 @@ class LocalizedUniqueSlugField(LocalizedAutoSlugField):
         - Improved performance
 
     When in doubt, use this over :see:LocalizedAutoSlugField.
+    Inherit from :see:AtomicSlugRetryMixin in your model to
+    make this field work properly.
     """
 
     def __init__(self, *args, **kwargs):
@@ -45,6 +49,12 @@ class LocalizedUniqueSlugField(LocalizedAutoSlugField):
         Returns:
             The localized slug that was generated.
         """
+
+        if not isinstance(instance, AtomicSlugRetryMixin):
+            raise ImproperlyConfigured((
+                'Model \'%s\' does not inherit from AtomicSlugRetryMixin. '
+                'Without this, the LocalizedUniqueSlugField will not work.'
+            ) % type(instance).__name__)
 
         slugs = LocalizedValue()
 

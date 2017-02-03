@@ -34,14 +34,14 @@ def _get_backend_base():
             '\'%s\' is not a valid database back-end.'
             ' The module does not define a DatabaseWrapper class.'
             ' Check the value of LOCALIZED_FIELDS_DB_BACKEND_BASE.'
-        ))
+        ) % base_class_name)
 
     if isinstance(base_class, Psycopg2DatabaseWrapper):
         raise ImproperlyConfigured((
             '\'%s\' is not a valid database back-end.'
             ' It does inherit from the PostgreSQL back-end.'
             ' Check the value of LOCALIZED_FIELDS_DB_BACKEND_BASE.'
-        ))
+        ) % base_class_name)
 
     return base_class
 
