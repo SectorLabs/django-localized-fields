@@ -146,14 +146,14 @@ At the moment, it is not possible to select two languages to be marked as requir
 
     .. code-block:: python
 
-        class MyModel(models.Model):
+        class MyModel(LocalizedModel):
             title = LocalizedField(required=True)
 
 * Make all languages optional:
 
     .. code-block:: python
 
-        class MyModel(models.Model):
+        class MyModel(LocalizedModel):
             title = LocalizedField(null=True)
 
 **Uniqueness**
@@ -164,7 +164,7 @@ By default the values stored in a ``LocalizedField`` are *not unique*. You can e
 
     .. code-block:: python
 
-        class MyModel(models.Model):
+        class MyModel(LocalizedModel):
             title = LocalizedField(uniqueness=['en', 'ro'])
 
 * Enforce uniqueness for **all** languages:
@@ -173,14 +173,14 @@ By default the values stored in a ``LocalizedField`` are *not unique*. You can e
 
         from localized_fields import get_language_codes
 
-        class MyModel(models.Model):
+        class MyModel(LocalizedModel):
             title = LocalizedField(uniqueness=get_language_codes())
 
 * Enforce uniqueness for one ore more languages **together** (similar to Django's ``unique_together``):
 
     .. code-block:: python
 
-        class MyModel(models.Model):
+        class MyModel(LocalizedModel):
             title = LocalizedField(uniqueness=[('en', 'ro')])
 
 * Enforce uniqueness for **all** languages **together**:
@@ -189,7 +189,7 @@ By default the values stored in a ``LocalizedField`` are *not unique*. You can e
 
         from localized_fields import get_language_codes
 
-        class MyModel(models.Model):
+        class MyModel(LocalizedModel):
             title = LocalizedField(uniqueness=[(*get_language_codes())])
 
 
@@ -203,11 +203,12 @@ Besides ``LocalizedField``, there's also:
 
           .. code-block:: python
 
-              from localized_fields.models import LocalizedModel
-              from localized_fields.fields import (LocalizedField,
-                                                   LocalizedUniqueSlugField)
+              from localized_fields import (LocalizedModel,
+                                            AtomicSlugRetryMixin,
+                                            LocalizedField,
+                                            LocalizedUniqueSlugField)
 
-              class MyModel(LocalizedModel):
+              class MyModel(AtomicSlugRetryMixin, LocalizedModel):
                    title = LocalizedField()
                    slug = LocalizedUniqueSlugField(populate_from='title')
 
@@ -218,9 +219,9 @@ Besides ``LocalizedField``, there's also:
 
           .. code-block:: python
 
-              from localized_fields.models import LocalizedModel
-              from localized_fields.fields import (LocalizedField,
-                                                   LocalizedAutoSlugField)
+              from localized_fields import (LocalizedModel,
+                                            LocalizedField,
+                                            LocalizedUniqueSlugField)
 
               class MyModel(LocalizedModel):
                    title = LocalizedField()
@@ -236,9 +237,9 @@ Besides ``LocalizedField``, there's also:
 
            .. code-block:: python
 
-              from localized_fields.models import LocalizedModel
-              from localized_fields.fields import (LocalizedField,
-                                                   LocalizedBleachField)
+              from localized_fields import (LocalizedModel,
+                                            LocalizedField,
+                                            LocalizedBleachField)
 
               class MyModel(LocalizedModel):
                    title = LocalizedField()
