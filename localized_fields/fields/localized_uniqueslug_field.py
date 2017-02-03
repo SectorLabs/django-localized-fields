@@ -26,7 +26,6 @@ class LocalizedUniqueSlugField(LocalizedAutoSlugField):
     def __init__(self, *args, **kwargs):
         """Initializes a new instance of :see:LocalizedUniqueSlugField."""
 
-        self.populate_from = kwargs.pop('populate_from')
         kwargs['uniqueness'] = kwargs.pop('uniqueness', get_language_codes())
 
         super(LocalizedUniqueSlugField, self).__init__(
@@ -34,7 +33,9 @@ class LocalizedUniqueSlugField(LocalizedAutoSlugField):
             **kwargs
         )
 
-    def pre_save(self, instance, _add: bool):
+        self.populate_from = kwargs.pop('populate_from')
+
+    def pre_save(self, instance, add: bool):
         """Ran just before the model is saved, allows us to built
         the slug.
 
