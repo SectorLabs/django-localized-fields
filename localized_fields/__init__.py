@@ -1,7 +1,7 @@
 from .util import get_language_codes
 from .forms import LocalizedFieldForm, LocalizedFieldWidget
 from .fields import (LocalizedField, LocalizedBleachField,
-                     LocalizedAutoSlugField, LocalizedMagicSlugField)
+                     LocalizedAutoSlugField, LocalizedUniqueSlugField)
 from .localized_value import LocalizedValue
 from .models import LocalizedModel
 
@@ -10,7 +10,7 @@ __all__ = [
     'LocalizedField',
     'LocalizedValue',
     'LocalizedAutoSlugField',
-    'LocalizedMagicSlugField',
+    'LocalizedUniqueSlugField',
     'LocalizedBleachField',
     'LocalizedFieldWidget',
     'LocalizedFieldForm',

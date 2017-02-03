@@ -6,7 +6,7 @@ from .localized_autoslug_field import LocalizedAutoSlugField
 from ..util import get_language_codes
 
 
-class LocalizedMagicSlugField(LocalizedAutoSlugField):
+class LocalizedUniqueSlugField(LocalizedAutoSlugField):
     """Automatically provides slugs for a localized
     field upon saving."
 
@@ -20,7 +20,7 @@ class LocalizedMagicSlugField(LocalizedAutoSlugField):
     """
 
     def __init__(self, *args, **kwargs):
-        """Initializes a new instance of :see:LocalizedMagicSlugField."""
+        """Initializes a new instance of :see:LocalizedUniqueSlugField."""
 
         self.populate_from = kwargs.pop('populate_from')
         kwargs['uniqueness'] = kwargs.pop('uniqueness', get_language_codes())

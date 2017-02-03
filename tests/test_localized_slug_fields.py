@@ -5,7 +5,7 @@ from django.db.utils import IntegrityError
 from django.utils.text import slugify
 
 from localized_fields import (LocalizedField, LocalizedAutoSlugField,
-                              LocalizedMagicSlugField)
+                              LocalizedUniqueSlugField)
 
 from .fake_model import get_fake_model
 
@@ -31,10 +31,10 @@ class LocalizedSlugFieldTestCase(TestCase):
         )
 
         cls.MagicSlugModel = get_fake_model(
-            'LocalizedMagicSlugFieldTestModel',
+            'LocalizedUniqueSlugFieldTestModel',
             {
                 'title': LocalizedField(),
-                'slug': LocalizedMagicSlugField(populate_from='title')
+                'slug': LocalizedUniqueSlugField(populate_from='title')
             }
         )
 
@@ -92,7 +92,7 @@ class LocalizedSlugFieldTestCase(TestCase):
 
     @classmethod
     def test_deconstruct_magic(cls):
-        cls._test_deconstruct(LocalizedMagicSlugField)
+        cls._test_deconstruct(LocalizedUniqueSlugField)
 
     @classmethod
     def test_formfield_auto(cls):
@@ -100,7 +100,7 @@ class LocalizedSlugFieldTestCase(TestCase):
 
     @classmethod
     def test_formfield_magic(cls):
-        cls._test_formfield(LocalizedMagicSlugField)
+        cls._test_formfield(LocalizedUniqueSlugField)
 
     @staticmethod
     def _test_populate(model):
