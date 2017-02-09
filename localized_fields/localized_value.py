@@ -76,6 +76,21 @@ class LocalizedValue:
 
         return value or ''
 
+    def __eq__(self, other):
+        """Compares :paramref:self to :paramref:other for
+        equality.
+
+        Returns:
+            True when :paramref:self is equal to :paramref:other.
+            And False when they are not.
+        """
+
+        for lang_code, _ in settings.LANGUAGES:
+            if self.get(lang_code) != other.get(lang_code):
+                return False
+
+        return True
+
     def __repr__(self):  # pragma: no cover
         """Gets a textual representation of this object."""
 

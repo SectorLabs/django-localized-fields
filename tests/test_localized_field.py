@@ -101,6 +101,19 @@ class LocalizedValueTestCase(TestCase):
             assert str(localized_value) == value
 
     @staticmethod
+    def test_eq():
+        """Tests whether the __eq__ operator
+        of :see:LocalizedValue works properly."""
+
+        a = LocalizedValue({'en': 'a', 'ar': 'b'})
+        b = LocalizedValue({'en': 'a', 'ar': 'b'})
+
+        assert a == b
+
+        b.en = 'b'
+        assert a != b
+
+    @staticmethod
     def test_str_fallback():
         """Tests whether the :see:LocalizedValue
         class's __str__'s fallback functionality
