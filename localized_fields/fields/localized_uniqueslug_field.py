@@ -30,13 +30,14 @@ class LocalizedUniqueSlugField(LocalizedAutoSlugField):
 
         kwargs['uniqueness'] = kwargs.pop('uniqueness', get_language_codes())
 
+        self.include_time = kwargs.pop('include_time', False)
+
         super(LocalizedUniqueSlugField, self).__init__(
             *args,
             **kwargs
         )
 
         self.populate_from = kwargs.pop('populate_from')
-        self.use_time = kwargs.pop('include_time', False)
 
     def deconstruct(self):
         """Deconstructs the field into something the database
