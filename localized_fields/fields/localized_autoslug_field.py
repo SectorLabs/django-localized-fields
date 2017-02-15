@@ -1,4 +1,5 @@
 from typing import Callable
+from datetime import datetime
 
 from django import forms
 from django.conf import settings
@@ -16,6 +17,7 @@ class LocalizedAutoSlugField(LocalizedField):
         """Initializes a new instance of :see:LocalizedAutoSlugField."""
 
         self.populate_from = kwargs.pop('populate_from', None)
+        self.include_time = kwargs.pop('include_time', False)
 
         super(LocalizedAutoSlugField, self).__init__(
             *args,
@@ -30,6 +32,7 @@ class LocalizedAutoSlugField(LocalizedField):
             LocalizedAutoSlugField, self).deconstruct()
 
         kwargs['populate_from'] = self.populate_from
+        kwargs['include_time'] = self.include_time
         return name, path, args, kwargs
 
     def formfield(self, **kwargs):
@@ -75,6 +78,9 @@ class LocalizedAutoSlugField(LocalizedField):
 
             if not value:
                 continue
+
+            if self.include_time:
+                value += '-%s' % datetime.now().microsecond
 
             def is_unique(slug: str, language: str) -> bool:
                 """Gets whether the specified slug is unique."""

@@ -7,6 +7,8 @@ from ..mixins import AtomicSlugRetryMixin
 from ..localized_value import LocalizedValue
 from .localized_autoslug_field import LocalizedAutoSlugField
 
+from datetime import datetime
+
 
 class LocalizedUniqueSlugField(LocalizedAutoSlugField):
     """Automatically provides slugs for a localized
@@ -34,6 +36,18 @@ class LocalizedUniqueSlugField(LocalizedAutoSlugField):
         )
 
         self.populate_from = kwargs.pop('populate_from')
+        self.use_time = kwargs.pop('include_time', False)
+
+    def deconstruct(self):
+        """Deconstructs the field into something the database
+        can store."""
+
+        name, path, args, kwargs = super(
+            LocalizedUniqueSlugField, self).deconstruct()
+
+        kwargs['populate_from'] = self.populate_from
+        kwargs['include_time'] = self.include_time
+        return name, path, args, kwargs
 
     def pre_save(self, instance, add: bool):
         """Ran just before the model is saved, allows us to built
@@ -70,6 +84,9 @@ class LocalizedUniqueSlugField(LocalizedAutoSlugField):
                 continue
 
             slug = slugify(value, allow_unicode=True)
+            if self.include_time:
+                slug += '-%d' % datetime.now().microsecond
+
             if instance.retries > 0:
                 slug += '-%d' % instance.retries
 

@@ -212,6 +212,15 @@ Besides ``LocalizedField``, there's also:
                    title = LocalizedField()
                    slug = LocalizedUniqueSlugField(populate_from='title')
 
+    By setting the option ``include_time=True``
+
+          .. code-block:: python
+
+               slug = LocalizedUniqueSlugField(populate_from='title', include_time=True)
+
+    You can instruct the field to include a part of the current time into
+    the resulting slug. This is useful if you're running into a lot of collisions.
+
 * ``LocalizedAutoSlugField``
      Automatically creates a slug for every language from the specified field.
 

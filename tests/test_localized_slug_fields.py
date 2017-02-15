@@ -43,7 +43,7 @@ class LocalizedSlugFieldTestCase(TestCase):
         cls._test_populate(cls.AutoSlugModel)
 
     @classmethod
-    def test_populate_magic(cls):
+    def test_populate_unique(cls):
         cls._test_populate(cls.MagicSlugModel)
 
     @classmethod
@@ -51,7 +51,7 @@ class LocalizedSlugFieldTestCase(TestCase):
         cls._test_populate_multiple_languages(cls.AutoSlugModel)
 
     @classmethod
-    def test_populate_multiple_languages_magic(cls):
+    def test_populate_multiple_languages_unique(cls):
         cls._test_populate_multiple_languages(cls.MagicSlugModel)
 
     @classmethod
@@ -59,14 +59,35 @@ class LocalizedSlugFieldTestCase(TestCase):
         cls._test_unique_slug(cls.AutoSlugModel)
 
     @classmethod
-    def test_unique_slug_magic(cls):
+    def test_unique_slug_unique(cls):
         cls._test_unique_slug(cls.MagicSlugModel)
 
-    def test_unique_slug_magic_max_retries(self):
-        """Tests whether the magic slug implementation doesn't
+    @staticmethod
+    def test_unique_slug_with_time():
+        """Tests whether the primary key is included in
+        the slug when the 'use_pk' option is enabled."""
+
+        title = 'myuniquetitle'
+
+        PkModel = get_fake_model(
+            'PkModel',
+            {
+                'title': LocalizedField(),
+                'slug': LocalizedUniqueSlugField(populate_from='title', include_time=True)
+            }
+        )
+
+        obj = PkModel()
+        obj.title.en = title
+        obj.save()
+
+        assert obj.slug.en.startswith('%s-' % title)
+
+    def test_unique_slug_unique_max_retries(self):
+        """Tests whether the unique slug implementation doesn't
         try to find a slug forever and gives up after a while."""
 
-        title = 'mymagictitle'
+        title = 'myuniquetitle'
 
         obj = self.MagicSlugModel()
         obj.title.en = title
@@ -83,7 +104,7 @@ class LocalizedSlugFieldTestCase(TestCase):
         cls._test_unique_slug_utf(cls.AutoSlugModel)
 
     @classmethod
-    def test_unique_slug_utf_magic(cls):
+    def test_unique_slug_utf_unique(cls):
         cls._test_unique_slug_utf(cls.MagicSlugModel)
 
     @classmethod
@@ -91,7 +112,7 @@ class LocalizedSlugFieldTestCase(TestCase):
         cls._test_deconstruct(LocalizedAutoSlugField)
 
     @classmethod
-    def test_deconstruct_magic(cls):
+    def test_deconstruct_unique(cls):
         cls._test_deconstruct(LocalizedUniqueSlugField)
 
     @classmethod
@@ -99,7 +120,7 @@ class LocalizedSlugFieldTestCase(TestCase):
         cls._test_formfield(LocalizedAutoSlugField)
 
     @classmethod
-    def test_formfield_magic(cls):
+    def test_formfield_unique(cls):
         cls._test_formfield(LocalizedUniqueSlugField)
 
     @staticmethod
@@ -130,7 +151,7 @@ class LocalizedSlugFieldTestCase(TestCase):
     def _test_unique_slug(model):
         """Tests whether unique slugs are properly generated."""
 
-        title = 'mymagictitle'
+        title = 'myuniquetitle'
 
         obj = model()
         obj.title.en = title
