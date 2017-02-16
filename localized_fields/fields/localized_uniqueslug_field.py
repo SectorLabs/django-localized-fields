@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.conf import settings
 from django.utils.text import slugify
 from django.core.exceptions import ImproperlyConfigured
@@ -6,8 +8,6 @@ from ..util import get_language_codes
 from ..mixins import AtomicSlugRetryMixin
 from ..localized_value import LocalizedValue
 from .localized_autoslug_field import LocalizedAutoSlugField
-
-from datetime import datetime
 
 
 class LocalizedUniqueSlugField(LocalizedAutoSlugField):
@@ -47,8 +47,6 @@ class LocalizedUniqueSlugField(LocalizedAutoSlugField):
 
         kwargs['populate_from'] = self.populate_from
         kwargs['include_time'] = self.include_time
-        # if not kwargs['include_time']:
-        #     raise RuntimeError()
         return name, path, args, kwargs
 
     def pre_save(self, instance, add: bool):
@@ -86,11 +84,25 @@ class LocalizedUniqueSlugField(LocalizedAutoSlugField):
                 continue
 
             slug = slugify(value, allow_unicode=True)
+
+            # verify whether it's needed to re-generate a slug,
+            # if not, re-use the same slug
+            if instance.pk is not None:
+                current_slug = getattr(instance, self.name).get(lang_code)
+                if current_slug is not None:
+                    stripped_slug = current_slug[0:current_slug.rfind('-')]
+                    if slug == stripped_slug:
+                        slugs.set(lang_code, current_slug)
+                        continue
+
             if self.include_time:
                 slug += '-%d' % datetime.now().microsecond
 
             if instance.retries > 0:
-                slug += '-%d' % instance.retries
+                # do not add another - if we already added time
+                if not self.include_time:
+                    slug += '-'
+                slug += '%d' % instance.retries
 
             slugs.set(lang_code, slug)
 

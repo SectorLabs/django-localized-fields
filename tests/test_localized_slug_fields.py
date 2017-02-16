@@ -1,11 +1,12 @@
+import copy
+
 from django import forms
 from django.conf import settings
 from django.test import TestCase
 from django.db.utils import IntegrityError
-from django.utils.text import slugify
-
 from localized_fields import (LocalizedField, LocalizedAutoSlugField,
                               LocalizedUniqueSlugField)
+from django.utils.text import slugify
 
 from .fake_model import get_fake_model
 
@@ -82,6 +83,33 @@ class LocalizedSlugFieldTestCase(TestCase):
         obj.save()
 
         assert obj.slug.en.startswith('%s-' % title)
+
+    @classmethod
+    def test_uniue_slug_no_change(cls):
+        """Tests whether slugs are not re-generated if not needed."""
+
+        NoChangeSlugModel = get_fake_model(
+            'NoChangeSlugModel',
+            {
+                'title': LocalizedField(),
+                'slug': LocalizedUniqueSlugField(populate_from='title', include_time=True)
+            }
+        )
+
+        title = 'myuniquetitle'
+
+        obj = NoChangeSlugModel()
+        obj.title.en = title
+        obj.title.nl = title
+        obj.save()
+
+        old_slug_en = copy.deepcopy(obj.slug.en)
+        old_slug_nl = copy.deepcopy(obj.slug.nl)
+        obj.title.nl += 'beer'
+        obj.save()
+
+        assert old_slug_en == obj.slug.en
+        assert old_slug_nl != obj.slug.nl
 
     def test_unique_slug_unique_max_retries(self):
         """Tests whether the unique slug implementation doesn't
