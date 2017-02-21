@@ -1,8 +1,8 @@
 from django.conf import settings
-from django.contrib.postgres.fields import HStoreField
 from django.db.utils import IntegrityError
-
 from localized_fields import LocalizedFieldForm
+from psqlextra.fields import HStoreField
+
 from ..localized_value import LocalizedValue
 
 
@@ -14,12 +14,11 @@ class LocalizedField(HStoreField):
 
     Meta = None
 
-    def __init__(self, *args, uniqueness=None, **kwargs):
-        """Initializes a new instance of :see:LocalizedValue."""
+    def __init__(self, *args, **kwargs):
+        """Initializes a new instance of :see:LocalizedField."""
 
-        super(LocalizedField, self).__init__(*args, **kwargs)
-
-        self.uniqueness = uniqueness
+        super(LocalizedField, self).__init__(
+            *args, required=[settings.LANGUAGE_CODE], **kwargs)
 
     @staticmethod
     def from_db_value(value, *_):

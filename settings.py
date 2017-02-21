@@ -11,7 +11,7 @@ DATABASES = {
     'default': dj_database_url.config(default='postgres:///localized_fields')
 }
 
-DATABASES['default']['ENGINE'] = 'localized_fields.db_backend'
+DATABASES['default']['ENGINE'] = 'psqlextra.backend'
 
 LANGUAGE_CODE = 'en'
 LANGUAGES = (
