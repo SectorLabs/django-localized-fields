@@ -7,24 +7,14 @@ django-localized-fields
 .. image:: https://scrutinizer-ci.com/g/SectorLabs/django-localized-fields/badges/coverage.png
     :target: https://scrutinizer-ci.com/g/SectorLabs/django-localized-fields/
 
-.. image:: https://travis-ci.com/SectorLabs/django-localized-fields.svg?token=sFgxhDFpypxkMcvhRoSz&branch=master
-    :target: https://travis-ci.com/SectorLabs/django-localized-fields
+.. image:: https://img.shields.io/github/license/SectorLabs/django-localized-fields.svg
 
 .. image:: https://badge.fury.io/py/django-localized-fields.svg
     :target: https://pypi.python.org/pypi/django-localized-fields
 
-.. image:: https://img.shields.io/github/license/SectorLabs/django-localized-fields.svg
-
 ``django-localized-fields`` is an implementation of a field class for Django models that allows the field's value to be set in multiple languages. It does this by utilizing the ``hstore`` type (PostgreSQL specific), which is available as ``models.HStoreField`` in Django 1.10.
 
-This package requires Python 3.5 or newer and Django 1.10 or newer.
-
-In the pipeline
----------------
-We're working on making this easier to setup and use. Any feedback is apreciated. Here's a short list of things we're working to improve:
-
-* Make it unnecesarry to add anything to your `INSTALLED_APPS`.
-* Move generic PostgreSQL code to a separate package.
+This package requires Python 3.5 or newer, Django 1.10 or newer and PostgreSQL 9.6 or newer.
 
 Installation
 ------------
