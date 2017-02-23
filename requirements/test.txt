@@ -1,3 +1,5 @@
+-r base.txt
+
 coverage==4.2
 Django==1.10.2
 django-autoslug==1.9.3
