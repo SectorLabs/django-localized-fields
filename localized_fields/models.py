@@ -1,12 +1,10 @@
-from django.db import models, transaction
-from django.db.utils import IntegrityError
-from django.conf import settings
+from psqlextra.models import PostgresModel
 
 from .fields import LocalizedField
 from .localized_value import LocalizedValue
 
 
-class LocalizedModel(models.Model):
+class LocalizedModel(PostgresModel):
     """A model that contains localized fields."""
 
     class Meta:

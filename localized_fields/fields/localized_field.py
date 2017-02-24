@@ -18,12 +18,6 @@ class LocalizedField(HStoreField):
     def __init__(self, *args, **kwargs):
         """Initializes a new instance of :see:LocalizedField."""
 
-        required = kwargs.get('required')
-        if required is None:
-            required = [settings.LANGUAGE_CODE]
-
-        kwargs['required'] = required
-
         super(LocalizedField, self).__init__(*args, **kwargs)
 
     @staticmethod
