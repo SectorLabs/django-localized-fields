@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db.utils import IntegrityError
+
 from localized_fields import LocalizedFieldForm
 from psqlextra.fields import HStoreField
 
@@ -17,8 +18,13 @@ class LocalizedField(HStoreField):
     def __init__(self, *args, **kwargs):
         """Initializes a new instance of :see:LocalizedField."""
 
-        super(LocalizedField, self).__init__(
-            *args, required=[settings.LANGUAGE_CODE], **kwargs)
+        required = kwargs.get('required')
+        if required is None:
+            required = [settings.LANGUAGE_CODE]
+
+        kwargs['required'] = required
+
+        super(LocalizedField, self).__init__(*args, **kwargs)
 
     @staticmethod
     def from_db_value(value, *_):
