@@ -18,7 +18,7 @@ setup(
     author_email='open-source@sectorlabs.ro',
     keywords=['django', 'localized', 'language', 'models', 'fields'],
     install_requires=[
-        'django-postgres-extra>=1.3'
+        'django-postgres-extra>=1.4'
     ],
     classifiers=[
         'Environment :: Web Environment',
