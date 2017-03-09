@@ -85,6 +85,11 @@ class LocalizedValue:
             And False when they are not.
         """
 
+        if not isinstance(other, type(self)):
+            if isinstance(other, str):
+                return self.__str__() == other
+            return False
+
         for lang_code, _ in settings.LANGUAGES:
             if self.get(lang_code) != other.get(lang_code):
                 return False
