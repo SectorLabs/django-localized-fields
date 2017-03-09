@@ -2,7 +2,7 @@ from django.conf import settings
 from django.utils import translation
 
 
-class LocalizedValue:
+class LocalizedValue(dict):
     """Represents the value of a :see:LocalizedField."""
 
     def __init__(self, keys: dict=None):
@@ -20,7 +20,7 @@ class LocalizedValue:
         else:
             for lang_code, _ in settings.LANGUAGES:
                 value = keys.get(lang_code) if keys else None
-                setattr(self, lang_code, value)
+                self.set(lang_code, value)
 
     def get(self, language: str=None) -> str:
         """Gets the underlying value in the specified or
@@ -37,7 +37,7 @@ class LocalizedValue:
         """
 
         language = language or settings.LANGUAGE_CODE
-        return getattr(self, language, None)
+        return super().get(language, None)
 
     def set(self, language: str, value: str):
         """Sets the value in the specified language.
@@ -50,7 +50,8 @@ class LocalizedValue:
                 The value to set.
         """
 
-        setattr(self, language, value)
+        self[language] = value
+        self.__dict__.update(self)
         return self
 
     def deconstruct(self) -> dict:
@@ -96,7 +97,31 @@ class LocalizedValue:
 
         return True
 
+    def __ne__(self, other):
+        """Compares :paramref:self to :paramerf:other for
+        in-equality.
+
+        Returns:
+            True when :paramref:self is not equal to :paramref:other.
+            And False when they are.
+        """
+
+        return not self.__eq__(other)
+
+    def __setattr__(self, language: str, value: str):
+        """Sets the value for a language with the specified name.
+
+        Arguments:
+            language:
+                The language to set the value in.
+
+            value:
+                The value to set.
+        """
+
+        self.set(language, value)
+
     def __repr__(self):  # pragma: no cover
         """Gets a textual representation of this object."""
 
-        return 'LocalizedValue<%s> 0x%s' % (self.__dict__, id(self))
+        return 'LocalizedValue<%s> 0x%s' % (dict(self), id(self))
