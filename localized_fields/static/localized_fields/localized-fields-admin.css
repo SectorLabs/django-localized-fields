@@ -19,6 +19,7 @@
     background: #79aec8;
     color: #fff;
     font-weight: 400;
+    opacity: 0.5;
 }
 
 .localized-fields-widget.tabs .localized-fields-widget.tab:first-child {
@@ -28,6 +29,7 @@
 .localized-fields-widget.tabs .localized-fields-widget.tab:hover {
     background: #417690;
     border-color: #417690;
+    opacity: 1;
 }
 
 .localized-fields-widget.tabs .localized-fields-widget.tab a {
@@ -39,11 +41,7 @@
 
 .localized-fields-widget.tabs .localized-fields-widget.tab.active,
 .localized-fields-widget.tabs .localized-fields-widget.tab.active:hover {
-    background: #fff;
-    border-color: #aaaaaa;
-}
-
-.localized-fields-widget.tabs .localized-fields-widget.tab.active a,
-.localized-fields-widget.tabs .localized-fields-widget.tab.active:hover a{
-    color: #000;
+    background: #79aec8;
+    border-color: #79aec8;
+    opacity: 1;
 }
