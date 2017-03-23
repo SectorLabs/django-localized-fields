@@ -1,9 +1,9 @@
 from django.conf import settings
+from django.db.utils import IntegrityError
 from django.test import TestCase
 from django.utils import translation
-from django.db.utils import IntegrityError
 
-from localized_fields import LocalizedField, LocalizedValue, LocalizedFieldForm
+from localized_fields import LocalizedField, LocalizedFieldForm, LocalizedValue
 
 
 def get_init_values() -> dict:
@@ -179,13 +179,25 @@ class LocalizedFieldTestCase(TestCase):
 
     @staticmethod
     def test_from_db_value_none():
-        """Tests whether the :see:from_db_valuei function
+        """Tests whether the :see:from_db_value function
         correctly handles None values."""
 
         localized_value = LocalizedField.from_db_value(None)
 
         for lang_code, _ in settings.LANGUAGES:
             assert localized_value.get(lang_code) is None
+
+    @staticmethod
+    def test_from_db_value_none_return_none():
+        """Tests whether the :see:from_db_value function
+        correctly handles None values when LOCALIZED_FIELDS_EXPERIMENTAL
+        is set to True."""
+
+        settings.LOCALIZED_FIELDS_EXPERIMENTAL = True
+        localized_value = LocalizedField.from_db_value(None)
+        settings.LOCALIZED_FIELDS_EXPERIMENTAL = False
+
+        assert localized_value is None
 
     @staticmethod
     def test_to_python():

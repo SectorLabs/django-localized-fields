@@ -244,6 +244,16 @@ Besides ``LocalizedField``, there's also:
                    title = LocalizedField()
                    description = LocalizedBleachField()
 
+Experimental feature
+^^^^^^^^^^^^^^^^^^^^
+    Enables the following experimental features:
+        * ``LocalizedField`` will return ``None`` instead of an empty ``LocalizedValue`` if there is no database value.
+
+    .. code-block:: python
+
+         LOCALIZED_FIELDS_EXPERIMENTAL = True
+
+
 Frequently asked questions (FAQ)
 --------------------------------
 

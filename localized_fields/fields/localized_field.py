@@ -1,8 +1,8 @@
 from django.conf import settings
 from django.db.utils import IntegrityError
+from psqlextra.fields import HStoreField
 
 from localized_fields import LocalizedFieldForm
-from psqlextra.fields import HStoreField
 
 from ..localized_value import LocalizedValue
 
@@ -36,11 +36,15 @@ class LocalizedField(HStoreField):
         """
 
         if not value:
-            return LocalizedValue()
+            if getattr(settings, 'LOCALIZED_FIELDS_EXPERIMENTAL', False):
+                return None
+            else:
+                return LocalizedValue()
 
         return LocalizedValue(value)
 
-    def to_python(self, value: dict) -> LocalizedValue:
+    @staticmethod
+    def to_python(value: dict) -> LocalizedValue:
         """Turns the specified database value into its Python
         equivalent.
 
