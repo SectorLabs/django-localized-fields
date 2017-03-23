@@ -43,9 +43,11 @@ class LocalizedValueDescriptor(object):
         # in __set__.
         if self.field.name in instance.__dict__:
             value = instance.__dict__[self.field.name]
-        else:
+        elif instance.pk is not None:
             instance.refresh_from_db(fields=[self.field.name])
             value = getattr(instance, self.field.name)
+        else:
+            value = None
 
         if value is None:
             attr = self.field.attr_class()
