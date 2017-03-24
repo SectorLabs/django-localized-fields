@@ -187,15 +187,13 @@ class LocalizedFieldTestCase(TestCase):
         for lang_code, _ in settings.LANGUAGES:
             assert localized_value.get(lang_code) is None
 
-    @staticmethod
-    def test_from_db_value_none_return_none():
+    def test_from_db_value_none_return_none(self):
         """Tests whether the :see:from_db_value function
         correctly handles None values when LOCALIZED_FIELDS_EXPERIMENTAL
         is set to True."""
 
-        settings.LOCALIZED_FIELDS_EXPERIMENTAL = True
-        localized_value = LocalizedField.from_db_value(None)
-        settings.LOCALIZED_FIELDS_EXPERIMENTAL = False
+        with self.settings(LOCALIZED_FIELDS_EXPERIMENTAL=True):
+            localized_value = LocalizedField.from_db_value(None)
 
         assert localized_value is None
 
