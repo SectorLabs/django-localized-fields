@@ -15,7 +15,7 @@ class LocalizedModel(PostgresModel):
 
         Here we set all the fields that are of :see:LocalizedField
         to an instance of :see:LocalizedValue in case they are none
-        so that the user doesn't explicitely have to do so."""
+        so that the user doesn't explicitly have to do so."""
 
         super(LocalizedModel, self).__init__(*args, **kwargs)
 

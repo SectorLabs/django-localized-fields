@@ -27,3 +27,5 @@ INSTALLED_APPS = (
 # set to a lower number than the default, since
 # we want the tests to be fast, default is 100
 LOCALIZED_FIELDS_MAX_RETRIES = 3
+
+LOCALIZED_FIELDS_EXPERIMENTAL = False
