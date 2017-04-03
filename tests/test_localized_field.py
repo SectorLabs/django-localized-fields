@@ -172,7 +172,7 @@ class LocalizedFieldTestCase(TestCase):
         produces the expected :see:LocalizedValue."""
 
         input_data = get_init_values()
-        localized_value = LocalizedField.from_db_value(input_data)
+        localized_value = LocalizedField().from_db_value(input_data)
 
         for lang_code, _ in settings.LANGUAGES:
             assert getattr(localized_value, lang_code) == input_data[lang_code]
@@ -182,7 +182,7 @@ class LocalizedFieldTestCase(TestCase):
         """Tests whether the :see:from_db_value function
         correctly handles None values."""
 
-        localized_value = LocalizedField.from_db_value(None)
+        localized_value = LocalizedField().from_db_value(None)
 
         for lang_code, _ in settings.LANGUAGES:
             assert localized_value.get(lang_code) is None
