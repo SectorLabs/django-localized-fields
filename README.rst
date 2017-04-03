@@ -192,11 +192,11 @@ Besides ``LocalizedField``, there's also:
 
           .. code-block:: python
 
-              from localized_fields import (AtomicSlugRetryMixin,
+              from localized_fields import (LocalizedModel,
                                             LocalizedField,
                                             LocalizedUniqueSlugField)
 
-              class MyModel(AtomicSlugRetryMixin, models.Model):
+              class MyModel(LocalizedModel):
                    title = LocalizedField()
                    slug = LocalizedUniqueSlugField(populate_from='title')
 
