@@ -1,0 +1,14 @@
+<div class="localized-fields-widget" role="tabs" data-synctabs="translation">
+    <ul class="localized-fields-widget tabs">
+    {% for key, lang in available_languages %}
+        <li class="localized-fields-widget tab">
+            <a href="#{{ id }}_{{ key }}">{{ lang|capfirst }}</a>
+        </li>
+    {% endfor %}
+    </ul>
+{% for key, widget in widgets %}
+    <div role="tabpanel" id="{{ id }}_{{ key }}">
+        {{ widget }}
+    </div>
+{% endfor %}
+</div>

@@ -242,12 +242,29 @@ Besides ``LocalizedField``, there's also:
 
 Experimental feature
 ^^^^^^^^^^^^^^^^^^^^
-    Enables the following experimental features:
-        * ``LocalizedField`` will return ``None`` instead of an empty ``LocalizedValue`` if there is no database value.
+Enables the following experimental features:
+    * ``LocalizedField`` will return ``None`` instead of an empty ``LocalizedValue`` if there is no database value.
 
-    .. code-block:: python
+.. code-block:: python
 
-         LOCALIZED_FIELDS_EXPERIMENTAL = True
+     LOCALIZED_FIELDS_EXPERIMENTAL = True
+
+
+Django Admin Integration
+^^^^^^^^^^^^^^^^^^^^^^^^
+To enable widgets in the admin, you need to inherit from ``LocalizedFieldsAdminMixin``:
+
+.. code-block:: python
+
+    from django.contrib import admin
+    from myapp.models import MyLocalizedModel
+
+    from localized_fields.admin import LocalizedFieldsAdminMixin
+
+    class MyLocalizedModelAdmin(LocalizedFieldsAdminMixin, admin.ModelAdmin):
+        """Any admin options you need go here"""
+
+    admin.site.register(MyLocalizedModel, MyLocalizedModelAdmin)
 
 
 Frequently asked questions (FAQ)
