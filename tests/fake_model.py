@@ -2,7 +2,7 @@ from django.db import connection, migrations
 from django.db.migrations.executor import MigrationExecutor
 from django.contrib.postgres.operations import HStoreExtension
 
-from localized_fields import LocalizedModel
+from localized_fields.models import LocalizedModel
 
 
 def define_fake_model(name='TestModel', fields=None):
