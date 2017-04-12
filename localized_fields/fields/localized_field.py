@@ -187,7 +187,10 @@ class LocalizedField(HStoreField):
         # are any of the language fiels None/empty?
         is_all_null = True
         for lang_code, _ in settings.LANGUAGES:
-            if value.get(lang_code):
+            # NOTE(seroy): use check for None, instead of
+            # `bool(value.get(lang_code))==True` condition, cause in this way
+            # we can not save '' value
+            if value.get(lang_code) is not None:
                 is_all_null = False
                 break
 
@@ -215,7 +218,9 @@ class LocalizedField(HStoreField):
 
         primary_lang_val = getattr(value, settings.LANGUAGE_CODE)
 
-        if not primary_lang_val:
+        # NOTE(seroy): use check for None, instead of `not primary_lang_val`
+        # condition, cause in this way we can not save '' value
+        if primary_lang_val is None:
             raise IntegrityError(
                 'null value in column "%s.%s" violates not-null constraint' % (
                     self.name,

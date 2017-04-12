@@ -46,6 +46,16 @@ class LocalizedFieldWidget(forms.MultiWidget):
         return result
 
 
+class LocalizedCharFieldWidget(LocalizedFieldWidget):
+    """Widget that has an input box for every language."""
+    widget = forms.TextInput
+
+
+class LocalizedFileWidget(LocalizedFieldWidget):
+    """Widget that has an file input box for every language."""
+    widget = forms.ClearableFileInput
+
+
 class AdminLocalizedFieldWidget(LocalizedFieldWidget):
     widget = widgets.AdminTextareaWidget
     template = 'localized_fields/admin/widget.html'
@@ -84,3 +94,11 @@ class AdminLocalizedFieldWidget(LocalizedFieldWidget):
                 and 'required' in attrs:
             del attrs['required']
         return attrs
+
+
+class AdminLocalizedCharFieldWidget(AdminLocalizedFieldWidget):
+    widget = widgets.AdminTextInputWidget
+
+
+class AdminLocalizedFileFieldWidget(AdminLocalizedFieldWidget):
+    widget = widgets.AdminFileWidget

@@ -1,6 +1,7 @@
 from .forms import LocalizedFieldForm, LocalizedFieldWidget
 from .fields import (LocalizedAutoSlugField, LocalizedField,
-                     LocalizedUniqueSlugField)
+                     LocalizedUniqueSlugField, LocalizedCharField,
+                     LocalizedTextField, LocalizedFileField)
 from .localized_value import LocalizedValue
 from .mixins import AtomicSlugRetryMixin
 from .models import LocalizedModel
@@ -14,6 +15,9 @@ __all__ = [
     'LocalizedAutoSlugField',
     'LocalizedUniqueSlugField',
     'LocalizedBleachField',
+    'LocalizedCharField',
+    'LocalizedTextField',
+    'LocalizedFileField',
     'LocalizedFieldWidget',
     'LocalizedFieldForm',
     'AtomicSlugRetryMixin'
