@@ -137,16 +137,19 @@ class LocalizedStingValue(LocalizedValue):
 
 
 class LocalizedFileValue(LocalizedValue):
+    def __getattr__(self, name: str):
+        """Proxies access to attributes to attributes of LocalizedFile"""
 
-    def __getattr__(self, name):
         value = self.get(translation.get_language())
         if hasattr(value, name):
             return getattr(value, name)
         raise AttributeError("'{}' object has no attribute '{}'".
                              format(self.__class__.__name__, name))
 
-    def __str__(self):
+    def __str__(self) -> str:
+        """Returns string representation of value"""
         return str(super().__str__())
 
     def localized(self):
+        """Returns value for current language"""
         return self.get(translation.get_language())

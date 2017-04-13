@@ -16,12 +16,6 @@ from ..forms import LocalizedFileFieldForm
 
 
 class LocalizedFieldFile(FieldFile):
-    def __init__(self, instance, field, name):
-        super(FieldFile, self).__init__(None, name)
-        self.instance = instance
-        self.field = field
-        self.storage = field.storage
-        self._committed = True
 
     def save(self, name, content, lang, save=True):
         name = self.field.generate_filename(self.instance, name, lang)
@@ -96,7 +90,7 @@ class LocalizedFileField(LocalizedField):
         super().__init__(verbose_name, name, **kwargs)
 
     def deconstruct(self):
-        name, path, args, kwargs = super(LocalizedFileField, self).deconstruct()
+        name, path, args, kwargs = super().deconstruct()
         kwargs['upload_to'] = self.upload_to
         if self.storage is not default_storage:
             kwargs['storage'] = self.storage
