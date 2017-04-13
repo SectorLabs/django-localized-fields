@@ -241,11 +241,10 @@ Besides ``LocalizedField``, there's also:
                    description = LocalizedBleachField()
 
 * ``LocalizedCharField`` and ``LocalizedTextField``
-    This fields following the Django convention for string-based fields use
-    the empty string as value for “no data”, not NULL.
+    This fields following the Django convention for string-based fields use the empty string as value for “no data”, not NULL.
     ``LocalizedCharField`` uses ``TextInput`` (``<input type="text">``) widget for render.
 
-     Example usage:
+    Example usage:
 
            .. code-block:: python
 
