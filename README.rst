@@ -240,6 +240,61 @@ Besides ``LocalizedField``, there's also:
                    title = LocalizedField()
                    description = LocalizedBleachField()
 
+* ``LocalizedCharField`` and ``LocalizedTextField``
+    This fields following the Django convention for string-based fields use
+    the empty string as value for “no data”, not NULL.
+    ``LocalizedCharField`` uses ``TextInput`` (``<input type="text">``) widget for render.
+
+     Example usage:
+
+           .. code-block:: python
+
+              from localized_fields import (LocalizedCharField,
+                                            LocalizedTextField)
+
+              class MyModel(models.Model):
+                   title = LocalizedCharField()
+                   description = LocalizedTextField()
+
+* ``LocalizedFileField``
+    A file-upload field
+
+    Parameter ``upload_to`` supports ``lang`` parameter for string formatting or as function argument (in case if ``upload_to`` is callable).
+
+    Example usage:
+
+           .. code-block:: python
+
+              from localized_fields import LocalizedFileField
+
+              def my_directory_path(instance, filename, lang):
+                # file will be uploaded to MEDIA_ROOT/<lang>/<id>_<filename>
+                return '{0}/{0}_{1}'.format(lang, instance.id, filename)
+
+              class MyModel(models.Model):
+                   file1 = LocalizedFileField(upload_to='uploads/{lang}/')
+                   file2 = LocalizedFileField(upload_to=my_directory_path)
+
+    In template you can access to file attributes:
+
+            .. code-block:: django
+
+              {# For current active language: #}
+
+              {{ model.file.url }}  {# output file url #}
+              {{ model.file.name }} {# output file name #}
+
+              {# Or get it in a specific language: #}
+
+              {{ model.file.ro.url }}  {# output file url for romanian language #}
+              {{ model.file.ro.name }} {# output file name for romanian language #}
+
+    To get access to file instance for current active language use ``localized`` method:
+
+            .. code-block:: python
+
+              model.file.localized()
+
 Experimental feature
 ^^^^^^^^^^^^^^^^^^^^
 Enables the following experimental features:
