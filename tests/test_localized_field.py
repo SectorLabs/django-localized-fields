@@ -1,3 +1,4 @@
+import json
 from django.conf import settings
 from django.db.utils import IntegrityError
 from django.test import TestCase
@@ -231,6 +232,20 @@ class LocalizedFieldTestCase(TestCase):
 
         for lang_code, _ in settings.LANGUAGES:
             assert localized_value.get(lang_code) is None
+
+    @staticmethod
+    def test_to_python_str():
+        """Tests whether the :see:to_python function produces
+        the expected :see:LocalizedValue when it is
+        passed serialized string value."""
+
+        serialized_str = json.dumps(get_init_values())
+        localized_value = LocalizedField().to_python(serialized_str)
+        assert isinstance(localized_value, LocalizedValue)
+
+        for language, value in get_init_values().items():
+            assert localized_value.get(language) == value
+            assert getattr(localized_value, language) == value
 
     @staticmethod
     def test_get_prep_value():
