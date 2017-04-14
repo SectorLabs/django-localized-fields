@@ -1,3 +1,5 @@
+from typing import Union
+
 from django.conf import settings
 from django.db.utils import IntegrityError
 from django.utils import six, translation
@@ -114,7 +116,7 @@ class LocalizedField(HStoreField):
 
         return cls.attr_class(value)
 
-    def to_python(self, value: dict) -> LocalizedValue:
+    def to_python(self, value: Union[dict, str, None]) -> LocalizedValue:
         """Turns the specified database value into its Python
         equivalent.
 
@@ -127,7 +129,8 @@ class LocalizedField(HStoreField):
             A :see:LocalizedValue instance containing the
             data extracted from the database.
         """
-
+        # make deserialization if need by parent method
+        value = super(LocalizedField, self).to_python(value)
         if not value or not isinstance(value, dict):
             return self.attr_class()
 
