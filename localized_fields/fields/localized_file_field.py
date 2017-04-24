@@ -17,8 +17,12 @@ from ..forms import LocalizedFileFieldForm
 
 class LocalizedFieldFile(FieldFile):
 
-    def save(self, name, content, lang, save=True):
-        name = self.field.generate_filename(self.instance, name, lang)
+    def __init__(self, instance, field, name, lang):
+        super().__init__(instance, field, name)
+        self.lang = lang
+
+    def save(self, name, content, save=True):
+        name = self.field.generate_filename(self.instance, name, self.lang)
         self.name = self.storage.save(name, content,
                                       max_length=self.field.max_length)
         self._committed = True
@@ -50,29 +54,31 @@ class LocalizedFieldFile(FieldFile):
 class LocalizedFileValueDescriptor(LocalizedValueDescriptor):
     def __get__(self, instance, cls=None):
         value = super().__get__(instance, cls)
-        for k, file in value.__dict__.items():
+        for lang, file in value.__dict__.items():
             if isinstance(file, six.string_types) or file is None:
-                file = self.field.value_class(instance, self.field, file)
-                value.set(k, file)
+                file = self.field.value_class(instance, self.field, file, lang)
+                value.set(lang, file)
 
             elif isinstance(file, File) and \
                     not isinstance(file, LocalizedFieldFile):
                 file_copy = self.field.value_class(instance, self.field,
-                                                   file.name)
+                                                   file.name, lang)
                 file_copy.file = file
                 file_copy._committed = False
-                value.set(k, file_copy)
+                value.set(lang, file_copy)
 
             elif isinstance(file, LocalizedFieldFile) and \
                     not hasattr(file, 'field'):
                 file.instance = instance
                 file.field = self.field
                 file.storage = self.field.storage
+                file.lang = lang
 
             # Make sure that the instance is correct.
             elif isinstance(file, LocalizedFieldFile) \
                     and instance is not file.instance:
                 file.instance = instance
+                file.lang = lang
         return value
 
 
@@ -115,9 +121,9 @@ class LocalizedFileField(LocalizedField):
         """Returns field's value just before saving."""
         value = super().pre_save(model_instance, add)
         if isinstance(value, LocalizedValue):
-            for lang, file in value.__dict__.items():
+            for file in value.__dict__.values():
                 if file and not file._committed:
-                    file.save(file.name, file, lang, save=False)
+                    file.save(file.name, file, save=False)
         return value
 
     def generate_filename(self, instance, filename, lang):
@@ -135,7 +141,7 @@ class LocalizedFileField(LocalizedField):
             for k, v in data.__dict__.items():
                 if v is not None and not v:
                     data.set(k, '')
-            setattr(instance, self.attname, data)
+            setattr(instance, self.name, data)
 
     def formfield(self, **kwargs):
         defaults = {'form_class': LocalizedFileFieldForm}
