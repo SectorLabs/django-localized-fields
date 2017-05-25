@@ -7,7 +7,6 @@ from .value import LocalizedValue
 from .widgets import LocalizedFieldWidget
 
 
-
 class LocalizedFieldForm(forms.MultiValueField):
     """Form for a localized field, allows editing
     the field in multiple languages."""
@@ -38,7 +37,7 @@ class LocalizedFieldForm(forms.MultiValueField):
         for f, w in zip(self.fields, self.widget.widgets):
             w.is_required = f.required
 
-    def compress(self, value: List[str]) -> value_class:
+    def compress(self, value: List[str]) -> LocalizedValue:
         """Compresses the values from individual fields
         into a single :see:LocalizedValue instance.
 

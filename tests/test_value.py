@@ -1,5 +1,3 @@
-import json
-
 from django.conf import settings
 from django.test import TestCase
 from django.utils import translation
@@ -164,4 +162,3 @@ class LocalizedValueTestCase(TestCase):
 
         value = LocalizedValue('beer')
         assert value.get(settings.LANGUAGE_CODE) == 'beer'
-

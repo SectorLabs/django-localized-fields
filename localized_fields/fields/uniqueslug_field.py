@@ -1,6 +1,5 @@
 from datetime import datetime
 
-from django.conf import settings
 from django.utils.text import slugify
 from django.core.exceptions import ImproperlyConfigured
 
@@ -73,13 +72,7 @@ class LocalizedUniqueSlugField(LocalizedAutoSlugField):
 
         slugs = LocalizedValue()
 
-        for lang_code, _ in settings.LANGUAGES:
-            value = self._get_populate_from_value(
-                instance,
-                self.populate_from,
-                lang_code
-            )
-
+        for lang_code, value in self._get_populate_values(instance):
             if not value:
                 continue
 

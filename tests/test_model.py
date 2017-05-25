@@ -34,7 +34,6 @@ class LocalizedModelTestCase(TestCase):
 
         assert isinstance(obj.title, LocalizedValue)
 
-
     @classmethod
     def test_model_init_kwargs(cls):
         """Tests whether all :see:LocalizedField

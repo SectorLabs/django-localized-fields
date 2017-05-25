@@ -3,7 +3,6 @@ from django.db.migrations.executor import MigrationExecutor
 from django.contrib.postgres.operations import HStoreExtension
 
 from localized_fields.models import LocalizedModel
-from localized_fields.mixins import AtomicSlugRetryMixin
 
 
 def define_fake_model(name='TestModel', fields=None):

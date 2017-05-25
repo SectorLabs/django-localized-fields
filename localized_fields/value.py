@@ -17,7 +17,8 @@ class LocalizedValue(dict):
                 different language.
         """
 
-        self._interpret_value(keys);
+        super().__init__({})
+        self._interpret_value(keys)
 
     def get(self, language: str=None) -> str:
         """Gets the underlying value in the specified or
