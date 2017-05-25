@@ -33,7 +33,7 @@ class LocalizedValueTestCase(TestCase):
 
     @staticmethod
     def test_init_default_values():
-        """Tests wehther the __init__ function
+        """Tests whether the __init__ function
         of the :see:LocalizedValue accepts the
         default value or an empty dict properly."""
 
@@ -41,6 +41,18 @@ class LocalizedValueTestCase(TestCase):
 
         for lang_code, _ in settings.LANGUAGES:
             assert getattr(value, lang_code) is None
+
+    @staticmethod
+    def test_init_array():
+        """Tests whether the __init__ function
+        of :see:LocalizedValue properly handles an
+        array.
+
+        Arrays can be passed to LocalizedValue as
+        a result of a ArrayAgg operation."""
+
+        value = LocalizedValue(['my value'])
+        assert value.get(settings.LANGUAGE_CODE) == 'my value'
 
     @staticmethod
     def test_get_explicit():
