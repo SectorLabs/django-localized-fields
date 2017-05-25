@@ -91,9 +91,18 @@ class LocalizedField(HStoreField):
 
         super(LocalizedField, self).__init__(*args, **kwargs)
 
-    def contribute_to_class(self, cls, name, **kwargs):
-        super(LocalizedField, self).contribute_to_class(cls, name, **kwargs)
-        setattr(cls, self.name, self.descriptor_class(self))
+    def contribute_to_class(self, model, name, **kwargs):
+        """Adds this field to the specifed model.
+
+        Arguments:
+            cls:
+                The model to add the field to.
+
+            name:
+                The name of the field to add.
+        """
+        super(LocalizedField, self).contribute_to_class(model, name, **kwargs)
+        setattr(model, self.name, self.descriptor_class(self))
 
     @classmethod
     def from_db_value(cls, value, *_):
