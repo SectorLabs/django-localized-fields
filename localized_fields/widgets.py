@@ -5,7 +5,7 @@ from django import forms
 from django.contrib.admin import widgets
 from django.template.loader import render_to_string
 
-from .localized_value import LocalizedValue
+from .value import LocalizedValue
 
 
 class LocalizedFieldWidget(forms.MultiWidget):

@@ -4,10 +4,10 @@ from django.conf import settings
 from django.utils.text import slugify
 from django.core.exceptions import ImproperlyConfigured
 
+from .autoslug_field import LocalizedAutoSlugField
 from ..util import get_language_codes
 from ..mixins import AtomicSlugRetryMixin
-from ..localized_value import LocalizedValue
-from .localized_autoslug_field import LocalizedAutoSlugField
+from ..value import LocalizedValue
 
 
 class LocalizedUniqueSlugField(LocalizedAutoSlugField):

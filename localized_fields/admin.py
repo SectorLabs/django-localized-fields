@@ -1,7 +1,7 @@
 from django.contrib.admin import ModelAdmin
 
-from .fields import LocalizedField
 from . import widgets
+from .fields import LocalizedField
 
 
 FORMFIELD_FOR_LOCALIZED_FIELDS_DEFAULTS = {

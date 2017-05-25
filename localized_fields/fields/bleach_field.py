@@ -1,8 +1,9 @@
 import bleach
+
 from django.conf import settings
 from django_bleach.utils import get_bleach_default_options
 
-from .localized_field import LocalizedField
+from .field import LocalizedField
 
 
 class LocalizedBleachField(LocalizedField):

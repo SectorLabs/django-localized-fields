@@ -4,9 +4,13 @@ from django import forms
 from django.conf import settings
 from django.test import TestCase
 from django.db.utils import IntegrityError
-from localized_fields import (LocalizedField, LocalizedAutoSlugField,
-                              LocalizedUniqueSlugField)
 from django.utils.text import slugify
+
+from localized_fields.fields import (
+    LocalizedField,
+    LocalizedAutoSlugField,
+    LocalizedUniqueSlugField
+)
 
 from .fake_model import get_fake_model
 

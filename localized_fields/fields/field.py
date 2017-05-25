@@ -8,8 +8,8 @@ from django.db.utils import IntegrityError
 from psqlextra.fields import HStoreField
 
 from ..forms import LocalizedFieldForm
-from ..localized_value import LocalizedValue
-from ..localized_descriptor import LocalizedValueDescriptor
+from ..value import LocalizedValue
+from ..descriptor import LocalizedValueDescriptor
 
 
 class LocalizedField(HStoreField):

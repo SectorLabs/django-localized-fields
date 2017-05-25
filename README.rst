@@ -228,6 +228,7 @@ Besides ``LocalizedField``, there's also:
 
 * ``LocalizedBleachField``
      Automatically bleaches the content of the field.
+
           * django-bleach
 
      Example usage:

@@ -16,7 +16,7 @@ def define_fake_model(name='TestModel', fields=None):
     if fields:
         attributes.update(fields)
 
-    model = type(name, (AtomicSlugRetryMixin,LocalizedModel,), attributes)
+    model = type(name, (LocalizedModel,), attributes)
     return model
 
 

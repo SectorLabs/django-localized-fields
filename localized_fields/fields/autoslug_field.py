@@ -5,8 +5,8 @@ from django import forms
 from django.conf import settings
 from django.utils.text import slugify
 
-from .localized_field import LocalizedField
-from ..localized_value import LocalizedValue
+from .field import LocalizedField
+from ..value import LocalizedValue
 
 
 class LocalizedAutoSlugField(LocalizedField):

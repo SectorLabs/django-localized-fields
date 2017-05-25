@@ -1,10 +1,13 @@
 import json
+
 from django.conf import settings
 from django.db.utils import IntegrityError
 from django.test import TestCase
 from django.utils import translation
 
-from localized_fields import LocalizedField, LocalizedFieldForm, LocalizedValue
+from localized_fields.fields import LocalizedField
+from localized_fields.forms import LocalizedFieldForm
+from localized_fields.value import LocalizedValue
 
 
 def get_init_values() -> dict:

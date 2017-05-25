@@ -3,7 +3,7 @@ from typing import List
 from django import forms
 from django.conf import settings
 
-from .localized_value import LocalizedValue
+from .value import LocalizedValue
 from .widgets import LocalizedFieldWidget
 
 
