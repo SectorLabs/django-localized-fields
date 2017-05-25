@@ -1,3 +1,5 @@
+import json
+
 from typing import Union
 
 from django.conf import settings
@@ -129,12 +131,18 @@ class LocalizedField(HStoreField):
             A :see:LocalizedValue instance containing the
             data extracted from the database.
         """
-        # make deserialization if need by parent method
-        value = super(LocalizedField, self).to_python(value)
-        if not value or not isinstance(value, dict):
+
+        # first let the base class  handle the deserialization, this is in case we
+        # get specified a json string representing a dict
+        try:
+            deserialized_value = super(LocalizedField, self).to_python(value)
+        except json.JSONDecodeError:
+            deserialized_value = value
+
+        if not deserialized_value:
             return self.attr_class()
 
-        return self.attr_class(value)
+        return self.attr_class(deserialized_value)
 
     def get_prep_value(self, value: LocalizedValue) -> dict:
         """Turns the specified value into something the database

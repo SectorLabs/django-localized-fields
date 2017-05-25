@@ -210,6 +210,14 @@ class LocalizedFieldTestCase(TestCase):
             assert localized_value.get(language) == value
 
     @staticmethod
+    def test_to_python_non_json():
+        """Tests whether the :see:to_python function
+        properly handles a string that is not JSON."""
+
+        localized_value = LocalizedField().to_python('my value')
+        assert localized_value.get() == 'my value'
+
+    @staticmethod
     def test_to_python_none():
         """Tests whether the :see:to_python function
         produces the expected :see:LocalizedValue
