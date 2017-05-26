@@ -32,7 +32,7 @@ Installation
             ....
 
             'django.contrib.postgres',
-            'localized_fields'
+            'localized_fields.apps.LocalizedFieldsConfig'
         ]
 
 3. Set the database engine to ``psqlextra.backend``:
