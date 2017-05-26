@@ -195,7 +195,7 @@ Besides ``LocalizedField``, there's also:
               from localized_fields.models import LocalizedModel
               from localized_fields.fields import LocalizedField, LocalizedUniqueSlugField
 
-              class MyModel(AtomicSlugRetryMixin, LocalizedModel):
+              class MyModel(LocalizedModel):
                    title = LocalizedField()
                    slug = LocalizedUniqueSlugField(populate_from='title')
 
@@ -217,7 +217,7 @@ Besides ``LocalizedField``, there's also:
 
               from localized_fields.fields import LocalizedField, LocalizedAutoSlugField
 
-              class MyModel(models.Model):
+              class MyModel(LocalizedModel):
                    title = LocalizedField()
                    slug = LocalizedAutoSlugField(populate_from='title')
 
