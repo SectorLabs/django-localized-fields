@@ -60,6 +60,6 @@ class LocalizedValueDescriptor:
     def __set__(self, instance, value):
         if isinstance(value, six.string_types):
             language = translation.get_language() or settings.LANGUAGE_CODE
-            self.__get__(instance).set(language, value) # pylint: disable=no-member
+            self.__get__(instance).set(language, value)  # pylint: disable=no-member
         else:
             instance.__dict__[self.field.name] = value
