@@ -48,18 +48,32 @@ class LocalizedExpressionsTestCase(TestCase):
                 other=obj
             )
 
-        for lang_code, _ in settings.LANGUAGES:
-            translation.activate(lang_code)
-
-            queryset = (
+        def create_queryset(ref):
+            return (
                 cls.TestModel1.objects
-                .annotate(
-                    mytexts=LocalizedRef('features__text')
-                )
-                .values_list(
-                    'mytexts', flat=True
-                )
+                .annotate(mytexts=ref)
+                .values_list('mytexts', flat=True)
             )
 
+        # assert that it properly selects the currently active language
+        for lang_code, _ in settings.LANGUAGES:
+            translation.activate(lang_code)
+            queryset = create_queryset(LocalizedRef('features__text'))
+
             for index, value in enumerate(queryset):
+                assert translation.get_language() in value
                 assert str(index) in value
+
+        # ensure that the default language is used in case no
+        # language is active at all
+        translation.deactivate_all()
+        queryset = create_queryset(LocalizedRef('features__text'))
+        for index, value in enumerate(queryset):
+            assert settings.LANGUAGE_CODE in value
+            assert str(index) in value
+
+        # ensures that overriding the language works properly
+        queryset = create_queryset(LocalizedRef('features__text', 'ro'))
+        for index, value in enumerate(queryset):
+            assert 'ro' in value
+            assert str(index) in value
