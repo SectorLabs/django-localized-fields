@@ -66,6 +66,22 @@ class LocalizedField(HStoreField):
             else:
                 return cls.attr_class()
 
+        # we can get a list if an aggregation expression was used..
+        # if we the expression was flattened when only one key was selected
+        # then we don't wrap each value in a localized value, otherwise we do
+        if isinstance(value, list):
+            result = []
+            for inner_val in value:
+                if isinstance(inner_val, dict):
+                    if inner_value is None:
+                        result.append(None)
+                    else:
+                        result.append(cls.attr_class(inner_val))
+                else:
+                    result.append(inner_val)
+
+            return result
+
         return cls.attr_class(value)
 
     def to_python(self, value: Union[dict, str, None]) -> LocalizedValue:
