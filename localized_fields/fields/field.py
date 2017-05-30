@@ -73,7 +73,7 @@ class LocalizedField(HStoreField):
             result = []
             for inner_val in value:
                 if isinstance(inner_val, dict):
-                    if inner_value is None:
+                    if inner_val is None:
                         result.append(None)
                     else:
                         result.append(cls.attr_class(inner_val))
