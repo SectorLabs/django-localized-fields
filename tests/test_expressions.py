@@ -2,6 +2,7 @@ from django.test import TestCase
 from django.db import models
 from django.utils import translation
 from django.conf import settings
+from django.contrib.postgres.aggregates import ArrayAgg
 
 from localized_fields.fields import LocalizedField
 from localized_fields.value import LocalizedValue
@@ -77,3 +78,9 @@ class LocalizedExpressionsTestCase(TestCase):
         for index, value in enumerate(queryset):
             assert 'ro' in value
             assert str(index) in value
+
+        # ensures that using this in combination with ArrayAgg works properly
+        queryset = create_queryset(ArrayAgg(LocalizedRef('features__text', 'ro'))).first()
+        assert isinstance(queryset, list)
+        for value in queryset:
+            assert 'ro' in value
