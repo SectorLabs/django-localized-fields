@@ -82,6 +82,12 @@ class LocalizedField(HStoreField):
 
             return result
 
+        # this is for when you select an individual key, it will be string,
+        # not a dictionary, we'll give it to you as a flat value, not as a
+        # localized value instance
+        if not isinstance(value, dict):
+            return value
+
         return cls.attr_class(value)
 
     def to_python(self, value: Union[dict, str, None]) -> LocalizedValue:
