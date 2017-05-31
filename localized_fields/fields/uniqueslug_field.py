@@ -91,11 +91,12 @@ class LocalizedUniqueSlugField(LocalizedAutoSlugField):
             if self.include_time:
                 slug += '-%d' % datetime.now().microsecond
 
-            if instance.retries > 0:
+            retries = getattr(instance, 'retries', 0)
+            if retries > 0:
                 # do not add another - if we already added time
                 if not self.include_time:
                     slug += '-'
-                slug += '%d' % instance.retries
+                slug += '%d' % retries
 
             slugs.set(lang_code, slug)
 
