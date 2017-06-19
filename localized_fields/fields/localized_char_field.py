@@ -1,10 +1,10 @@
 from ..forms import LocalizedCharFieldForm
 from .localized_field import LocalizedField
-from ..localized_value import LocalizedStingValue
+from ..localized_value import LocalizedStringValue
 
 
 class LocalizedCharField(LocalizedField):
-    attr_class = LocalizedStingValue
+    attr_class = LocalizedStringValue
 
     def formfield(self, **kwargs):
         """Gets the form field associated with this field."""

@@ -132,7 +132,7 @@ class LocalizedValue(dict):
                                 self.__dict__, id(self))
 
 
-class LocalizedStingValue(LocalizedValue):
+class LocalizedStringValue(LocalizedValue):
     default_value = ''
 
 

@@ -5,7 +5,7 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.forms.widgets import FILE_INPUT_CONTRADICTION
 
-from .localized_value import LocalizedValue, LocalizedStingValue, \
+from .localized_value import LocalizedValue, LocalizedStringValue, \
     LocalizedFileValue
 from .widgets import LocalizedFieldWidget, LocalizedCharFieldWidget, \
     LocalizedFileWidget
@@ -68,14 +68,14 @@ class LocalizedCharFieldForm(LocalizedFieldForm):
     the field in multiple languages."""
 
     widget = LocalizedCharFieldWidget
-    value_class = LocalizedStingValue
+    value_class = LocalizedStringValue
 
 
 class LocalizedTextFieldForm(LocalizedFieldForm):
     """Form for a localized text field, allows editing
     the field in multiple languages."""
 
-    value_class = LocalizedStingValue
+    value_class = LocalizedStringValue
 
 
 class LocalizedFileFieldForm(LocalizedFieldForm, forms.FileField):
