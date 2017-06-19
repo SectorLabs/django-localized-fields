@@ -32,7 +32,7 @@ Installation
             ....
 
             'django.contrib.postgres',
-            'localized_fields'
+            'localized_fields.apps.LocalizedFieldsConfig'
         ]
 
 3. Set the database engine to ``psqlextra.backend``:
@@ -160,7 +160,7 @@ By default the values stored in a ``LocalizedField`` are *not unique*. You can e
 
     .. code-block:: python
 
-        from localized_fields import get_language_codes
+        from localized_fields.util import get_language_codes
 
         class MyModel(models.Model):
             title = LocalizedField(uniqueness=get_language_codes())
@@ -176,7 +176,7 @@ By default the values stored in a ``LocalizedField`` are *not unique*. You can e
 
     .. code-block:: python
 
-        from localized_fields import get_language_codes
+        from localized_fields.util import get_language_codes
 
         class MyModel(models.Model):
             title = LocalizedField(uniqueness=[(*get_language_codes())])
@@ -192,9 +192,8 @@ Besides ``LocalizedField``, there's also:
 
           .. code-block:: python
 
-              from localized_fields import (LocalizedModel,
-                                            LocalizedField,
-                                            LocalizedUniqueSlugField)
+              from localized_fields.models import LocalizedModel
+              from localized_fields.fields import LocalizedField, LocalizedUniqueSlugField
 
               class MyModel(LocalizedModel):
                    title = LocalizedField()
@@ -216,10 +215,9 @@ Besides ``LocalizedField``, there's also:
 
           .. code-block:: python
 
-              from localized_fields import (LocalizedField,
-                                            LocalizedUniqueSlugField)
+              from localized_fields.fields import LocalizedField, LocalizedAutoSlugField
 
-              class MyModel(models.Model):
+              class MyModel(LocalizedModel):
                    title = LocalizedField()
                    slug = LocalizedAutoSlugField(populate_from='title')
 
@@ -227,14 +225,14 @@ Besides ``LocalizedField``, there's also:
 
 * ``LocalizedBleachField``
      Automatically bleaches the content of the field.
+
           * django-bleach
 
      Example usage:
 
            .. code-block:: python
 
-              from localized_fields import (LocalizedField,
-                                            LocalizedBleachField)
+              from localized_fields.fields import LocalizedField, LocalizedBleachField
 
               class MyModel(models.Model):
                    title = LocalizedField()

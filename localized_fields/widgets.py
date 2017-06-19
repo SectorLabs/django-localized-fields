@@ -5,7 +5,7 @@ from django import forms
 from django.contrib.admin import widgets
 from django.template.loader import render_to_string
 
-from .localized_value import LocalizedValue
+from .value import LocalizedValue
 
 
 class LocalizedFieldWidget(forms.MultiWidget):
@@ -15,12 +15,12 @@ class LocalizedFieldWidget(forms.MultiWidget):
     def __init__(self, *args, **kwargs):
         """Initializes a new instance of :see:LocalizedFieldWidget."""
 
-        widgets = []
+        initial_widgets = [
+            self.widget
+            for _ in settings.LANGUAGES
+        ]
 
-        for _ in settings.LANGUAGES:
-            widgets.append(self.widget)
-
-        super(LocalizedFieldWidget, self).__init__(widgets, *args, **kwargs)
+        super().__init__(initial_widgets, *args, **kwargs)
 
     def decompress(self, value: LocalizedValue) -> List[str]:
         """Decompresses the specified value so
@@ -36,7 +36,6 @@ class LocalizedFieldWidget(forms.MultiWidget):
         """
 
         result = []
-
         for lang_code, _ in settings.LANGUAGES:
             if value:
                 result.append(value.get(lang_code))
@@ -88,7 +87,8 @@ class AdminLocalizedFieldWidget(LocalizedFieldWidget):
         }
         return render_to_string(self.template, context)
 
-    def build_widget_attrs(self, widget, value, attrs):
+    @staticmethod
+    def build_widget_attrs(widget, value, attrs):
         attrs = dict(attrs)  # Copy attrs to avoid modifying the argument.
         if (not widget.use_required_attribute(value) or not widget.is_required) \
                 and 'required' in attrs:

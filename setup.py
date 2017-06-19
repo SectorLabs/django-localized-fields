@@ -7,7 +7,7 @@ with open(os.path.join(os.path.dirname(__file__), 'README.rst')) as readme:
 
 setup(
     name='django-localized-fields',
-    version='3.6',
+    version='4.1',
     packages=find_packages(),
     include_package_data=True,
     license='MIT License',
@@ -18,7 +18,7 @@ setup(
     author_email='open-source@sectorlabs.ro',
     keywords=['django', 'localized', 'language', 'models', 'fields'],
     install_requires=[
-        'django-postgres-extra>=1.4'
+        'django-postgres-extra>=1.11'
     ],
     classifiers=[
         'Environment :: Web Environment',

@@ -1,12 +1,12 @@
-from typing import Callable
+from typing import Callable, Tuple
 from datetime import datetime
 
 from django import forms
 from django.conf import settings
 from django.utils.text import slugify
 
-from .localized_field import LocalizedField
-from ..localized_value import LocalizedValue
+from .field import LocalizedField
+from ..value import LocalizedValue
 
 
 class LocalizedAutoSlugField(LocalizedField):
@@ -69,13 +69,7 @@ class LocalizedAutoSlugField(LocalizedField):
 
         slugs = LocalizedValue()
 
-        for lang_code, _ in settings.LANGUAGES:
-            value = self._get_populate_from_value(
-                instance,
-                self.populate_from,
-                lang_code
-            )
-
+        for lang_code, value in self._get_populate_values(instance):
             if not value:
                 continue
 
@@ -127,6 +121,30 @@ class LocalizedAutoSlugField(LocalizedField):
             index += 1
 
         return unique_slug
+
+    def _get_populate_values(self, instance) -> Tuple[str, str]:
+        """Gets all values (for each language) from the
+        specified's instance's `populate_from` field.
+
+        Arguments:
+            instance:
+                The instance to get the values from.
+
+        Returns:
+            A list of (lang_code, value) tuples.
+        """
+
+        return [
+            (
+                lang_code,
+                self._get_populate_from_value(
+                    instance,
+                    self.populate_from,
+                    lang_code
+                ),
+            )
+            for lang_code, _ in settings.LANGUAGES
+        ]
 
     @staticmethod
     def _get_populate_from_value(instance, field_name: str, language: str):

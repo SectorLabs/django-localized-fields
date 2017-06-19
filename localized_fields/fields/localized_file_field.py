@@ -8,10 +8,10 @@ from django.core.files.storage import default_storage
 from django.utils.encoding import force_str, force_text
 
 from localized_fields.fields import LocalizedField
-from localized_fields.fields.localized_field import LocalizedValueDescriptor
-from localized_fields.localized_value import LocalizedValue
+from localized_fields.fields.field import LocalizedValueDescriptor
+from localized_fields.value import LocalizedValue
 
-from ..localized_value import LocalizedFileValue
+from ..value import LocalizedFileValue
 from ..forms import LocalizedFileFieldForm
 
 

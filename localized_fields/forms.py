@@ -5,7 +5,7 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.forms.widgets import FILE_INPUT_CONTRADICTION
 
-from .localized_value import LocalizedValue, LocalizedStringValue, \
+from .value import LocalizedValue, LocalizedStringValue, \
     LocalizedFileValue
 from .widgets import LocalizedFieldWidget, LocalizedCharFieldWidget, \
     LocalizedFileWidget

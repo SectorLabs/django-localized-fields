@@ -1,6 +1,7 @@
 from django.test import TestCase
 
-from localized_fields import LocalizedField, LocalizedValue
+from localized_fields.fields import LocalizedField
+from localized_fields.value import LocalizedValue
 
 from .fake_model import get_fake_model
 
@@ -32,7 +33,6 @@ class LocalizedModelTestCase(TestCase):
         obj = cls.TestModel()
 
         assert isinstance(obj.title, LocalizedValue)
-
 
     @classmethod
     def test_model_init_kwargs(cls):

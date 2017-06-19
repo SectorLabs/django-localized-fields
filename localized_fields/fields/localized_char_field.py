@@ -1,6 +1,6 @@
 from ..forms import LocalizedCharFieldForm
-from .localized_field import LocalizedField
-from ..localized_value import LocalizedStringValue
+from .field import LocalizedField
+from ..value import LocalizedStringValue
 
 
 class LocalizedCharField(LocalizedField):

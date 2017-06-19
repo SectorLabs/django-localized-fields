@@ -1,70 +1,15 @@
+import json
+
+from typing import Union
+
 from django.conf import settings
 from django.db.utils import IntegrityError
-from django.utils import six, translation
 
 from psqlextra.fields import HStoreField
 
 from ..forms import LocalizedFieldForm
-from ..localized_value import LocalizedValue
-
-
-class LocalizedValueDescriptor(object):
-    """
-    The descriptor for the localized value attribute on the model instance.
-    Returns a :see:LocalizedValue when accessed so you can do stuff like::
-
-        >>> from myapp.models import MyModel
-        >>> instance = MyModel()
-        >>> instance.value.en = 'English value'
-
-    Assigns a strings to active language key in :see:LocalizedValue on
-    assignment so you can do::
-
-        >>> from django.utils import translation
-        >>> from myapp.models import MyModel
-
-        >>> translation.activate('nl')
-        >>> instance = MyModel()
-        >>> instance.title = 'dutch title'
-        >>> print(instance.title.nl) # prints 'dutch title'
-    """
-    def __init__(self, field):
-        self.field = field
-
-    def __get__(self, instance, cls=None):
-        if instance is None:
-            return self
-
-        # This is slightly complicated, so worth an explanation.
-        # `instance.localizedvalue` needs to ultimately return some instance of
-        # `LocalizedValue`, probably a subclass.
-
-        # The instance dict contains whatever was originally assigned
-        # in __set__.
-        if self.field.name in instance.__dict__:
-            value = instance.__dict__[self.field.name]
-        elif instance.pk is not None:
-            instance.refresh_from_db(fields=[self.field.name])
-            value = getattr(instance, self.field.name)
-        else:
-            value = None
-
-        if value is None:
-            attr = self.field.attr_class()
-            instance.__dict__[self.field.name] = attr
-
-        if isinstance(value, dict):
-            attr = self.field.attr_class(value)
-            instance.__dict__[self.field.name] = attr
-
-        return instance.__dict__[self.field.name]
-
-    def __set__(self, instance, value):
-        if isinstance(value, six.string_types):
-            self.__get__(instance).set(translation.get_language() or
-                                       settings.LANGUAGE_CODE, value)
-        else:
-            instance.__dict__[self.field.name] = value
+from ..value import LocalizedValue
+from ..descriptor import LocalizedValueDescriptor
 
 
 class LocalizedField(HStoreField):
@@ -87,9 +32,18 @@ class LocalizedField(HStoreField):
 
         super(LocalizedField, self).__init__(*args, **kwargs)
 
-    def contribute_to_class(self, cls, name, **kwargs):
-        super(LocalizedField, self).contribute_to_class(cls, name, **kwargs)
-        setattr(cls, self.name, self.descriptor_class(self))
+    def contribute_to_class(self, model, name, **kwargs):
+        """Adds this field to the specifed model.
+
+        Arguments:
+            cls:
+                The model to add the field to.
+
+            name:
+                The name of the field to add.
+        """
+        super(LocalizedField, self).contribute_to_class(model, name, **kwargs)
+        setattr(model, self.name, self.descriptor_class(self))
 
     @classmethod
     def from_db_value(cls, value, *_):
@@ -112,9 +66,31 @@ class LocalizedField(HStoreField):
             else:
                 return cls.attr_class()
 
+        # we can get a list if an aggregation expression was used..
+        # if we the expression was flattened when only one key was selected
+        # then we don't wrap each value in a localized value, otherwise we do
+        if isinstance(value, list):
+            result = []
+            for inner_val in value:
+                if isinstance(inner_val, dict):
+                    if inner_val is None:
+                        result.append(None)
+                    else:
+                        result.append(cls.attr_class(inner_val))
+                else:
+                    result.append(inner_val)
+
+            return result
+
+        # this is for when you select an individual key, it will be string,
+        # not a dictionary, we'll give it to you as a flat value, not as a
+        # localized value instance
+        if not isinstance(value, dict):
+            return value
+
         return cls.attr_class(value)
 
-    def to_python(self, value: dict) -> LocalizedValue:
+    def to_python(self, value: Union[dict, str, None]) -> LocalizedValue:
         """Turns the specified database value into its Python
         equivalent.
 
@@ -128,10 +104,17 @@ class LocalizedField(HStoreField):
             data extracted from the database.
         """
 
-        if not value or not isinstance(value, dict):
+        # first let the base class  handle the deserialization, this is in case we
+        # get specified a json string representing a dict
+        try:
+            deserialized_value = super(LocalizedField, self).to_python(value)
+        except json.JSONDecodeError:
+            deserialized_value = value
+
+        if not deserialized_value:
             return self.attr_class()
 
-        return self.attr_class(value)
+        return self.attr_class(deserialized_value)
 
     def get_prep_value(self, value: LocalizedValue) -> dict:
         """Turns the specified value into something the database

@@ -1,7 +1,8 @@
 from django.conf import settings
 from django.test import TestCase
 
-from localized_fields import LocalizedFieldWidget, LocalizedValue
+from localized_fields.value import LocalizedValue
+from localized_fields.widgets import LocalizedFieldWidget
 
 
 class LocalizedFieldWidgetTestCase(TestCase):

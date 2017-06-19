@@ -1,3 +1,6 @@
+import collections
+
+
 from django.conf import settings
 from django.utils import translation
 
@@ -16,17 +19,10 @@ class LocalizedValue(dict):
                 different language.
         """
 
-        # NOTE(seroy): First fill all the keys with default value,
-        # in order to attributes will be for each language
-        for lang_code, _ in settings.LANGUAGES:
-            value = keys.get(lang_code) if isinstance(keys, dict) else \
-                self.default_value
-            self.set(lang_code, value)
+        super().__init__({})
+        self._interpret_value(keys)
 
-        if isinstance(keys, str):
-            setattr(self, settings.LANGUAGE_CODE, keys)
-
-    def get(self, language: str=None) -> str:
+    def get(self, language: str=None, default: str=None) -> str:
         """Gets the underlying value in the specified or
         primary language.
 
@@ -41,7 +37,7 @@ class LocalizedValue(dict):
         """
 
         language = language or settings.LANGUAGE_CODE
-        return super().get(language, None)
+        return super().get(language, default)
 
     def set(self, language: str, value: str):
         """Sets the value in the specified language.
@@ -68,6 +64,40 @@ class LocalizedValue(dict):
 
         path = 'localized_fields.localized_value.%s' % self.__class__.__name__
         return path, [self.__dict__], {}
+
+    def _interpret_value(self, value):
+        """Interprets a value passed in the constructor as
+        a :see:LocalizedValue.
+
+        If string:
+            Assumes it's the default language.
+
+        If dict:
+            Each key is a language and the value a string
+            in that language.
+
+        If list:
+            Recurse into to apply rules above.
+
+        Arguments:
+            value:
+                The value to interpret.
+        """
+
+        for lang_code, _ in settings.LANGUAGES:
+            self.set(lang_code, self.default_value)
+
+        if isinstance(value, str):
+            self.set(settings.LANGUAGE_CODE, value)
+
+        elif isinstance(value, dict):
+            for lang_code, _ in settings.LANGUAGES:
+                lang_value = value.get(lang_code, self.default_value)
+                self.set(lang_code, lang_value)
+
+        elif isinstance(value, collections.Iterable):
+            for val in value:
+                self._interpret_value(val)
 
     def __str__(self) -> str:
         """Gets the value in the current language, or falls
