@@ -1,9 +1,9 @@
 from .field import LocalizedField
 from .autoslug_field import LocalizedAutoSlugField
 from .uniqueslug_field import LocalizedUniqueSlugField
-from .localized_char_field import LocalizedCharField
-from .localized_text_field import LocalizedTextField
-from .localized_file_field import LocalizedFileField
+from .char_field import LocalizedCharField
+from .text_field import LocalizedTextField
+from .file_field import LocalizedFileField
 
 
 __all__ = [

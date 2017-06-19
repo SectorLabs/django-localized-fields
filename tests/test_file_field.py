@@ -9,7 +9,7 @@ from django.core.files.base import File, ContentFile
 from django.core.files import temp as tempfile
 from localized_fields.fields import LocalizedFileField
 from localized_fields.value import LocalizedValue
-from localized_fields.fields.localized_file_field import LocalizedFieldFile
+from localized_fields.fields.file_field import LocalizedFieldFile
 from localized_fields.forms import LocalizedFileFieldForm
 from localized_fields.value import LocalizedFileValue
 from localized_fields.widgets import LocalizedFileWidget

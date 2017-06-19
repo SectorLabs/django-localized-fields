@@ -1,5 +1,5 @@
 from ..forms import LocalizedTextFieldForm
-from .localized_char_field import LocalizedCharField
+from .char_field import LocalizedCharField
 
 
 class LocalizedTextField(LocalizedCharField):
