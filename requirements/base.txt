@@ -1,1 +1,1 @@
-django-postgres-extra==1.4
+django-postgres-extra==1.11
