@@ -45,3 +45,7 @@
     border-color: #79aec8;
     opacity: 1;
 }
+
+.localized-fields-widget p.file-upload {
+    margin-left: 0;
+}

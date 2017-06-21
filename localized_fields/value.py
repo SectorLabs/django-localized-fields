@@ -1,11 +1,13 @@
 import collections
 
+
 from django.conf import settings
 from django.utils import translation
 
 
 class LocalizedValue(dict):
     """Represents the value of a :see:LocalizedField."""
+    default_value = None
 
     def __init__(self, keys: dict=None):
         """Initializes a new instance of :see:LocalizedValue.
@@ -20,7 +22,7 @@ class LocalizedValue(dict):
         super().__init__({})
         self._interpret_value(keys)
 
-    def get(self, language: str=None) -> str:
+    def get(self, language: str=None, default: str=None) -> str:
         """Gets the underlying value in the specified or
         primary language.
 
@@ -35,7 +37,7 @@ class LocalizedValue(dict):
         """
 
         language = language or settings.LANGUAGE_CODE
-        return super().get(language, None)
+        return super().get(language, default)
 
     def set(self, language: str, value: str):
         """Sets the value in the specified language.
@@ -60,7 +62,7 @@ class LocalizedValue(dict):
             contained in this instance.
         """
 
-        path = 'localized_fields.fields.LocalizedValue'
+        path = 'localized_fields.localized_value.%s' % self.__class__.__name__
         return path, [self.__dict__], {}
 
     def _interpret_value(self, value):
@@ -83,14 +85,14 @@ class LocalizedValue(dict):
         """
 
         for lang_code, _ in settings.LANGUAGES:
-            self.set(lang_code, None)
+            self.set(lang_code, self.default_value)
 
         if isinstance(value, str):
             self.set(settings.LANGUAGE_CODE, value)
 
         elif isinstance(value, dict):
             for lang_code, _ in settings.LANGUAGES:
-                lang_value = value.get(lang_code) or None
+                lang_value = value.get(lang_code, self.default_value)
                 self.set(lang_code, lang_value)
 
         elif isinstance(value, collections.Iterable):
@@ -156,4 +158,28 @@ class LocalizedValue(dict):
     def __repr__(self):  # pragma: no cover
         """Gets a textual representation of this object."""
 
-        return 'LocalizedValue<%s> 0x%s' % (dict(self), id(self))
+        return '%s<%s> 0x%s' % (self.__class__.__name__,
+                                self.__dict__, id(self))
+
+
+class LocalizedStringValue(LocalizedValue):
+    default_value = ''
+
+
+class LocalizedFileValue(LocalizedValue):
+    def __getattr__(self, name: str):
+        """Proxies access to attributes to attributes of LocalizedFile"""
+
+        value = self.get(translation.get_language())
+        if hasattr(value, name):
+            return getattr(value, name)
+        raise AttributeError("'{}' object has no attribute '{}'".
+                             format(self.__class__.__name__, name))
+
+    def __str__(self) -> str:
+        """Returns string representation of value"""
+        return str(super().__str__())
+
+    def localized(self):
+        """Returns value for current language"""
+        return self.get(translation.get_language())

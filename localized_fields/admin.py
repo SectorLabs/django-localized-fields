@@ -1,11 +1,16 @@
 from django.contrib.admin import ModelAdmin
 
 from . import widgets
-from .fields import LocalizedField
+from .fields import LocalizedField, LocalizedCharField, LocalizedTextField, \
+    LocalizedFileField
+
 
 
 FORMFIELD_FOR_LOCALIZED_FIELDS_DEFAULTS = {
     LocalizedField: {'widget': widgets.AdminLocalizedFieldWidget},
+    LocalizedCharField: {'widget': widgets.AdminLocalizedCharFieldWidget},
+    LocalizedTextField: {'widget': widgets.AdminLocalizedFieldWidget},
+    LocalizedFileField: {'widget': widgets.AdminLocalizedFileFieldWidget},
 }
 
 
