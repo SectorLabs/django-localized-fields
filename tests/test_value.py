@@ -144,6 +144,26 @@ class LocalizedValueTestCase(TestCase):
         assert localized_value.get(other_language) != test_value
 
     @staticmethod
+    def test_str_fallback_custom_fallback():
+        """Tests whether the :see:LocalizedValue class's
+        __str__'s fallback functionality properly respects
+        the LOCALIZED_FIELDS_FALLBACKS setting."""
+
+        test_value = 'myvalue'
+
+        settings.LOCALIZED_FIELDS_FALLBACKS = {
+            'nl': ['ro']
+        }
+
+        localized_value = LocalizedValue({
+            settings.LANGUAGE_CODE: settings.LANGUAGE_CODE,
+            'ro': 'ro'
+        })
+
+        with translation.override('nl'):
+            assert str(localized_value) == 'ro'
+
+    @staticmethod
     def test_deconstruct():
         """Tests whether the :see:LocalizedValue
         class's :see:deconstruct function works properly."""
