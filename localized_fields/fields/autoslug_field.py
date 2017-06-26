@@ -1,12 +1,14 @@
-from typing import Callable, Tuple
+from typing import Callable, Tuple, Union
 from datetime import datetime
 
 from django import forms
 from django.conf import settings
+from django.utils import translation
 from django.utils.text import slugify
 
 from .field import LocalizedField
 from ..value import LocalizedValue
+from ..util import resolve_object_property
 
 
 class LocalizedAutoSlugField(LocalizedField):
@@ -147,7 +149,7 @@ class LocalizedAutoSlugField(LocalizedField):
         ]
 
     @staticmethod
-    def _get_populate_from_value(instance, field_name: str, language: str):
+    def _get_populate_from_value(instance, field_name: Union[str, Tuple[str]], language: str):
         """Gets the value to create a slug from in the specified language.
 
         Arguments:
@@ -164,5 +166,17 @@ class LocalizedAutoSlugField(LocalizedField):
             The text to generate a slug for.
         """
 
-        value = getattr(instance, field_name, None)
-        return value.get(language)
+        def get_field_value(name):
+            value = resolve_object_property(instance, name)
+            with translation.override(language):
+                return str(value)
+
+        if isinstance(field_name, tuple) or isinstance(field_name, list):
+            value = '-'.join([
+                value
+                for value in [get_field_value(name) for name in field_name]
+                if value
+            ])
+            return value
+
+        return get_field_value(field_name)

@@ -1,6 +1,7 @@
 import copy
 
 from django import forms
+from django.db import models
 from django.conf import settings
 from django.test import TestCase
 from django.db.utils import IntegrityError
@@ -31,6 +32,7 @@ class LocalizedSlugFieldTestCase(TestCase):
             'LocalizedAutoSlugFieldTestModel',
             {
                 'title': LocalizedField(),
+                'name': models.CharField(max_length=255),
                 'slug': LocalizedAutoSlugField(populate_from='title')
             }
         )
@@ -39,6 +41,7 @@ class LocalizedSlugFieldTestCase(TestCase):
             'LocalizedUniqueSlugFieldTestModel',
             {
                 'title': LocalizedField(),
+                'name': models.CharField(max_length=255),
                 'slug': LocalizedUniqueSlugField(populate_from='title')
             }
         )
@@ -155,6 +158,22 @@ class LocalizedSlugFieldTestCase(TestCase):
     def test_formfield_unique(cls):
         cls._test_formfield(LocalizedUniqueSlugField)
 
+    @classmethod
+    def test_populate_multiple_from_fields_auto(cls):
+        cls._test_populate_multiple_from_fields(LocalizedAutoSlugField)
+
+    @classmethod
+    def test_populate_multiple_from_fields_unique(cls):
+        cls._test_populate_multiple_from_fields(LocalizedUniqueSlugField)
+
+    @classmethod
+    def test_populate_multiple_from_fields_fk_auto(cls):
+        cls._test_populate_multiple_from_fields_fk(LocalizedAutoSlugField)
+
+    @classmethod
+    def test_populate_multiple_from_fields_fk_unique(cls):
+        cls._test_populate_multiple_from_fields_fk(LocalizedUniqueSlugField)
+
     @staticmethod
     def _test_populate(model):
         """Tests whether the populating feature works correctly."""
@@ -164,6 +183,67 @@ class LocalizedSlugFieldTestCase(TestCase):
         obj.save()
 
         assert obj.slug.get('en') == slugify(obj.title)
+
+    @staticmethod
+    def _test_populate_multiple_from_fields(field_type):
+        """Tests whether populating the slug from multiple
+        fields works correctly."""
+
+        model = get_fake_model(
+            '_test_populate_multiple_from_fields_' + str(field_type),
+            {
+                'title': LocalizedField(),
+                'name': models.CharField(max_length=255),
+                'slug': field_type(populate_from=('title', 'name'))
+            }
+        )
+
+        obj = model()
+        for lang_code, lang_name in settings.LANGUAGES:
+            obj.name = 'swen'
+            obj.title.set(lang_code, 'title %s' % lang_name)
+
+        obj.save()
+
+        for lang_code, lang_name in settings.LANGUAGES:
+            assert obj.slug.get(lang_code) == 'title-%s-swen' % lang_name.lower()
+
+    @staticmethod
+    def _test_populate_multiple_from_fields_fk(field_type):
+        """Tests whether populating the slug from multiple
+        fields works correctly."""
+
+        model_fk = get_fake_model(
+            '_test_populate_multiple_from_fields_fk_other_' + str(field_type),
+            {
+                'name': LocalizedField(),
+            }
+        )
+
+        model = get_fake_model(
+            '_test_populate_multiple_from_fields_fk_' + str(field_type),
+            {
+                'title': LocalizedField(),
+                'other': models.ForeignKey(model_fk),
+                'slug': field_type(populate_from=('title', 'other.name'))
+            }
+        )
+
+        other = model_fk.objects.create(name={settings.LANGUAGE_CODE: 'swen'})
+        # for lang_code, lang_name in settings.LANGUAGES:
+        #     other.name.set(lang_code, 'swen')
+
+        # other.save()
+
+        obj = model()
+        for lang_code, lang_name in settings.LANGUAGES:
+            obj.other_id = other.id
+            obj.title.set(lang_code, 'title %s' % lang_name)
+
+        obj.save()
+
+        for lang_code, lang_name in settings.LANGUAGES:
+            assert obj.slug.get(lang_code) == 'title-%s-swen' % lang_name.lower()
 
     @staticmethod
     def _test_populate_multiple_languages(model):
