@@ -1,6 +1,5 @@
 import collections
 
-
 from django.conf import settings
 from django.utils import translation
 
@@ -104,12 +103,18 @@ class LocalizedValue(dict):
         back to the primary language if there's no value
         in the current language."""
 
-        value = self.get(translation.get_language())
+        fallbacks = getattr(settings, 'LOCALIZED_FIELDS_FALLBACKS', {})
 
-        if not value:
-            value = self.get(settings.LANGUAGE_CODE)
+        language = translation.get_language() or settings.LANGUAGE_CODE
+        languages = fallbacks.get(language, [settings.LANGUAGE_CODE])[:]
+        languages.insert(0, language)
 
-        return value or ''
+        for lang_code in languages:
+            value = self.get(lang_code)
+            if value:
+                return value or ''
+
+        return ''
 
     def __eq__(self, other):
         """Compares :paramref:self to :paramref:other for
