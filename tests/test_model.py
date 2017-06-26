@@ -18,7 +18,6 @@ class LocalizedModelTestCase(TestCase):
         super(LocalizedModelTestCase, cls).setUpClass()
 
         cls.TestModel = get_fake_model(
-            'LocalizedModelTestCase',
             {
                 'title': LocalizedField()
             }

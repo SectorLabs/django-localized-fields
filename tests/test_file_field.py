@@ -30,7 +30,6 @@ class LocalizedFileFieldTestCase(TestCase):
         super().setUpClass()
 
         cls.FileFieldModel = get_fake_model(
-            'LocalizedFileFieldTestModel',
             {
                 'file': LocalizedFileField(),
             }

@@ -24,14 +24,12 @@ class LocalizedExpressionsTestCase(TestCase):
         super(LocalizedExpressionsTestCase, cls).setUpClass()
 
         cls.TestModel1 = get_fake_model(
-            'LocalizedExpressionsTestCase2',
             {
                 'name': models.CharField(null=False, blank=False, max_length=255),
             }
         )
 
         cls.TestModel2 = get_fake_model(
-            'LocalizedExpressionsTestCase1',
             {
                 'text': LocalizedField(),
                 'other': models.ForeignKey(cls.TestModel1, related_name='features')

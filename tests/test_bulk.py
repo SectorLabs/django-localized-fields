@@ -16,7 +16,6 @@ class LocalizedBulkTestCase(TestCase):
         a :see:LocalizedUniqueSlugField in the model."""
 
         model = get_fake_model(
-            'BulkSlugInsertModel',
             {
                 'name': LocalizedField(),
                 'slug': LocalizedUniqueSlugField(populate_from='name', include_time=True),

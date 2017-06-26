@@ -29,7 +29,6 @@ class LocalizedSlugFieldTestCase(TestCase):
         super(LocalizedSlugFieldTestCase, cls).setUpClass()
 
         cls.AutoSlugModel = get_fake_model(
-            'LocalizedAutoSlugFieldTestModel',
             {
                 'title': LocalizedField(),
                 'name': models.CharField(max_length=255),
@@ -38,7 +37,6 @@ class LocalizedSlugFieldTestCase(TestCase):
         )
 
         cls.MagicSlugModel = get_fake_model(
-            'LocalizedUniqueSlugFieldTestModel',
             {
                 'title': LocalizedField(),
                 'name': models.CharField(max_length=255),
@@ -78,7 +76,6 @@ class LocalizedSlugFieldTestCase(TestCase):
         title = 'myuniquetitle'
 
         PkModel = get_fake_model(
-            'PkModel',
             {
                 'title': LocalizedField(),
                 'slug': LocalizedUniqueSlugField(populate_from='title', include_time=True)
@@ -96,7 +93,6 @@ class LocalizedSlugFieldTestCase(TestCase):
         """Tests whether slugs are not re-generated if not needed."""
 
         NoChangeSlugModel = get_fake_model(
-            'NoChangeSlugModel',
             {
                 'title': LocalizedField(),
                 'slug': LocalizedUniqueSlugField(populate_from='title', include_time=True)
@@ -190,7 +186,6 @@ class LocalizedSlugFieldTestCase(TestCase):
         fields works correctly."""
 
         model = get_fake_model(
-            '_test_populate_multiple_from_fields_' + str(field_type),
             {
                 'title': LocalizedField(),
                 'name': models.CharField(max_length=255),
@@ -214,14 +209,12 @@ class LocalizedSlugFieldTestCase(TestCase):
         fields works correctly."""
 
         model_fk = get_fake_model(
-            '_test_populate_multiple_from_fields_fk_other_' + str(field_type),
             {
                 'name': LocalizedField(),
             }
         )
 
         model = get_fake_model(
-            '_test_populate_multiple_from_fields_fk_' + str(field_type),
             {
                 'title': LocalizedField(),
                 'other': models.ForeignKey(model_fk),
@@ -230,10 +223,6 @@ class LocalizedSlugFieldTestCase(TestCase):
         )
 
         other = model_fk.objects.create(name={settings.LANGUAGE_CODE: 'swen'})
-        # for lang_code, lang_name in settings.LANGUAGES:
-        #     other.name.set(lang_code, 'swen')
-
-        # other.save()
 
         obj = model()
         for lang_code, lang_name in settings.LANGUAGES:

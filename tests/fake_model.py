@@ -1,3 +1,5 @@
+import uuid
+
 from django.db import connection, migrations
 from django.db.migrations.executor import MigrationExecutor
 from django.contrib.postgres.operations import HStoreExtension
@@ -5,24 +7,27 @@ from django.contrib.postgres.operations import HStoreExtension
 from localized_fields.models import LocalizedModel
 
 
-def define_fake_model(name='TestModel', fields=None):
+def define_fake_model(fields=None, model_base=LocalizedModel, meta_options={}):
+    name = str(uuid.uuid4()).replace('-', '')[:8]
+
     attributes = {
-        'app_label': 'localized_fields',
+        'app_label': 'tests',
         '__module__': __name__,
-        '__name__': name
+        '__name__': name,
+        'Meta': type('Meta', (object,), meta_options)
     }
 
     if fields:
         attributes.update(fields)
+    model = type(name, (model_base,), attributes)
 
-    model = type(name, (LocalizedModel,), attributes)
     return model
 
 
-def get_fake_model(name='TestModel', fields=None):
+def get_fake_model(fields=None, model_base=LocalizedModel, meta_options={}):
     """Creates a fake model to use during unit tests."""
 
-    model = define_fake_model(name, fields)
+    model = define_fake_model(fields, model_base, meta_options)
 
     class TestProject:
 
@@ -39,7 +44,7 @@ def get_fake_model(name='TestModel', fields=None):
     with connection.schema_editor() as schema_editor:
         migration_executor = MigrationExecutor(schema_editor.connection)
         migration_executor.apply_migration(
-            TestProject(), TestMigration('eh', 'localized_fields'))
+            TestProject(), TestMigration('eh', 'postgres_extra'))
 
         schema_editor.create_model(model)
 
