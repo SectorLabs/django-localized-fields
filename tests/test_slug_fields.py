@@ -82,6 +82,14 @@ class LocalizedSlugFieldTestCase(TestCase):
         assert old_slug_nl != obj.slug.nl
 
     @classmethod
+    def test_unique_slug_update(cls):
+        obj = cls.Model.objects.create(title={settings.LANGUAGE_CODE: 'mytitle'})
+        assert obj.slug.get() == 'mytitle'
+        obj.title.set(settings.LANGUAGE_CODE, 'othertitle')
+        obj.save()
+        assert obj.slug.get() == 'othertitle'
+
+    @classmethod
     def test_unique_slug_unique_max_retries(cls):
         """Tests whether the unique slug implementation doesn't
         try to find a slug forever and gives up after a while."""
