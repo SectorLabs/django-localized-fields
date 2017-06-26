@@ -1,3 +1,4 @@
+import json
 import datetime
 import posixpath
 
@@ -149,3 +150,11 @@ class LocalizedFileField(LocalizedField):
             defaults['required'] = False
         defaults.update(kwargs)
         return super().formfield(**defaults)
+
+    def value_to_string(self, obj):
+        value = self.value_from_object(obj)
+        if isinstance(value, LocalizedFileValue):
+            return json.dumps({k: v.name for k, v
+                               in value.__dict__.items()})
+        else:
+            return super().value_to_string(obj)
