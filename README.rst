@@ -199,6 +199,29 @@ Besides ``LocalizedField``, there's also:
                    title = LocalizedField()
                    slug = LocalizedUniqueSlugField(populate_from='title')
 
+    ``populate_from`` can be:
+
+        - The name of a field.
+
+           .. code-block:: python
+
+               slug = LocalizedUniqueSlugField(populate_from='name', include_time=True)
+
+        - A callable.
+
+           .. code-block:: python
+
+               def generate_slug(instance):
+                   return instance.title
+
+               slug = LocalizedUniqueSlugField(populate_from=generate_slug, include_time=True)
+
+        - A tuple of names of fields.
+
+           .. code-block:: python
+
+               slug = LocalizedUniqueSlugField(populate_from=('name', 'beer') include_time=True)
+
     By setting the option ``include_time=True``
 
           .. code-block:: python
@@ -207,21 +230,6 @@ Besides ``LocalizedField``, there's also:
 
     You can instruct the field to include a part of the current time into
     the resulting slug. This is useful if you're running into a lot of collisions.
-
-* ``LocalizedAutoSlugField``
-     Automatically creates a slug for every language from the specified field.
-
-     Currently only supports ``populate_from``. Example usage:
-
-          .. code-block:: python
-
-              from localized_fields.fields import LocalizedField, LocalizedAutoSlugField
-
-              class MyModel(LocalizedModel):
-                   title = LocalizedField()
-                   slug = LocalizedAutoSlugField(populate_from='title')
-
-     This implementation is **NOT** concurrency safe, prefer ``LocalizedUniqueSlugField``.
 
 * ``LocalizedBleachField``
      Automatically bleaches the content of the field.
