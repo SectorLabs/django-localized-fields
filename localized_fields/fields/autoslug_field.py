@@ -1,3 +1,5 @@
+import warnings
+
 from typing import Callable, Tuple, Union
 from datetime import datetime
 
@@ -20,6 +22,11 @@ class LocalizedAutoSlugField(LocalizedField):
 
         self.populate_from = kwargs.pop('populate_from', None)
         self.include_time = kwargs.pop('include_time', False)
+
+        warnings.warn(
+            'LocalizedAutoSlug is deprecated and will be removed in the next major version.',
+            DeprecationWarning
+        )
 
         super(LocalizedAutoSlugField, self).__init__(
             *args,
