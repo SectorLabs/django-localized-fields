@@ -88,7 +88,7 @@ class LocalizedFileFieldForm(LocalizedFieldForm, forms.FileField):
 
     def clean(self, value, initial=None):
         """
-        Most part of this method is a copy of 
+        Most part of this method is a copy of
         django.forms.MultiValueField.clean, with the exception of initial
         value handling (this need for correct processing FileField's).
         All original comments saved.
@@ -121,8 +121,9 @@ class LocalizedFileFieldForm(LocalizedFieldForm, forms.FileField):
                 field_initial = initial[i]
             except IndexError:
                 field_initial = None
+
             if field_value in self.empty_values and \
-                            field_initial in self.empty_values:
+                    field_initial in self.empty_values:
                 if self.require_all_fields:
                     # Raise a 'required' error if the MultiValueField is
                     # required and any field is empty.
