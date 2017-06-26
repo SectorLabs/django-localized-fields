@@ -166,6 +166,9 @@ class LocalizedAutoSlugField(LocalizedField):
             The text to generate a slug for.
         """
 
+        if callable(field_name):
+            return field_name(instance)
+
         def get_field_value(name):
             value = resolve_object_property(instance, name)
             with translation.override(language):

@@ -19,7 +19,7 @@ class LocalizedSlugFieldTestCase(TestCase):
     """Tests the localized slug classes."""
 
     AutoSlugModel = None
-    MagicSlugModel = None
+    Model = None
 
     @classmethod
     def setUpClass(cls):
@@ -27,7 +27,7 @@ class LocalizedSlugFieldTestCase(TestCase):
 
         super(LocalizedSlugFieldTestCase, cls).setUpClass()
 
-        cls.MagicSlugModel = get_fake_model(
+        cls.Model = get_fake_model(
             {
                 'title': LocalizedField(),
                 'name': models.CharField(max_length=255),
@@ -88,13 +88,13 @@ class LocalizedSlugFieldTestCase(TestCase):
 
         title = 'myuniquetitle'
 
-        obj = cls.MagicSlugModel()
+        obj = cls.Model()
         obj.title.en = title
         obj.save()
 
         with cls.assertRaises(cls, IntegrityError):
             for _ in range(0, settings.LOCALIZED_FIELDS_MAX_RETRIES + 1):
-                another_obj = cls.MagicSlugModel()
+                another_obj = cls.Model()
                 another_obj.title.en = title
                 another_obj.save()
 
@@ -102,11 +102,34 @@ class LocalizedSlugFieldTestCase(TestCase):
     def test_populate(cls):
         """Tests whether the populating feature works correctly."""
 
-        obj = cls.MagicSlugModel()
+        obj = cls.Model()
         obj.title.en = 'this is my title'
         obj.save()
 
         assert obj.slug.get('en') == slugify(obj.title)
+
+    @classmethod
+    def test_populate_callable(cls):
+        """Tests whether the populating feature works correctly
+        when you specify a callable."""
+
+        def generate_slug(instance):
+            return instance.title
+
+        model = get_fake_model({
+            'title': LocalizedField(),
+            'slug': LocalizedUniqueSlugField(populate_from=generate_slug)
+        })
+
+        obj = cls.Model()
+        for lang_code, lang_name in settings.LANGUAGES:
+            obj.title.set(lang_code, 'title %s' % lang_name)
+
+        obj.save()
+
+        for lang_code, lang_name in settings.LANGUAGES:
+            assert obj.slug.get(lang_code) == 'title-%s' % lang_name.lower()
+
 
     @staticmethod
     def test_populate_multiple_from_fields():
@@ -167,7 +190,7 @@ class LocalizedSlugFieldTestCase(TestCase):
         """Tests whether the populating feature correctly
         works for all languages."""
 
-        obj = cls.MagicSlugModel()
+        obj = cls.Model()
         for lang_code, lang_name in settings.LANGUAGES:
             obj.title.set(lang_code, 'title %s' % lang_name)
 
@@ -182,12 +205,12 @@ class LocalizedSlugFieldTestCase(TestCase):
 
         title = 'myuniquetitle'
 
-        obj = cls.MagicSlugModel()
+        obj = cls.Model()
         obj.title.en = title
         obj.save()
 
         for i in range(1, settings.LOCALIZED_FIELDS_MAX_RETRIES - 1):
-            another_obj = cls.MagicSlugModel()
+            another_obj = cls.Model()
             another_obj.title.en = title
             another_obj.save()
 
@@ -199,7 +222,7 @@ class LocalizedSlugFieldTestCase(TestCase):
         when the value consists completely out
         of non-ASCII characters."""
 
-        obj = cls.MagicSlugModel()
+        obj = cls.Model()
         obj.title.en = 'مكاتب للايجار بشارع بورسعيد'
         obj.save()
 
