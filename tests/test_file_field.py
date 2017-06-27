@@ -2,6 +2,7 @@ import os
 import shutil
 import tempfile as sys_tempfile
 import pickle
+import json
 
 from django import forms
 from django.test import TestCase, override_settings
@@ -117,6 +118,20 @@ class LocalizedFileFieldTestCase(TestCase):
             '%s_%s' % (lang, filename)
         filename = field.generate_filename(instance, 'test', 'en')
         assert filename == 'en_test'
+
+    @classmethod
+    @override_settings(LANGUAGES=(('en', 'English'),))
+    def test_value_to_string(cls):
+        """Tests whether the :see:LocalizedFileField
+        class's :see:value_to_string function works properly."""
+
+        temp_file = File(tempfile.NamedTemporaryFile())
+        instance = cls.FileFieldModel()
+        field = cls.FileFieldModel._meta.get_field('file')
+        field.upload_to = ''
+        instance.file.en.save('testfilename', temp_file)
+        expected_value_to_string = json.dumps({'en': 'testfilename'})
+        assert field.value_to_string(instance) == expected_value_to_string
 
     @staticmethod
     def test_get_prep_value():
