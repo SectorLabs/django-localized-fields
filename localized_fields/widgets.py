@@ -10,6 +10,7 @@ from .value import LocalizedValue
 
 class LocalizedFieldWidget(forms.MultiWidget):
     """Widget that has an input box for every language."""
+    template_name = 'localized_fields/multiwidget.html'
     widget = forms.Textarea
 
     def __init__(self, *args, **kwargs):
@@ -21,6 +22,10 @@ class LocalizedFieldWidget(forms.MultiWidget):
         ]
 
         super().__init__(initial_widgets, *args, **kwargs)
+
+        for ((lc, ln), w) in zip(settings.LANGUAGES, self.widgets):
+            w.attrs['lang_code'] = lc
+            w.attrs['lang_name'] = ln
 
     def decompress(self, value: LocalizedValue) -> List[str]:
         """Decompresses the specified value so

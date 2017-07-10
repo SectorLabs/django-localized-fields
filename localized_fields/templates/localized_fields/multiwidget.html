@@ -1,0 +1,4 @@
+{% for widget in widget.subwidgets %}
+<label for="{{ widget.attrs.id }}">{{ widget.attrs.lang_name }}</label>
+{% include widget.template_name %}
+{% endfor %}
