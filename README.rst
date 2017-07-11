@@ -254,8 +254,7 @@ Besides ``LocalizedField``, there's also:
 
            .. code-block:: python
 
-              from localized_fields import (LocalizedCharField,
-                                            LocalizedTextField)
+              from localized_fields.fields import LocalizedCharField, LocalizedTextField
 
               class MyModel(models.Model):
                    title = LocalizedCharField()
@@ -270,7 +269,7 @@ Besides ``LocalizedField``, there's also:
 
            .. code-block:: python
 
-              from localized_fields import LocalizedFileField
+              from localized_fields.fields import LocalizedFileField
 
               def my_directory_path(instance, filename, lang):
                 # file will be uploaded to MEDIA_ROOT/<lang>/<id>_<filename>
