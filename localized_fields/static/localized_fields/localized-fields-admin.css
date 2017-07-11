@@ -1,5 +1,5 @@
 .localized-fields-widget {
-    margin-left: 160px;
+    display: inline-block;
 }
 
 .localized-fields-widget.tabs {
