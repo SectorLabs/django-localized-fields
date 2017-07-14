@@ -19,16 +19,13 @@ class LocalizedFieldForm(forms.MultiValueField):
     field_class = forms.fields.CharField
     value_class = LocalizedValue
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, required_langs: List[str]=[], **kwargs):
         """Initializes a new instance of :see:LocalizedFieldForm."""
 
         fields = []
 
         for lang_code, _ in settings.LANGUAGES:
-            field_options = {'required': False}
-
-            if lang_code == settings.LANGUAGE_CODE:
-                field_options['required'] = kwargs.get('required', True)
+            field_options = {'required': lang_code in required_langs}
 
             field_options['label'] = lang_code
             fields.append(self.field_class(**field_options))

@@ -32,6 +32,13 @@ class LocalizedField(HStoreField):
 
         super(LocalizedField, self).__init__(*args, **kwargs)
 
+        if self.required is None and self.blank:
+            self.required = []
+        elif self.required is None and not self.blank:
+            self.required = [settings.LANGUAGE_CODE]
+        elif type(self.required) == bool and self.required:
+            self.required = [lang_code for lang_code, _ in settings.LANGUAGES]
+
     def contribute_to_class(self, model, name, **kwargs):
         """Adds this field to the specifed model.
 
@@ -185,8 +192,8 @@ class LocalizedField(HStoreField):
         return value
 
     def validate(self, value: LocalizedValue, *_):
-        """Validates that the value for the primary language
-        has been filled in.
+        """Validates that the values has been filled in for all required
+        languages
 
         Exceptions are raises in order to notify the user
         of invalid values.
@@ -199,17 +206,14 @@ class LocalizedField(HStoreField):
         if self.null:
             return
 
-        primary_lang_val = getattr(value, settings.LANGUAGE_CODE)
+        for lang in self.required:
+            lang_val = getattr(value, settings.LANGUAGE_CODE)
 
-        # NOTE(seroy): use check for None, instead of `not primary_lang_val`
-        # condition, cause in this way we can not save '' value
-        if primary_lang_val is None:
-            raise IntegrityError(
-                'null value in column "%s.%s" violates not-null constraint' % (
-                    self.name,
-                    settings.LANGUAGE_CODE
-                )
-            )
+            # NOTE(seroy): use check for None, instead of `not lang_val`
+            # condition, cause in this way we can not save '' value
+            if lang_val is None:
+                raise IntegrityError('null value in column "%s.%s" violates' \
+                                     'not-null constraint' % (self.name, lang))
 
     def formfield(self, **kwargs):
         """Gets the form field associated with this field."""
@@ -217,18 +221,10 @@ class LocalizedField(HStoreField):
         defaults = {
             'form_class': LocalizedFieldForm
         }
-
+        if issubclass(kwargs.get('form_class', LocalizedFieldForm),
+                      LocalizedFieldForm):
+            defaults.update({
+                'required_langs': self.required
+            })
         defaults.update(kwargs)
         return super().formfield(**defaults)
-
-    def deconstruct(self):
-        """Gets the values to pass to :see:__init__ when
-        re-creating this object."""
-
-        name, path, args, kwargs = super(
-            LocalizedField, self).deconstruct()
-
-        if self.uniqueness:
-            kwargs['uniqueness'] = self.uniqueness
-
-        return name, path, args, kwargs

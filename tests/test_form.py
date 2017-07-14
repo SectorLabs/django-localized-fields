@@ -12,7 +12,7 @@ class LocalizedFieldFormTestCase(TestCase):
         """Tests whether the constructor correctly
         creates a field for every language."""
 
-        form = LocalizedFieldForm()
+        form = LocalizedFieldForm(required_langs=[settings.LANGUAGE_CODE])
 
         for (lang_code, _), field in zip(settings.LANGUAGES, form.fields):
             assert field.label == lang_code
