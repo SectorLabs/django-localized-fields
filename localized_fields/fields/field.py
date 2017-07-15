@@ -177,9 +177,6 @@ class LocalizedField(HStoreField):
         # are any of the language fiels None/empty?
         is_all_null = True
         for lang_code, _ in settings.LANGUAGES:
-            # NOTE(seroy): use check for None, instead of
-            # `bool(value.get(lang_code))==True` condition, cause in this way
-            # we can not save '' value
             if value.get(lang_code) is not None:
                 is_all_null = False
                 break
@@ -209,8 +206,6 @@ class LocalizedField(HStoreField):
         for lang in self.required:
             lang_val = getattr(value, settings.LANGUAGE_CODE)
 
-            # NOTE(seroy): use check for None, instead of `not lang_val`
-            # condition, cause in this way we can not save '' value
             if lang_val is None:
                 raise IntegrityError('null value in column "%s.%s" violates' \
                                      'not-null constraint' % (self.name, lang))
@@ -218,13 +213,11 @@ class LocalizedField(HStoreField):
     def formfield(self, **kwargs):
         """Gets the form field associated with this field."""
 
-        defaults = {
-            'form_class': LocalizedFieldForm
-        }
-        if issubclass(kwargs.get('form_class', LocalizedFieldForm),
-                      LocalizedFieldForm):
-            defaults.update({
-                'required_langs': self.required
-            })
+        defaults = dict(form_class=LocalizedFieldForm)
+
+        form_class = kwargs.get('form_class', LocalizedFieldForm)
+        if issubclass(form_class, LocalizedFieldForm):
+            defaults.update(dict(required_langs=self.required))
+
         defaults.update(kwargs)
         return super().formfield(**defaults)
