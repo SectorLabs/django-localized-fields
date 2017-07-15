@@ -207,7 +207,7 @@ class LocalizedField(HStoreField):
             lang_val = getattr(value, settings.LANGUAGE_CODE)
 
             if lang_val is None:
-                raise IntegrityError('null value in column "%s.%s" violates' \
+                raise IntegrityError('null value in column "%s.%s" violates '
                                      'not-null constraint' % (self.name, lang))
 
     def formfield(self, **kwargs):

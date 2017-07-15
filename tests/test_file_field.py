@@ -72,7 +72,7 @@ class LocalizedFileFieldTestCase(TestCase):
 
     @classmethod
     def test_save_form_data(cls):
-        """Tests whether the :see:save_form_data function correctly set 
+        """Tests whether the :see:save_form_data function correctly set
         a valid value."""
 
         instance = cls.FileFieldModel()
@@ -87,7 +87,7 @@ class LocalizedFileFieldTestCase(TestCase):
         instance = cls.FileFieldModel()
         instance.file = {'en': ContentFile("test", "testfilename")}
         instance._meta.get_field('file').pre_save(instance, False)
-        assert instance.file.en._committed == True
+        assert instance.file.en._committed is True
 
     @classmethod
     def test_file_methods(cls):
@@ -135,17 +135,17 @@ class LocalizedFileFieldTestCase(TestCase):
 
     @staticmethod
     def test_get_prep_value():
-        """Tests whether the :see:get_prep_value function returns correctly 
+        """Tests whether the :see:get_prep_value function returns correctly
         value."""
 
         value = LocalizedValue({'en': None})
-        assert LocalizedFileField().get_prep_value(None) == None
+        assert LocalizedFileField().get_prep_value(None) is None
         assert isinstance(LocalizedFileField().get_prep_value(value), dict)
         assert LocalizedFileField().get_prep_value(value)['en'] == ''
 
     @staticmethod
     def test_formfield():
-        """Tests whether the :see:formfield function correctly returns 
+        """Tests whether the :see:formfield function correctly returns
         a valid form."""
 
         form_field = LocalizedFileField().formfield()
@@ -161,6 +161,5 @@ class LocalizedFileFieldTestCase(TestCase):
         name, path, args, kwargs = LocalizedFileField().deconstruct()
         assert 'upload_to' in kwargs
         assert 'storage' not in kwargs
-        name, path, \
-        args, kwargs = LocalizedFileField(storage='test').deconstruct()
+        name, path, args, kwargs = LocalizedFileField(storage='test').deconstruct()
         assert 'storage' in kwargs
