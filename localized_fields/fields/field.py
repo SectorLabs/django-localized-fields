@@ -36,7 +36,7 @@ class LocalizedField(HStoreField):
             self.required = []
         elif self.required is None and not self.blank:
             self.required = [settings.LANGUAGE_CODE]
-        elif type(self.required) == bool and self.required:
+        elif self.required is True:
             self.required = [lang_code for lang_code, _ in settings.LANGUAGES]
 
     def contribute_to_class(self, model, name, **kwargs):

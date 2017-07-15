@@ -25,9 +25,11 @@ class LocalizedFieldForm(forms.MultiValueField):
         fields = []
 
         for lang_code, _ in settings.LANGUAGES:
-            field_options = {'required': lang_code in required_langs}
+            field_options = dict(
+                required=lang_code in required_langs,
+                label=lang_code
+            )
 
-            field_options['label'] = lang_code
             fields.append(self.field_class(**field_options))
 
         super(LocalizedFieldForm, self).__init__(
@@ -35,9 +37,10 @@ class LocalizedFieldForm(forms.MultiValueField):
             require_all_fields=False,
             *args, **kwargs
         )
+
         # set 'required' attribute for each widget separately
-        for f, w in zip(self.fields, self.widget.widgets):
-            w.is_required = f.required
+        for field, widget in zip(self.fields, self.widget.widgets):
+            widget.is_required = field.required
 
     def compress(self, value: List[str]) -> value_class:
         """Compresses the values from individual fields
