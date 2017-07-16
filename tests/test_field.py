@@ -9,6 +9,7 @@ from localized_fields.forms import LocalizedFieldForm
 from localized_fields.value import LocalizedValue
 
 from .data import get_init_values
+from .fake_model import get_fake_model
 
 
 class LocalizedFieldTestCase(TestCase):
@@ -156,3 +157,62 @@ class LocalizedFieldTestCase(TestCase):
             LocalizedField().formfield(),
             LocalizedFieldForm
         )
+
+    def test_required_all(self):
+        """Tests whether passing required=True properly validates
+        that all languages are filled in."""
+
+        model = get_fake_model(dict(
+            title=LocalizedField(required=True)
+        ))
+
+        with self.assertRaises(IntegrityError):
+            model.objects.create(title=dict(ro='romanian', nl='dutch'))
+
+        with self.assertRaises(IntegrityError):
+            model.objects.create(title=dict(nl='dutch'))
+
+        with self.assertRaises(IntegrityError):
+            model.objects.create(title=dict(random='random'))
+
+        with self.assertRaises(IntegrityError):
+            model.objects.create(title=dict())
+
+        with self.assertRaises(IntegrityError):
+            model.objects.create(title=None)
+
+        with self.assertRaises(IntegrityError):
+            model.objects.create(title='')
+
+        with self.assertRaises(IntegrityError):
+            model.objects.create(title='         ')
+
+    def test_required_some(self):
+        """Tests whether passing an array to required,
+        properly validates whether the specified languages
+        are marked as required."""
+
+        model = get_fake_model(dict(
+            title=LocalizedField(required=['nl', 'ro'])
+        ))
+
+        with self.assertRaises(IntegrityError):
+            model.objects.create(title=dict(ro='romanian', nl='dutch'))
+
+        with self.assertRaises(IntegrityError):
+            model.objects.create(title=dict(nl='dutch'))
+
+        with self.assertRaises(IntegrityError):
+            model.objects.create(title=dict(random='random'))
+
+        with self.assertRaises(IntegrityError):
+            model.objects.create(title=dict())
+
+        with self.assertRaises(IntegrityError):
+            model.objects.create(title=None)
+
+        with self.assertRaises(IntegrityError):
+            model.objects.create(title='')
+
+        with self.assertRaises(IntegrityError):
+            model.objects.create(title='         ')
