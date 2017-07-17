@@ -12,9 +12,9 @@ django-localized-fields
 .. image:: https://badge.fury.io/py/django-localized-fields.svg
     :target: https://pypi.python.org/pypi/django-localized-fields
 
-``django-localized-fields`` is an implementation of a field class for Django models that allows the field's value to be set in multiple languages. It does this by utilizing the ``hstore`` type (PostgreSQL specific), which is available as ``models.HStoreField`` in Django 1.10.
+``django-localized-fields`` is an implementation of a field class for Django models that allows the field's value to be set in multiple languages. It does this by utilizing the ``hstore`` type (PostgreSQL specific), which is available as ``models.HStoreField`` since Django 1.10.
 
-This package requires Python 3.5 or newer, Django 1.10 or newer and PostgreSQL 9.6 or newer.
+This package requires Python 3.5 or newer, Django 1.11 or newer and PostgreSQL 9.6 or newer.
 
 Installation
 ------------
@@ -335,7 +335,7 @@ Frequently asked questions (FAQ)
 
 2. Does this package work with Django 1.X?
 
-    No. Only Django 1.10 or newer is supported. This is because we rely on Django's ``HStoreField``.
+    No. Only Django 1.11 or newer is supported. This is because we rely on Django's ``HStoreField`` and template-based widget rendering.
 
 3. Does this package come with support for Django Admin?
 
