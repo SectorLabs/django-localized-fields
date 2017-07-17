@@ -129,21 +129,42 @@ Constraints
 
 **Required/Optional**
 
-At the moment, it is not possible to select two languages to be marked as required. The constraint is **not** enforced on a database level.
+Constraints is enforced on a database level.
 
-* Make the primary language **required** and the others optional (this is the **default**):
-
-    .. code-block:: python
-
-        class MyModel(models.Model):
-            title = LocalizedField(required=True)
-
-* Make all languages optional:
+* Optional filling
 
     .. code-block:: python
 
         class MyModel(models.Model):
-            title = LocalizedField(null=True)
+            title = LocalizedField(blank=True, null=True, required=False)
+
+* Make translation required for any language
+
+    .. code-block:: python
+
+        class MyModel(models.Model):
+            title = LocalizedField(blank=False, null=False, required=False)
+
+* Make translation required for specific languages
+
+    .. code-block:: python
+
+        class MyModel(models.Model):
+            title = LocalizedField(blank=False, null=False, required=['en', 'ro'])
+
+* Make translation required for all languages
+
+    .. code-block:: python
+
+        class MyModel(models.Model):
+            title = LocalizedField(blank=False, null=False, required=True)
+
+* By default the primary language **required** and the others optional:
+
+    .. code-block:: python
+
+        class MyModel(models.Model):
+            title = LocalizedField()
 
 **Uniqueness**
 
