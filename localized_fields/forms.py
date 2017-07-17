@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 
 from django import forms
 from django.conf import settings
@@ -19,21 +19,22 @@ class LocalizedFieldForm(forms.MultiValueField):
     field_class = forms.fields.CharField
     value_class = LocalizedValue
 
-    def __init__(self, *args, required_langs: List[str]=[], **kwargs):
+    def __init__(self, *args, required: Union[bool, List[str]]=False, **kwargs):
         """Initializes a new instance of :see:LocalizedFieldForm."""
 
         fields = []
 
         for lang_code, _ in settings.LANGUAGES:
             field_options = dict(
-                required=lang_code in required_langs,
+                required=required if type(required) is bool else (lang_code in
+                                                                  required),
                 label=lang_code
             )
-
             fields.append(self.field_class(**field_options))
 
         super(LocalizedFieldForm, self).__init__(
             fields,
+            required=required if type(required) is bool else True,
             require_all_fields=False,
             *args, **kwargs
         )

@@ -1,6 +1,6 @@
 import json
 
-from typing import Union
+from typing import Union, List
 
 from django.conf import settings
 from django.db.utils import IntegrityError
@@ -27,12 +27,12 @@ class LocalizedField(HStoreField):
     # The descriptor to use for accessing the attribute off of the class.
     descriptor_class = LocalizedValueDescriptor
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, required: Union[bool, List[str]]=None, **kwargs):
         """Initializes a new instance of :see:LocalizedField."""
 
-        super(LocalizedField, self).__init__(*args, **kwargs)
+        super(LocalizedField, self).__init__(*args, required=required, **kwargs)
 
-        if self.required is None and self.blank:
+        if (self.required is None and self.blank) or self.required is False:
             self.required = []
         elif self.required is None and not self.blank:
             self.required = [settings.LANGUAGE_CODE]
@@ -213,11 +213,9 @@ class LocalizedField(HStoreField):
     def formfield(self, **kwargs):
         """Gets the form field associated with this field."""
 
-        defaults = dict(form_class=LocalizedFieldForm)
-
-        form_class = kwargs.get('form_class', LocalizedFieldForm)
-        if issubclass(form_class, LocalizedFieldForm):
-            defaults.update(dict(required_langs=self.required))
-
+        defaults = dict(
+            form_class=LocalizedFieldForm,
+            required=False if self.blank else self.required
+        )
         defaults.update(kwargs)
         return super().formfield(**defaults)
