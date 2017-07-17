@@ -42,3 +42,16 @@ class LocalizedFieldWidgetTestCase(TestCase):
 
         for _, value in zip(settings.LANGUAGES, decompressed_values):
             assert not value
+
+    @staticmethod
+    def test_get_context():
+        """Tests whether the :see:get_context correctly
+        handles 'required' attribute, separately for each subwidget."""
+
+        widget = LocalizedFieldWidget()
+        widget.widgets[0].is_required = True
+        widget.widgets[1].is_required = False
+        context = widget.get_context(name='test', value=LocalizedValue(),
+                                     attrs=dict(required=True))
+        assert context['widget']['subwidgets'][0]['attrs']['required']
+        assert 'required' not in context['widget']['subwidgets'][1]['attrs']
