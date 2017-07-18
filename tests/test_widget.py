@@ -1,3 +1,4 @@
+import re
 from django.conf import settings
 from django.test import TestCase
 
@@ -42,3 +43,13 @@ class LocalizedFieldWidgetTestCase(TestCase):
 
         for _, value in zip(settings.LANGUAGES, decompressed_values):
             assert not value
+
+    @staticmethod
+    def test_render():
+        """Tests whether the :see:LocalizedFieldWidget correctly
+        render."""
+
+        widget = LocalizedFieldWidget()
+        output = widget.render(name='title', value=None)
+        assert bool(re.search('<label (.|\n|\t)*>\w+<\/label>', output))
+
