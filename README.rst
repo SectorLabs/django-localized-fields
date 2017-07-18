@@ -16,6 +16,12 @@ django-localized-fields
 
 This package requires Python 3.5 or newer, Django 1.11 or newer and PostgreSQL 9.6 or newer.
 
+Contributors
+------------
+
+* `seroy <https://github.com/seroy/>`_
+
+
 Installation
 ------------
 1. Install the package from PyPi:
