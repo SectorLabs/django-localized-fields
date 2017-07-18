@@ -1,3 +1,4 @@
+import re
 from django.conf import settings
 from django.test import TestCase
 
@@ -55,3 +56,12 @@ class LocalizedFieldWidgetTestCase(TestCase):
                                      attrs=dict(required=True))
         assert context['widget']['subwidgets'][0]['attrs']['required']
         assert 'required' not in context['widget']['subwidgets'][1]['attrs']
+
+    @staticmethod
+    def test_render():
+        """Tests whether the :see:LocalizedFieldWidget correctly
+        render."""
+
+        widget = LocalizedFieldWidget()
+        output = widget.render(name='title', value=None)
+        assert bool(re.search('<label (.|\n|\t)*>\w+<\/label>', output))

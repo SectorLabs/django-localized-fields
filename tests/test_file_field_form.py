@@ -28,7 +28,7 @@ class LocalizedFileFieldFormTestCase(TestCase):
         formfield.clean(['', ''], ['', ''])
 
     def test_bound_data(self):
-        """Tests whether the :see:bound_data function is returns correctly 
+        """Tests whether the :see:bound_data function is returns correctly
         value"""
 
         formfield = LocalizedFileFieldForm()
@@ -38,4 +38,3 @@ class LocalizedFileFieldFormTestCase(TestCase):
         value = [None] * len(settings.LANGUAGES)
         expected_value = [''] * len(settings.LANGUAGES)
         assert formfield.bound_data(value, initial) == expected_value
-

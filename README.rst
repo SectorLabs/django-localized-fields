@@ -12,9 +12,9 @@ django-localized-fields
 .. image:: https://badge.fury.io/py/django-localized-fields.svg
     :target: https://pypi.python.org/pypi/django-localized-fields
 
-``django-localized-fields`` is an implementation of a field class for Django models that allows the field's value to be set in multiple languages. It does this by utilizing the ``hstore`` type (PostgreSQL specific), which is available as ``models.HStoreField`` in Django 1.10.
+``django-localized-fields`` is an implementation of a field class for Django models that allows the field's value to be set in multiple languages. It does this by utilizing the ``hstore`` type (PostgreSQL specific), which is available as ``models.HStoreField`` since Django 1.10.
 
-This package requires Python 3.5 or newer, Django 1.10 or newer and PostgreSQL 9.6 or newer.
+This package requires Python 3.5 or newer, Django 1.11 or newer and PostgreSQL 9.6 or newer.
 
 Installation
 ------------
@@ -129,21 +129,42 @@ Constraints
 
 **Required/Optional**
 
-At the moment, it is not possible to select two languages to be marked as required. The constraint is **not** enforced on a database level.
+Constraints is enforced on a database level.
 
-* Make the primary language **required** and the others optional (this is the **default**):
-
-    .. code-block:: python
-
-        class MyModel(models.Model):
-            title = LocalizedField(required=True)
-
-* Make all languages optional:
+* Optional filling
 
     .. code-block:: python
 
         class MyModel(models.Model):
-            title = LocalizedField(null=True)
+            title = LocalizedField(blank=True, null=True, required=False)
+
+* Make translation required for any language
+
+    .. code-block:: python
+
+        class MyModel(models.Model):
+            title = LocalizedField(blank=False, null=False, required=False)
+
+* Make translation required for specific languages
+
+    .. code-block:: python
+
+        class MyModel(models.Model):
+            title = LocalizedField(blank=False, null=False, required=['en', 'ro'])
+
+* Make translation required for all languages
+
+    .. code-block:: python
+
+        class MyModel(models.Model):
+            title = LocalizedField(blank=False, null=False, required=True)
+
+* By default the primary language **required** and the others optional:
+
+    .. code-block:: python
+
+        class MyModel(models.Model):
+            title = LocalizedField()
 
 **Uniqueness**
 
@@ -335,7 +356,7 @@ Frequently asked questions (FAQ)
 
 2. Does this package work with Django 1.X?
 
-    No. Only Django 1.10 or newer is supported. This is because we rely on Django's ``HStoreField``.
+    No. Only Django 1.11 or newer is supported. This is because we rely on Django's ``HStoreField`` and template-based widget rendering.
 
 3. Does this package come with support for Django Admin?
 

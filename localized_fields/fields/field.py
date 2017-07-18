@@ -1,6 +1,6 @@
 import json
 
-from typing import Union
+from typing import Union, List
 
 from django.conf import settings
 from django.db.utils import IntegrityError
@@ -27,10 +27,17 @@ class LocalizedField(HStoreField):
     # The descriptor to use for accessing the attribute off of the class.
     descriptor_class = LocalizedValueDescriptor
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, required: Union[bool, List[str]]=None, **kwargs):
         """Initializes a new instance of :see:LocalizedField."""
 
-        super(LocalizedField, self).__init__(*args, **kwargs)
+        super(LocalizedField, self).__init__(*args, required=required, **kwargs)
+
+        if (self.required is None and self.blank) or self.required is False:
+            self.required = []
+        elif self.required is None and not self.blank:
+            self.required = [settings.LANGUAGE_CODE]
+        elif self.required is True:
+            self.required = [lang_code for lang_code, _ in settings.LANGUAGES]
 
     def contribute_to_class(self, model, name, **kwargs):
         """Adds this field to the specifed model.
@@ -170,9 +177,6 @@ class LocalizedField(HStoreField):
         # are any of the language fiels None/empty?
         is_all_null = True
         for lang_code, _ in settings.LANGUAGES:
-            # NOTE(seroy): use check for None, instead of
-            # `bool(value.get(lang_code))==True` condition, cause in this way
-            # we can not save '' value
             if value.get(lang_code) is not None:
                 is_all_null = False
                 break
@@ -185,8 +189,8 @@ class LocalizedField(HStoreField):
         return value
 
     def validate(self, value: LocalizedValue, *_):
-        """Validates that the value for the primary language
-        has been filled in.
+        """Validates that the values has been filled in for all required
+        languages
 
         Exceptions are raises in order to notify the user
         of invalid values.
@@ -199,36 +203,19 @@ class LocalizedField(HStoreField):
         if self.null:
             return
 
-        primary_lang_val = getattr(value, settings.LANGUAGE_CODE)
+        for lang in self.required:
+            lang_val = getattr(value, settings.LANGUAGE_CODE)
 
-        # NOTE(seroy): use check for None, instead of `not primary_lang_val`
-        # condition, cause in this way we can not save '' value
-        if primary_lang_val is None:
-            raise IntegrityError(
-                'null value in column "%s.%s" violates not-null constraint' % (
-                    self.name,
-                    settings.LANGUAGE_CODE
-                )
-            )
+            if lang_val is None:
+                raise IntegrityError('null value in column "%s.%s" violates '
+                                     'not-null constraint' % (self.name, lang))
 
     def formfield(self, **kwargs):
         """Gets the form field associated with this field."""
 
-        defaults = {
-            'form_class': LocalizedFieldForm
-        }
-
+        defaults = dict(
+            form_class=LocalizedFieldForm,
+            required=False if self.blank else self.required
+        )
         defaults.update(kwargs)
         return super().formfield(**defaults)
-
-    def deconstruct(self):
-        """Gets the values to pass to :see:__init__ when
-        re-creating this object."""
-
-        name, path, args, kwargs = super(
-            LocalizedField, self).deconstruct()
-
-        if self.uniqueness:
-            kwargs['uniqueness'] = self.uniqueness
-
-        return name, path, args, kwargs
