@@ -23,8 +23,9 @@ class LocalizedFieldWidget(forms.MultiWidget):
         super().__init__(initial_widgets, *args, **kwargs)
 
         for ((lang_code, lang_name), widget) in zip(settings.LANGUAGES, self.widgets):
-            widget.attrs['lang_code'] = lang_code
-            widget.attrs['lang_name'] = lang_name
+            widget.attrs['lang'] = lang_code
+            widget.lang_code = lang_code
+            widget.lang_name = lang_name
 
     def decompress(self, value: LocalizedValue) -> List[str]:
         """Decompresses the specified value so
@@ -76,7 +77,12 @@ class LocalizedFieldWidget(forms.MultiWidget):
             else:
                 widget_attrs = final_attrs
             widget_attrs = self.build_widget_attrs(widget, widget_value, widget_attrs)
-            subwidgets.append(widget.get_context(widget_name, widget_value, widget_attrs)['widget'])
+            widget_context = widget.get_context(widget_name, widget_value, widget_attrs)['widget']
+            widget_context.update(dict(
+                lang_code=widget.lang_code,
+                lang_name=widget.lang_name
+            ))
+            subwidgets.append(widget_context)
         context['widget']['subwidgets'] = subwidgets
         return context
 
