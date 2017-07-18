@@ -3,7 +3,6 @@ from typing import List
 from django.conf import settings
 from django import forms
 from django.contrib.admin import widgets
-from django.template.loader import render_to_string
 
 from .value import LocalizedValue
 
@@ -49,6 +48,48 @@ class LocalizedFieldWidget(forms.MultiWidget):
 
         return result
 
+    def get_context(self, name, value, attrs):
+        context = super(forms.MultiWidget, self).get_context(name, value, attrs)
+        if self.is_localized:
+            for widget in self.widgets:
+                widget.is_localized = self.is_localized
+        # value is a list of values, each corresponding to a widget
+        # in self.widgets.
+        if not isinstance(value, list):
+            value = self.decompress(value)
+
+        final_attrs = context['widget']['attrs']
+        input_type = final_attrs.pop('type', None)
+        id_ = final_attrs.get('id')
+        subwidgets = []
+        for i, widget in enumerate(self.widgets):
+            if input_type is not None:
+                widget.input_type = input_type
+            widget_name = '%s_%s' % (name, i)
+            try:
+                widget_value = value[i]
+            except IndexError:
+                widget_value = None
+            if id_:
+                widget_attrs = final_attrs.copy()
+                widget_attrs['id'] = '%s_%s' % (id_, i)
+            else:
+                widget_attrs = final_attrs
+            widget_attrs = self.build_widget_attrs(widget, widget_value, widget_attrs)
+            subwidgets.append(widget.get_context(widget_name, widget_value, widget_attrs)['widget'])
+        context['widget']['subwidgets'] = subwidgets
+        return context
+
+    @staticmethod
+    def build_widget_attrs(widget, value, attrs):
+        attrs = dict(attrs)  # Copy attrs to avoid modifying the argument.
+
+        if (not widget.use_required_attribute(value) or not widget.is_required) \
+                and 'required' in attrs:
+            del attrs['required']
+
+        return attrs
+
 
 class LocalizedCharFieldWidget(LocalizedFieldWidget):
     """Widget that has an input box for every language."""
@@ -61,52 +102,8 @@ class LocalizedFileWidget(LocalizedFieldWidget):
 
 
 class AdminLocalizedFieldWidget(LocalizedFieldWidget):
+    template_name = 'localized_fields/admin/widget.html'
     widget = widgets.AdminTextareaWidget
-    template = 'localized_fields/admin/widget.html'
-
-    def render(self, name, value, attrs=None):
-        if self.is_localized:
-            for widget in self.widgets:
-                widget.is_localized = self.is_localized
-
-        # value is a list of values, each corresponding to a widget
-        # in self.widgets.
-        if not isinstance(value, list):
-            value = self.decompress(value)
-
-        output = []
-        final_attrs = self.build_attrs(attrs)
-        id_ = final_attrs.get('id')
-
-        for i, widget in enumerate(self.widgets):
-            try:
-                widget_value = value[i]
-            except IndexError:
-                widget_value = None
-            if id_:
-                final_attrs = dict(final_attrs, id='%s_%s' % (id_, i))
-
-            widget_attrs = self.build_widget_attrs(widget, widget_value, final_attrs)
-            output.append(widget.render(name + '_%s' % i, widget_value, widget_attrs))
-
-        context = {
-            'id': final_attrs.get('id'),
-            'name': name,
-            'widgets': zip([code for code, lang in settings.LANGUAGES], output),
-            'available_languages': settings.LANGUAGES
-        }
-
-        return render_to_string(self.template, context)
-
-    @staticmethod
-    def build_widget_attrs(widget, value, attrs):
-        attrs = dict(attrs)  # Copy attrs to avoid modifying the argument.
-
-        if (not widget.use_required_attribute(value) or not widget.is_required) \
-                and 'required' in attrs:
-            del attrs['required']
-
-        return attrs
 
 
 class AdminLocalizedCharFieldWidget(AdminLocalizedFieldWidget):
