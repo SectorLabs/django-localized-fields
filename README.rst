@@ -8,6 +8,7 @@ django-localized-fields
     :target: https://scrutinizer-ci.com/g/SectorLabs/django-localized-fields/
 
 .. image:: https://img.shields.io/github/license/SectorLabs/django-localized-fields.svg
+    :target: https://github.com/SectorLabs/django-localized-fields/blob/master/LICENSE.md
 
 .. image:: https://badge.fury.io/py/django-localized-fields.svg
     :target: https://pypi.python.org/pypi/django-localized-fields
