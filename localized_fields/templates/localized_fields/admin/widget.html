@@ -3,12 +3,12 @@
     <ul class="localized-fields-widget tabs">
     {% for widget in widget.subwidgets %}
         <li class="localized-fields-widget tab">
-            <a href="#{{ widget_id }}_{{ widget.attrs.lang_code }}">{{ widget.attrs.lang_name|capfirst }}</a>
+            <a href="#{{ widget_id }}_{{ widget.lang_code }}">{{ widget.lang_name|capfirst }}</a>
         </li>
     {% endfor %}
     </ul>
 {% for widget in widget.subwidgets %}
-    <div role="tabpanel" id="{{ widget_id }}_{{ widget.attrs.lang_code }}">
+    <div role="tabpanel" id="{{ widget_id }}_{{ widget.lang_code }}">
         {% include widget.template_name %}
     </div>
 {% endfor %}
