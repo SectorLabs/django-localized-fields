@@ -21,7 +21,7 @@ Contributors
 ------------
 
 * `seroy <https://github.com/seroy/>`_
-
+* `unaizalakain <https://github.com/unaizalakain/>`_
 
 Installation
 ------------
