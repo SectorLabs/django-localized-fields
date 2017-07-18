@@ -16,3 +16,6 @@ dist/
 
 # Ignore stupid .DS_Store
 .DS_Store
+
+# Ignore PyCharm
+.idea/
