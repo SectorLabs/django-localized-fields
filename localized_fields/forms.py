@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 
 from django import forms
 from django.conf import settings
@@ -19,28 +19,29 @@ class LocalizedFieldForm(forms.MultiValueField):
     field_class = forms.fields.CharField
     value_class = LocalizedValue
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, required: Union[bool, List[str]]=False, **kwargs):
         """Initializes a new instance of :see:LocalizedFieldForm."""
 
         fields = []
 
         for lang_code, _ in settings.LANGUAGES:
-            field_options = {'required': False}
-
-            if lang_code == settings.LANGUAGE_CODE:
-                field_options['required'] = kwargs.get('required', True)
-
-            field_options['label'] = lang_code
+            field_options = dict(
+                required=required if type(required) is bool else (lang_code in
+                                                                  required),
+                label=lang_code
+            )
             fields.append(self.field_class(**field_options))
 
         super(LocalizedFieldForm, self).__init__(
             fields,
+            required=required if type(required) is bool else True,
             require_all_fields=False,
             *args, **kwargs
         )
+
         # set 'required' attribute for each widget separately
-        for f, w in zip(self.fields, self.widget.widgets):
-            w.is_required = f.required
+        for field, widget in zip(self.fields, self.widget.widgets):
+            widget.is_required = field.required
 
     def compress(self, value: List[str]) -> value_class:
         """Compresses the values from individual fields

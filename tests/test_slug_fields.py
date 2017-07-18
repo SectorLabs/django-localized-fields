@@ -124,7 +124,7 @@ class LocalizedSlugFieldTestCase(TestCase):
         def generate_slug(instance):
             return instance.title
 
-        model = get_fake_model({
+        get_fake_model({
             'title': LocalizedField(),
             'slug': LocalizedUniqueSlugField(populate_from=generate_slug)
         })
@@ -137,7 +137,6 @@ class LocalizedSlugFieldTestCase(TestCase):
 
         for lang_code, lang_name in settings.LANGUAGES:
             assert obj.slug.get(lang_code) == 'title-%s' % lang_name.lower()
-
 
     @staticmethod
     def test_populate_multiple_from_fields():

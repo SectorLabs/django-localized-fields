@@ -11,8 +11,8 @@ class LocalizedFieldFormTestCase(TestCase):
     def test_init():
         """Tests whether the constructor correctly
         creates a field for every language."""
-
-        form = LocalizedFieldForm()
+        # case required for specific language
+        form = LocalizedFieldForm(required=[settings.LANGUAGE_CODE])
 
         for (lang_code, _), field in zip(settings.LANGUAGES, form.fields):
             assert field.label == lang_code
@@ -21,6 +21,25 @@ class LocalizedFieldFormTestCase(TestCase):
                 assert field.required
             else:
                 assert not field.required
+
+        # case required for all languages
+        form = LocalizedFieldForm(required=True)
+        assert form.required
+        for field in form.fields:
+            assert field.required
+
+        # case optional filling
+        form = LocalizedFieldForm(required=False)
+        assert not form.required
+        for field in form.fields:
+            assert not field.required
+
+        # case required for any language
+        form = LocalizedFieldForm(required=[])
+        assert form.required
+        for field in form.fields:
+            assert not field.required
+
 
     @staticmethod
     def test_compress():

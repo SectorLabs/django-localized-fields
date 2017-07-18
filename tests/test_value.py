@@ -149,8 +149,6 @@ class LocalizedValueTestCase(TestCase):
         __str__'s fallback functionality properly respects
         the LOCALIZED_FIELDS_FALLBACKS setting."""
 
-        test_value = 'myvalue'
-
         settings.LOCALIZED_FIELDS_FALLBACKS = {
             'nl': ['ro']
         }

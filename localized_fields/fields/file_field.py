@@ -146,8 +146,6 @@ class LocalizedFileField(LocalizedField):
 
     def formfield(self, **kwargs):
         defaults = {'form_class': LocalizedFileFieldForm}
-        if 'initial' in kwargs:
-            defaults['required'] = False
         defaults.update(kwargs)
         return super().formfield(**defaults)
 
