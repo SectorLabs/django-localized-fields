@@ -175,7 +175,7 @@ class LocalizedSlugFieldTestCase(TestCase):
         model = get_fake_model(
             {
                 'title': LocalizedField(),
-                'other': models.ForeignKey(model_fk),
+                'other': models.ForeignKey(model_fk, on_delete=models.CASCADE),
                 'slug': LocalizedUniqueSlugField(populate_from=('title', 'other.name'))
             }
         )

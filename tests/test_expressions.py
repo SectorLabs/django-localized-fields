@@ -32,7 +32,7 @@ class LocalizedExpressionsTestCase(TestCase):
         cls.TestModel2 = get_fake_model(
             {
                 'text': LocalizedField(),
-                'other': models.ForeignKey(cls.TestModel1, related_name='features')
+                'other': models.ForeignKey(cls.TestModel1, related_name='features', on_delete=models.CASCADE)
             }
         )
 
