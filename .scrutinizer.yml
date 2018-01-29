@@ -28,7 +28,7 @@ build:
             -
                 command: flake8 ./localized_fields/
             -
-                command: coverage run manage.py test
+                command: tox
                 coverage:
                     file: '.coverage'
                     format: 'py-cc'
