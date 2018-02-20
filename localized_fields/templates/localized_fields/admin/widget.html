@@ -3,7 +3,7 @@
     <ul class="localized-fields-widget tabs">
     {% for widget in widget.subwidgets %}
         <li class="localized-fields-widget tab">
-            <a href="#{{ widget_id }}_{{ widget.lang_code }}">{{ widget.lang_name|capfirst }}</a>
+            <label for="{{ widget_id }}_{{ widget.lang_code }}">{{ widget.lang_name|capfirst }}</label>
         </li>
     {% endfor %}
     </ul>
