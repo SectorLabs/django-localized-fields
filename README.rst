@@ -361,9 +361,9 @@ Frequently asked questions (FAQ)
 
     No. Only Python 3.5 or newer is supported. We're using type hints. These do not work well under older versions of Python.
 
-2. Does this package work with Django 1.X?
+2. With what Django versions does this package work?
 
-    No. Only Django 1.11 or newer is supported. This is because we rely on Django's ``HStoreField`` and template-based widget rendering.
+    Only Django 1.11 or newer is supported, this includes Django 2.X. This is because we rely on Django's ``HStoreField`` and template-based widget rendering.
 
 3. Does this package come with support for Django Admin?
 
