@@ -1,10 +1,10 @@
 (function($) {
     var syncTabs = function(lang) {
-        $('.localized-fields-widget.tab a:contains("'+lang+'")').each(function(){
+        $('.localized-fields-widget.tab label:contains("'+lang+'")').each(function(){
             $(this).parents('.localized-fields-widget[role="tabs"]').find('.localized-fields-widget.tab').removeClass('active');
             $(this).parents('.localized-fields-widget.tab').addClass('active');
             $(this).parents('.localized-fields-widget[role="tabs"]').children('.localized-fields-widget [role="tabpanel"]').hide();
-            $($(this).attr('href')).show();
+            $('#'+$(this).attr('for')).show();
         });
     }
 
@@ -13,7 +13,7 @@
         // set first tab as active
         $('.localized-fields-widget[role="tabs"]').each(function () {
             $(this).find('.localized-fields-widget.tab:first').addClass('active');
-            $($(this).find('.localized-fields-widget.tab:first a').attr('href')).show();
+            $('#'+$(this).find('.localized-fields-widget.tab:first label').attr('for')).show();
         });
         // try set active last selected tab
         if (window.sessionStorage) {
@@ -23,7 +23,7 @@
             }
         }
 
-        $('.localized-fields-widget.tab a').click(function(event) {
+        $('.localized-fields-widget.tab label').click(function(event) {
             event.preventDefault();
             syncTabs(this.innerText);
             if (window.sessionStorage) {

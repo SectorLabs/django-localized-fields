@@ -32,7 +32,7 @@
     opacity: 1;
 }
 
-.localized-fields-widget.tabs .localized-fields-widget.tab a {
+.localized-fields-widget.tabs .localized-fields-widget.tab label {
     padding: 5px 10px;
     display: inline-block;
     text-decoration: none;

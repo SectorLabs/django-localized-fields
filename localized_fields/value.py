@@ -61,7 +61,7 @@ class LocalizedValue(dict):
             contained in this instance.
         """
 
-        path = 'localized_fields.localized_value.%s' % self.__class__.__name__
+        path = 'localized_fields.value.%s' % self.__class__.__name__
         return path, [self.__dict__], {}
 
     def _interpret_value(self, value):
