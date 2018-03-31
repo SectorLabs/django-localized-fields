@@ -131,6 +131,8 @@ class LocalizedField(HStoreField):
         specified, we'll treat it as an empty :see:LocalizedValue
         instance, on which the validation will fail.
 
+        Dictonaries are converted into :see:LocalizedValue instances.
+
         Arguments:
             value:
                 The :see:LocalizedValue instance to serialize
@@ -140,6 +142,9 @@ class LocalizedField(HStoreField):
             A dictionary containing a key for every language,
             extracted from the specified value.
         """
+
+        if isinstance(value, dict):
+            value = LocalizedValue(value)
 
         # default to None if this is an unknown type
         if not isinstance(value, LocalizedValue) and value:
