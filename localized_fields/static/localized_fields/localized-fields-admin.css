@@ -37,6 +37,7 @@
     display: inline-block;
     text-decoration: none;
     color: #fff;
+    width: initial;
 }
 
 .localized-fields-widget.tabs .localized-fields-widget.tab.active,
