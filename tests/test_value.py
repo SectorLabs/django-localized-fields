@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.test import TestCase
 from django.utils import translation
+from django.db.models import F
 
 from localized_fields.value import LocalizedValue
 
@@ -180,3 +181,11 @@ class LocalizedValueTestCase(TestCase):
 
         value = LocalizedValue('beer')
         assert value.get(settings.LANGUAGE_CODE) == 'beer'
+
+    @staticmethod
+    def test_construct_expression():
+        """Tests whether passing expressions as values
+        works properly and are not converted to string."""
+
+        value = LocalizedValue(dict(en=F('other')))
+        assert isinstance(value.en, F)
