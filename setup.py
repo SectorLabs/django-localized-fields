@@ -7,7 +7,7 @@ with open(os.path.join(os.path.dirname(__file__), 'README.rst'), encoding='utf-8
 
 setup(
     name='django-localized-fields',
-    version='4.6a2',
+    version='4.6a3',
     packages=find_packages(exclude=['tests']),
     include_package_data=True,
     license='MIT License',
