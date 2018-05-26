@@ -1,6 +1,6 @@
-from .field import LocalizedField
-
 from django.conf import settings
+
+from .field import LocalizedField
 
 class LocalizedIntegerField(LocalizedField):
 

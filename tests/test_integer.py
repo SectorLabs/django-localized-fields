@@ -16,4 +16,4 @@ class LocalizedIntegerFieldTestCase(TestCase):
 
         for lang_code, _ in settings.LANGUAGES:
             assert getattr(localized_value, lang_code) == input_data[lang_code]
-            assert type((getattr(localized_value, lang_code))) == int
+            assert isinstance((getattr(localized_value, lang_code)), int) is True
