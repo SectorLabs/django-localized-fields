@@ -111,10 +111,13 @@ class LocalizedValue(dict):
 
         for lang_code in languages:
             value = self.get(lang_code)
-            if value:
+            if value is not None:
                 return value or ''
 
         return ''
+
+    def __int__(self) -> int:
+        return int(self.__str__())
 
     def __eq__(self, other):
         """Compares :paramref:self to :paramref:other for
@@ -170,6 +173,10 @@ class LocalizedValue(dict):
 class LocalizedStringValue(LocalizedValue):
     default_value = ''
 
+class LocalizedIntegerValue(LocalizedValue):
+
+    def __int__(self) -> int:
+        int(self.__str__())
 
 class LocalizedFileValue(LocalizedValue):
     def __getattr__(self, name: str):
