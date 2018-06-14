@@ -1,7 +1,7 @@
+import deprecation
 import collections
 
 from typing import Optional
-
 from django.conf import settings
 from django.utils import translation
 
@@ -194,6 +194,9 @@ class LocalizedFileValue(LocalizedValue):
         """Returns string representation of value"""
         return str(super().__str__())
 
+    @deprecation.deprecated(deprecated_in='4.6', removed_in='5.0',
+                            current_version='4.6',
+                            details='Use the translate() function instead.')
     def localized(self):
         """Returns value for current language"""
         return self.get(translation.get_language())
