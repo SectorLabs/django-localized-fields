@@ -1,5 +1,7 @@
 import collections
 
+from typing import Optional
+
 from django.conf import settings
 from django.utils import translation
 
@@ -98,10 +100,10 @@ class LocalizedValue(dict):
             for val in value:
                 self._interpret_value(val)
 
-    def __str__(self) -> str:
-        """Gets the value in the current language, or falls
-        back to the primary language if there's no value
-        in the current language."""
+    def translate(self) -> Optional[str]:
+        """Gets the value in the current language or falls
+        back to the next language if there's no value in the
+        current language."""
 
         fallbacks = getattr(settings, 'LOCALIZED_FIELDS_FALLBACKS', {})
 
@@ -112,9 +114,16 @@ class LocalizedValue(dict):
         for lang_code in languages:
             value = self.get(lang_code)
             if value:
-                return value or ''
+                return value or None
 
-        return ''
+        return None
+
+    def __str__(self) -> str:
+        """Gets the value in the current language or falls
+        back to the next language if there's no value in the
+        current language."""
+
+        return self.translate() or ''
 
     def __eq__(self, other):
         """Compares :paramref:self to :paramref:other for

@@ -1,7 +1,7 @@
-from django.conf import settings
-from django.test import TestCase
-from django.utils import translation
 from django.db.models import F
+from django.conf import settings
+from django.utils import translation
+from django.test import TestCase, override_settings
 
 from localized_fields.value import LocalizedValue
 
@@ -91,18 +91,6 @@ class LocalizedValueTestCase(TestCase):
             assert getattr(localized_value, language) == value
 
     @staticmethod
-    def test_str():
-        """Tests whether the :see:LocalizedValue
-        class's __str__ works properly."""
-
-        keys = get_init_values()
-        localized_value = LocalizedValue(keys)
-
-        for language, value in keys.items():
-            translation.activate(language)
-            assert str(localized_value) == value
-
-    @staticmethod
     def test_eq():
         """Tests whether the __eq__ operator
         of :see:LocalizedValue works properly."""
@@ -116,9 +104,21 @@ class LocalizedValueTestCase(TestCase):
         assert a != b
 
     @staticmethod
-    def test_str_fallback():
+    def test_translate():
         """Tests whether the :see:LocalizedValue
-        class's __str__'s fallback functionality
+        class's __str__ works properly."""
+
+        keys = get_init_values()
+        localized_value = LocalizedValue(keys)
+
+        for language, value in keys.items():
+            translation.activate(language)
+            assert localized_value.translate() == value
+
+    @staticmethod
+    def test_translate_fallback():
+        """Tests whether the :see:LocalizedValue
+        class's translate()'s fallback functionality
         works properly."""
 
         test_value = 'myvalue'
@@ -131,13 +131,13 @@ class LocalizedValueTestCase(TestCase):
 
         # make sure that, by default it returns
         # the value in the default language
-        assert str(localized_value) == test_value
+        assert localized_value.translate() == test_value
 
         # make sure that it falls back to the
         # primary language when there's no value
         # available in the current language
         translation.activate(other_language)
-        assert str(localized_value) == test_value
+        assert localized_value.translate() == test_value
 
         # make sure that it's just __str__ falling
         # back and that for the other language
@@ -145,12 +145,35 @@ class LocalizedValueTestCase(TestCase):
         assert localized_value.get(other_language) != test_value
 
     @staticmethod
-    def test_str_fallback_custom_fallback():
+    def test_translate_none():
+        """Tests whether the :see:LocalizedValue
+        class's translate() method properly returns
+        None when there is no value."""
+
+        # with no value, we always expect it to return None
+        localized_value = LocalizedValue()
+        assert localized_value.translate() == None
+        assert str(localized_value) == ''
+
+        # with no value for the default language, the default
+        # behavior is to return None, unless a custom fallback
+        # chain is configured, which there is not for this test
+        other_language = settings.LANGUAGES[-1][0]
+        localized_value = LocalizedValue({
+            other_language: 'hey'
+        })
+
+        translation.activate(settings.LANGUAGE_CODE)
+        assert localized_value.translate() == None
+        assert str(localized_value) == ''
+
+    @staticmethod
+    def test_translate_fallback_custom_fallback():
         """Tests whether the :see:LocalizedValue class's
-        __str__'s fallback functionality properly respects
+        translate()'s fallback functionality properly respects
         the LOCALIZED_FIELDS_FALLBACKS setting."""
 
-        settings.LOCALIZED_FIELDS_FALLBACKS = {
+        fallbacks = {
             'nl': ['ro']
         }
 
@@ -159,8 +182,9 @@ class LocalizedValueTestCase(TestCase):
             'ro': 'ro'
         })
 
-        with translation.override('nl'):
-            assert str(localized_value) == 'ro'
+        with override_settings(LOCALIZED_FIELDS_FALLBACKS=fallbacks):
+            with translation.override('nl'):
+                assert localized_value.translate() == 'ro'
 
     @staticmethod
     def test_deconstruct():
