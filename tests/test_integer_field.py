@@ -163,3 +163,14 @@ class LocalizedIntegerFieldTestCase(TestCase):
 
         obj = model.objects.create()
         assert obj.score.get(settings.LANGUAGE_CODE) == 75
+
+        obj = model()
+        for lang_code, _ in settings.LANGUAGES:
+            obj.score.set(lang_code, None)
+        obj.save()
+
+        for lang_code, _ in settings.LANGUAGES:
+            if lang_code == settings.LANGUAGE_CODE:
+                assert obj.score.get(lang_code) == 75
+            else:
+                assert obj.score.get(lang_code) is None

@@ -32,8 +32,16 @@ class LocalizedIntegerField(LocalizedField):
         db_value = super().to_python(value)
         return self._convert_localized_value(db_value)
 
-    def get_prep_value(self, value: LocalizedValue) -> dict:
+    def get_prep_value(self, value: LocalizedIntegerValue) -> dict:
         """Gets the value in a format to store into the database."""
+
+        # apply default values
+        default_values = LocalizedIntegerValue(self.default)
+        if isinstance(value, LocalizedIntegerValue):
+            for lang_code, _ in settings.LANGUAGES:
+                local_value = value.get(lang_code)
+                if local_value is None:
+                    value.set(lang_code, default_values.get(lang_code, None))
 
         prepped_value = super().get_prep_value(value)
         if prepped_value is None:
@@ -51,7 +59,7 @@ class LocalizedIntegerField(LocalizedField):
 
             # convert to a string before saving because the underlying
             # type is hstore, which only accept strings
-            prepped_value[lang_code] = str(local_value) if local_value else None
+            prepped_value[lang_code] = str(local_value) if local_value is not None else None
 
         return prepped_value
 
