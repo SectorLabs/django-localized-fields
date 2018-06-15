@@ -1,6 +1,6 @@
 import json
 
-from typing import Union, List
+from typing import Union, List, Optional
 
 from django.conf import settings
 from django.db.utils import IntegrityError
@@ -53,7 +53,7 @@ class LocalizedField(HStoreField):
         setattr(model, self.name, self.descriptor_class(self))
 
     @classmethod
-    def from_db_value(cls, value, *_):
+    def from_db_value(cls, value, *_) -> Optional[LocalizedValue]:
         """Turns the specified database value into its Python
         equivalent.
 

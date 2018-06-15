@@ -38,7 +38,8 @@ class LocalizedValue(dict):
         """
 
         language = language or settings.LANGUAGE_CODE
-        return super().get(language, default)
+        value = super().get(language, default)
+        return value if value is not None else default
 
     def set(self, language: str, value: str):
         """Sets the value in the specified language.
@@ -192,6 +193,7 @@ class LocalizedFileValue(LocalizedValue):
 
     def __str__(self) -> str:
         """Returns string representation of value"""
+
         return str(super().__str__())
 
     @deprecation.deprecated(deprecated_in='4.6', removed_in='5.0',
@@ -199,4 +201,30 @@ class LocalizedFileValue(LocalizedValue):
                             details='Use the translate() function instead.')
     def localized(self):
         """Returns value for current language"""
+
         return self.get(translation.get_language())
+
+
+class LocalizedIntegerValue(LocalizedValue):
+    """All values are integers."""
+
+    default_value = None
+
+    def translate(self):
+        """Gets the value in the current language, or
+        in the configured fallbck language."""
+
+        value = super().translate()
+        if value is None or (isinstance(value, str) and value.strip() == ''):
+            return None
+
+        return int(value)
+
+    def __int__(self):
+        """Gets the value in the current language as an integer."""
+
+        value = self.translate()
+        if value is None:
+            return self.default_value
+
+        return int(value)
