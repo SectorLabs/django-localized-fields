@@ -121,6 +121,7 @@ Or get it in a specific language:
      print(new.title.get('en')) # prints 'english title'
      print(new.title.get('ro')) # prints 'romanian title'
      print(new.title.get()) # whatever language is the primary one
+     print(new.title.get('ar', 'haha')) # prints 'haha' if there is no value in arabic
 
 You can also explicitly set a value in a certain language:
 
@@ -136,7 +137,7 @@ Constraints
 
 **Required/Optional**
 
-Constraints is enforced on a database level.
+Constraints are enforced on a database level.
 
 * Optional filling
 
@@ -274,8 +275,24 @@ Besides ``LocalizedField``, there's also:
                    title = LocalizedField()
                    description = LocalizedBleachField()
 
+* ``LocalizedIntegerField``
+    This is an experimental field type introduced in version 5.0 and is subject to change. It also has
+    some pretty major downsides due to the fact that values are stored as strings and are converted
+    back and forth.
+
+    Allows storing integers in multiple languages. This works exactly like ``LocalizedField`` except that
+    all values must be integers. Do note that values are stored as strings in your database because
+    the backing field type is ``hstore``, which only allows storing integers. The ``LocalizedIntegerField``
+    takes care of ensuring that all values are integers and converts the stored strings back to integers
+    when retrieving them from the database. Do not expect to be able to do queries such as:
+
+        .. code-block:: python
+
+            MyModel.objects.filter(score__en__gt=1)
+
+
 * ``LocalizedCharField`` and ``LocalizedTextField``
-    This fields following the Django convention for string-based fields use the empty string as value for “no data”, not NULL.
+    These fields following the Django convention for string-based fields use the empty string as value for “no data”, not NULL.
     ``LocalizedCharField`` uses ``TextInput`` (``<input type="text">``) widget for render.
 
     Example usage:
