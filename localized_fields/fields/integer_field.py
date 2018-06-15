@@ -41,12 +41,17 @@ class LocalizedIntegerField(LocalizedField):
 
         # make sure all values are proper integers
         for lang_code, _ in settings.LANGUAGES:
+            local_value = prepped_value[lang_code]
             try:
-                if prepped_value[lang_code] is not None:
-                    int(prepped_value[lang_code])
+                if local_value is not None:
+                    int(local_value)
             except (TypeError, ValueError):
                 raise IntegrityError('non-integer value in column "%s.%s" violates '
                                      'integer constraint' % (self.name, lang_code))
+
+            # convert to a string before saving because the underlying
+            # type is hstore, which only accept strings
+            prepped_value[lang_code] = str(local_value) if local_value else None
 
         return prepped_value
 

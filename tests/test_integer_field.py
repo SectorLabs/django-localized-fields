@@ -152,3 +152,14 @@ class LocalizedIntegerFieldTestCase(TestCase):
 
         obj.refresh_from_db()
         assert obj.score.get(settings.LANGUAGE_CODE) is None
+
+    def test_default_value(self):
+        """Tests whether a default is properly set
+        when specified."""
+
+        model = get_fake_model({
+            'score': LocalizedIntegerField(default={settings.LANGUAGE_CODE: 75})
+        })
+
+        obj = model.objects.create()
+        assert obj.score.get(settings.LANGUAGE_CODE) == 75
