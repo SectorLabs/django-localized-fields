@@ -1,3 +1,5 @@
+import copy
+
 from typing import List
 
 from django.conf import settings
@@ -16,7 +18,7 @@ class LocalizedFieldWidget(forms.MultiWidget):
         """Initializes a new instance of :see:LocalizedFieldWidget."""
 
         initial_widgets = [
-            self.widget
+            copy.copy(self.widget)
             for _ in settings.LANGUAGES
         ]
 
