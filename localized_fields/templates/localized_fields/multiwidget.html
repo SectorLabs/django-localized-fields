@@ -1,4 +1,16 @@
-{% for widget in widget.subwidgets %}
-<label for="{{ widget.attrs.id }}">{{ widget.lang_name }}</label>
-{% include widget.template_name %}
-{% endfor %}
+{% with widget_id=widget.attrs.id %}
+<div class="localized-fields-widget" role="tabs" data-synctabs="translation">
+    <ul class="localized-fields-widget tabs">
+    {% for widget in widget.subwidgets %}
+        <li class="localized-fields-widget tab">
+            <label for="{{ widget_id }}_{{ widget.lang_code }}">{{ widget.lang_name|capfirst }}</label>
+        </li>
+    {% endfor %}
+    </ul>
+    {% for widget in widget.subwidgets %}
+        <div role="tabpanel" id="{{ widget_id }}_{{ widget.lang_code }}">
+            {% include widget.template_name %}
+        </div>
+    {% endfor %}
+</div>
+{% endwith %}

@@ -16,6 +16,7 @@ class LocalizedFieldWidgetTestCase(TestCase):
 
         widget = LocalizedFieldWidget()
         assert len(widget.widgets) == len(settings.LANGUAGES)
+        assert len(set(widget.widgets)) == len(widget.widgets)
 
     @staticmethod
     def test_decompress():
