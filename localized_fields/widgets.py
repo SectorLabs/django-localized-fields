@@ -120,3 +120,7 @@ class AdminLocalizedCharFieldWidget(AdminLocalizedFieldWidget):
 
 class AdminLocalizedFileFieldWidget(AdminLocalizedFieldWidget):
     widget = widgets.AdminFileWidget
+
+
+class AdminLocalizedIntegerFieldWidget(AdminLocalizedFieldWidget):
+    widget = widgets.AdminIntegerFieldWidget

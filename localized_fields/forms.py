@@ -6,9 +6,9 @@ from django.core.exceptions import ValidationError
 from django.forms.widgets import FILE_INPUT_CONTRADICTION
 
 from .value import LocalizedValue, LocalizedStringValue, \
-    LocalizedFileValue
+    LocalizedFileValue, LocalizedIntegerValue
 from .widgets import LocalizedFieldWidget, LocalizedCharFieldWidget, \
-    LocalizedFileWidget
+    LocalizedFileWidget, AdminLocalizedIntegerFieldWidget
 
 
 class LocalizedFieldForm(forms.MultiValueField):
@@ -77,6 +77,14 @@ class LocalizedTextFieldForm(LocalizedFieldForm):
     the field in multiple languages."""
 
     value_class = LocalizedStringValue
+
+
+class LocalizedIntegerFieldForm(LocalizedFieldForm):
+    """Form for a localized integer field, allows editing
+    the field in multiple languages."""
+
+    widget = AdminLocalizedIntegerFieldWidget
+    value_class = LocalizedIntegerValue
 
 
 class LocalizedFileFieldForm(LocalizedFieldForm, forms.FileField):

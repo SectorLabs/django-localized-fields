@@ -228,3 +228,8 @@ class LocalizedIntegerValue(LocalizedValue):
             return self.default_value
 
         return int(value)
+
+    def __str__(self) -> str:
+        """Returns string representation of value"""
+
+        return str(self.get(translation.get_language()))
