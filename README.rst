@@ -348,6 +348,7 @@ Experimental feature
 ^^^^^^^^^^^^^^^^^^^^
 Enables the following experimental features:
     * ``LocalizedField`` will return ``None`` instead of an empty ``LocalizedValue`` if there is no database value.
+    * ``LocalizedField`` lookups will lookup by currently active language instead of HStoreField
 
 .. code-block:: python
 
