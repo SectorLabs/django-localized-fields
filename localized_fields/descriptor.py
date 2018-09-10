@@ -41,7 +41,7 @@ class LocalizedValueDescriptor:
 
         if self.field.name in instance.__dict__:
             value = instance.__dict__[self.field.name]
-        elif instance.pk is not None:
+        elif not instance._state.adding:
             instance.refresh_from_db(fields=[self.field.name])
             value = getattr(instance, self.field.name)
         else:
