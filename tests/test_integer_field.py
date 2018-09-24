@@ -4,6 +4,7 @@ from django.conf import settings
 from django.db import connection
 from django.utils import translation
 
+from localized_fields.value import LocalizedIntegerValue
 from localized_fields.fields import LocalizedIntegerField
 
 from .fake_model import get_fake_model
