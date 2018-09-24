@@ -232,4 +232,5 @@ class LocalizedIntegerValue(LocalizedValue):
     def __str__(self) -> str:
         """Returns string representation of value"""
 
-        return str(self.get(translation.get_language()))
+        value = self.translate()
+        return str(value) if value is not None else None
