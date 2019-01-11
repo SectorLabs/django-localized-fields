@@ -3,10 +3,6 @@
 django-autoslug==1.9.3
 django-bleach==0.3.0
 psycopg2==2.7.3.2
-pylint==1.8.1
-pylint-common==0.2.5
-pylint-django==0.8.0
-pylint-plugin-utils==0.2.6
 coverage==4.4.2
 flake8==3.6.0
 pep8==1.7.1
