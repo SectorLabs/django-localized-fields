@@ -33,7 +33,6 @@ class LocalizedFieldTestCase(TestCase):
         field = LocalizedField(required=False)
         assert field.required == []
 
-
     @staticmethod
     def test_from_db_value():
         """Tests whether the :see:from_db_value function

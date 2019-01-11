@@ -40,7 +40,6 @@ class LocalizedFieldFormTestCase(TestCase):
         for field in form.fields:
             assert not field.required
 
-
     @staticmethod
     def test_compress():
         """Tests whether the :see:compress function

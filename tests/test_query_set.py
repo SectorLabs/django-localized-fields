@@ -1,6 +1,4 @@
-from django.conf import settings
 from django.test import TestCase
-from django.utils import translation
 
 from localized_fields.fields import LocalizedField
 

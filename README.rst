@@ -1,11 +1,8 @@
 django-localized-fields
 =======================
 
-.. image:: https://scrutinizer-ci.com/g/SectorLabs/django-localized-fields/badges/quality-score.png
-    :target: https://scrutinizer-ci.com/g/SectorLabs/django-localized-fields/
-
-.. image:: https://scrutinizer-ci.com/g/SectorLabs/django-localized-fields/badges/coverage.png
-    :target: https://scrutinizer-ci.com/g/SectorLabs/django-localized-fields/
+.. image:: https://circleci.com/gh/SectorLabs/django-localized-fields.svg?style=svg
+    :target: https://circleci.com/gh/SectorLabs/django-localized-fields
 
 .. image:: https://img.shields.io/github/license/SectorLabs/django-localized-fields.svg
     :target: https://github.com/SectorLabs/django-localized-fields/blob/master/LICENSE.md

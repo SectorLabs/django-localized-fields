@@ -5,6 +5,7 @@ from django.db.utils import IntegrityError
 
 from .field import LocalizedField
 from ..value import LocalizedValue, LocalizedIntegerValue
+from ..forms import LocalizedIntegerFieldForm
 
 
 class LocalizedIntegerField(LocalizedField):
@@ -62,6 +63,15 @@ class LocalizedIntegerField(LocalizedField):
             prepped_value[lang_code] = str(local_value) if local_value is not None else None
 
         return prepped_value
+
+    def formfield(self, **kwargs):
+        """Gets the form field associated with this field."""
+        defaults = {
+            'form_class': LocalizedIntegerFieldForm
+        }
+
+        defaults.update(kwargs)
+        return super().formfield(**defaults)
 
     @staticmethod
     def _convert_localized_value(value: LocalizedValue) -> LocalizedIntegerValue:
