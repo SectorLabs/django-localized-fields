@@ -1,6 +1,7 @@
 import json
 
 from django.conf import settings
+from django.db import models
 from django.db.utils import IntegrityError
 from django.test import TestCase
 
@@ -203,6 +204,16 @@ class LocalizedFieldTestCase(TestCase):
         assert field.formfield().required
         for field in field.formfield().fields:
             assert field.required
+
+    def test_descriptor_user_defined_primary_key(self):
+        """Tests that descriptor works even when primary key is user defined."""
+        model = get_fake_model(dict(
+            slug=models.SlugField(primary_key=True),
+            title=LocalizedField()
+        ))
+
+        obj = model.objects.create(slug='test', title='test')
+        assert obj.title == 'test'
 
     def test_required_all(self):
         """Tests whether passing required=True properly validates
