@@ -1,5 +1,3 @@
-from django.contrib.admin import ModelAdmin
-
 from . import widgets
 from .fields import LocalizedField, LocalizedCharField, LocalizedTextField, \
     LocalizedFileField
@@ -13,7 +11,7 @@ FORMFIELD_FOR_LOCALIZED_FIELDS_DEFAULTS = {
 }
 
 
-class LocalizedFieldsAdminMixin(ModelAdmin):
+class LocalizedFieldsAdminMixin:
     """Mixin for making the fancy widgets work in Django Admin."""
 
     class Media:
