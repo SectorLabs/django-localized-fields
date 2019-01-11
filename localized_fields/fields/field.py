@@ -165,7 +165,7 @@ class LocalizedField(HStoreField):
         can store in the database.
 
         For example, when all the language fields are
-        left empty, and the field is allows to be null,
+        left empty, and the field is allowed to be null,
         we will store None instead of empty keys.
 
         Arguments:
