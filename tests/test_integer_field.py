@@ -4,7 +4,6 @@ from django.conf import settings
 from django.db import connection
 from django.utils import translation
 
-from localized_fields.value import LocalizedIntegerValue
 from localized_fields.fields import LocalizedIntegerField
 
 from .fake_model import get_fake_model
@@ -149,7 +148,7 @@ class LocalizedIntegerFieldTestCase(TestCase):
 
         with connection.cursor() as cursor:
             table_name = self.TestModel._meta.db_table
-            cursor.execute("update %s set score = 'en=>haha'" % table_name);
+            cursor.execute("update %s set score = 'en=>haha'" % table_name)
 
         obj.refresh_from_db()
         assert obj.score.get(settings.LANGUAGE_CODE) is None

@@ -152,7 +152,7 @@ class LocalizedValueTestCase(TestCase):
 
         # with no value, we always expect it to return None
         localized_value = LocalizedValue()
-        assert localized_value.translate() == None
+        assert localized_value.translate() is None
         assert str(localized_value) == ''
 
         # with no value for the default language, the default
@@ -164,7 +164,7 @@ class LocalizedValueTestCase(TestCase):
         })
 
         translation.activate(settings.LANGUAGE_CODE)
-        assert localized_value.translate() == None
+        assert localized_value.translate() is None
         assert str(localized_value) == ''
 
     @staticmethod
