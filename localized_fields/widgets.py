@@ -6,7 +6,7 @@ from django.conf import settings
 from django import forms
 from django.contrib.admin import widgets
 
-from .value import LocalizedValue
+from .value import LocalizedValue, LocalizedIntegerValue
 
 
 class LocalizedFieldWidget(forms.MultiWidget):
@@ -52,6 +52,7 @@ class LocalizedFieldWidget(forms.MultiWidget):
         return result
 
     def get_context(self, name, value, attrs):
+        value = self.remove_if_needed(value)
         context = super(forms.MultiWidget, self).get_context(name, value, attrs)
         if self.is_localized:
             for widget in self.widgets:
@@ -97,6 +98,16 @@ class LocalizedFieldWidget(forms.MultiWidget):
             del attrs['required']
 
         return attrs
+
+    @staticmethod
+    def remove_if_needed(value):
+        """If the field LocalizedIntegerField is null in the DB then it must
+        be set to None so it can be represented"""
+        if isinstance(value, LocalizedIntegerValue):
+            not_none_score = list(filter(lambda x: value[x] is not None, [i[0] for i in settings.LANGUAGES]))
+            return value if len(not_none_score) > 0 else None
+        else:
+            return value
 
 
 class LocalizedCharFieldWidget(LocalizedFieldWidget):
