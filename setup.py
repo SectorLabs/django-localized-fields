@@ -33,7 +33,7 @@ with open(os.path.join(os.path.dirname(__file__), 'README.rst'), encoding='utf-8
 
 setup(
     name='django-localized-fields',
-    version='5.0a8',
+    version='5.0a9',
     packages=find_packages(exclude=['tests']),
     include_package_data=True,
     license='MIT License',
@@ -44,7 +44,7 @@ setup(
     author_email='open-source@sectorlabs.ro',
     keywords=['django', 'localized', 'language', 'models', 'fields'],
     install_requires=[
-        'django-postgres-extra>=1.21a15',
+        'django-postgres-extra>=1.21a16',
         'Django>=1.11',
         'deprecation==2.0.3'
     ],
