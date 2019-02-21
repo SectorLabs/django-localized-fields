@@ -279,7 +279,7 @@ Besides ``LocalizedField``, there's also:
 
     Allows storing integers in multiple languages. This works exactly like ``LocalizedField`` except that
     all values must be integers. Do note that values are stored as strings in your database because
-    the backing field type is ``hstore``, which only allows storing integers. The ``LocalizedIntegerField``
+    the backing field type is ``hstore``, which only allows storing strings. The ``LocalizedIntegerField``
     takes care of ensuring that all values are integers and converts the stored strings back to integers
     when retrieving them from the database. Do not expect to be able to do queries such as:
 
