@@ -369,6 +369,10 @@ To enable widgets in the admin, you need to inherit from ``LocalizedFieldsAdminM
     admin.site.register(MyLocalizedModel, MyLocalizedModelAdmin)
 
 
+.. image:: ./images/admin-widget.png
+    :alt: The appearance of admin widget
+
+
 Frequently asked questions (FAQ)
 --------------------------------
 
