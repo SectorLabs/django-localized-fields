@@ -22,6 +22,7 @@ class LocalizedFieldsAdminMixin:
         }
 
         js = (
+            'admin/js/jquery.init.js',
             'localized_fields/localized-fields-admin.js',
         )
 
