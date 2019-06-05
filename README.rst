@@ -33,7 +33,7 @@ Installation
      .. code-block:: bash
 
         INSTALLED_APPS = [
-            ....
+            ...
 
             'django.contrib.postgres',
             'localized_fields.apps.LocalizedFieldsConfig'
