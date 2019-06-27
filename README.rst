@@ -61,6 +61,13 @@ Installation
              ('ro', 'Romanian')
          )
 
+
+4. Apply migrations to enable the HStore extension:
+
+     .. code-block:: bash
+
+	 python manage.py migrate
+
 Usage
 -----
 
