@@ -17,16 +17,16 @@ class LocalizedAutoSlugField(LocalizedField):
     """Automatically provides slugs for a localized
     field upon saving."""
 
+    warnings.warn(
+        'LocalizedAutoSlug is deprecated and will be removed in the next major version.',
+        DeprecationWarning
+    )
+
     def __init__(self, *args, **kwargs):
         """Initializes a new instance of :see:LocalizedAutoSlugField."""
 
         self.populate_from = kwargs.pop('populate_from', None)
         self.include_time = kwargs.pop('include_time', False)
-
-        warnings.warn(
-            'LocalizedAutoSlug is deprecated and will be removed in the next major version.',
-            DeprecationWarning
-        )
 
         super(LocalizedAutoSlugField, self).__init__(
             *args,
