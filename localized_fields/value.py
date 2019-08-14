@@ -1,7 +1,8 @@
 import deprecation
-import collections
 
 from typing import Optional
+from collections.abc import Iterable
+
 from django.conf import settings
 from django.utils import translation
 
@@ -97,7 +98,7 @@ class LocalizedValue(dict):
                 lang_value = value.get(lang_code, self.default_value)
                 self.set(lang_code, lang_value)
 
-        elif isinstance(value, collections.Iterable):
+        elif isinstance(value, Iterable):
             for val in value:
                 self._interpret_value(val)
 
