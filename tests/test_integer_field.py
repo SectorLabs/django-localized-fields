@@ -4,6 +4,7 @@ from django.conf import settings
 from django.db import connection
 from django.utils import translation
 
+from localized_fields.value import LocalizedIntegerValue
 from localized_fields.fields import LocalizedIntegerField
 
 from .fake_model import get_fake_model
@@ -174,3 +175,18 @@ class LocalizedIntegerFieldTestCase(TestCase):
                 assert obj.score.get(lang_code) == 75
             else:
                 assert obj.score.get(lang_code) is None
+
+    def test_default_value_update(self):
+        """Tests whether a default is properly set
+        when specified during updates."""
+
+        model = get_fake_model({
+            'score': LocalizedIntegerField(default={settings.LANGUAGE_CODE: 75}, null=True)
+        })
+
+        obj = model.objects.create(score=LocalizedIntegerValue({settings.LANGUAGE_CODE: 35}))
+        assert obj.score.get(settings.LANGUAGE_CODE) == 35
+
+        model.objects.update(score=LocalizedIntegerValue({settings.LANGUAGE_CODE: None}))
+        obj.refresh_from_db()
+        assert obj.score.get(settings.LANGUAGE_CODE) == 75
