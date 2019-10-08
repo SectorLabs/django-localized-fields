@@ -46,7 +46,7 @@ setup(
     install_requires=[
         'django-postgres-extra>=1.22',
         'Django>=1.11',
-        'deprecation==2.0.3'
+        'deprecation==2.0.7'
     ],
     classifiers=[
         'Environment :: Web Environment',

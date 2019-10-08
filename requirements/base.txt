@@ -1,2 +1,2 @@
 django-postgres-extra==1.22
-deprecation==2.0.3
+deprecation==2.0.7
