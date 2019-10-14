@@ -12,7 +12,7 @@ django-localized-fields
 
 ``django-localized-fields`` is an implementation of a field class for Django models that allows the field's value to be set in multiple languages. It does this by utilizing the ``hstore`` type (PostgreSQL specific), which is available as ``models.HStoreField`` since Django 1.10.
 
-This package requires Python 3.5 or newer, Django 1.11 or newer and PostgreSQL 9.6 or newer.
+This package requires Python 3.7 or newer, Django 2.0 or newer and PostgreSQL 10 or newer.
 
 Contributors
 ------------
@@ -385,11 +385,11 @@ Frequently asked questions (FAQ)
 
 1. Does this package work with Python 2?
 
-    No. Only Python 3.5 or newer is supported. We're using type hints. These do not work well under older versions of Python.
+    No. Only Python 3.7 or newer is supported. We're using type hints. These do not work well under older versions of Python.
 
 2. With what Django versions does this package work?
 
-    Only Django 1.11 or newer is supported, this includes Django 2.X. This is because we rely on Django's ``HStoreField`` and template-based widget rendering.
+    Only Django 2.x or newer is supported. This is because we rely on Django's ``HStoreField`` and template-based widget rendering.
 
 3. Does this package come with support for Django Admin?
 
@@ -399,7 +399,7 @@ Frequently asked questions (FAQ)
 
     You should pick whatever you feel comfortable with. This package stores translations in your database without having to have translation tables. It however only works on PostgreSQL.
 
-5. I am using PostgreSQL <9.6, can I use this?
+5. I am using PostgreSQL <10, can I use this?
 
     No. The ``hstore`` data type was introduced in PostgreSQL 9.6.
 
