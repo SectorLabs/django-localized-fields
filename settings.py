@@ -1,5 +1,3 @@
-import dj_database_url
-
 DEBUG = True
 TEMPLATE_DEBUG = True
 
@@ -8,7 +6,10 @@ SECRET_KEY = 'this is my secret key'  # NOQA
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
 DATABASES = {
-    'default': dj_database_url.config(default='postgres:///localized_fields')
+    'default': {
+        'HOST': '127.0.0.1',
+        'NAME': 'localized_fields',
+    },
 }
 
 DATABASES['default']['ENGINE'] = 'psqlextra.backend'
