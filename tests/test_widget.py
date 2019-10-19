@@ -82,4 +82,4 @@ class LocalizedFieldWidgetTestCase(TestCase):
 
         widget = LocalizedFieldWidget()
         output = widget.render(name="title", value=None)
-        assert bool(re.search("<label (.|\n|\t)*>\w+<\/label>", output))
+        assert bool(re.search(r"<label (.|\n|\t)*>\w+<\/label>", output))

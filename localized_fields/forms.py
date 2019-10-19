@@ -55,7 +55,7 @@ class LocalizedFieldForm(forms.MultiValueField):
         for field, widget in zip(self.fields, self.widget.widgets):
             widget.is_required = field.required
 
-    def compress(self, value: List[str]) -> value_class:
+    def compress(self, value: List[str]) -> LocalizedValue:
         """Compresses the values from individual fields into a single
         :see:LocalizedValue instance.
 
@@ -123,13 +123,8 @@ class LocalizedFileFieldForm(LocalizedFieldForm, forms.FileField):
         clean_data = []
         errors = []
         if not value or isinstance(value, (list, tuple)):
-            if (
-                not value
-                or not [v for v in value if v not in self.empty_values]
-            ) and (
-                not initial
-                or not [v for v in initial if v not in self.empty_values]
-            ):
+            is_empty = [v for v in value if v not in self.empty_values]
+            if (not value or not is_empty) and (not initial or not is_empty):
                 if self.required:
                     raise ValidationError(
                         self.error_messages["required"], code="required"
@@ -143,6 +138,7 @@ class LocalizedFileFieldForm(LocalizedFieldForm, forms.FileField):
                 field_value = value[i]
             except IndexError:
                 field_value = None
+
             try:
                 field_initial = initial[i]
             except IndexError:
