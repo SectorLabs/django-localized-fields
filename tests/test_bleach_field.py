@@ -8,11 +8,11 @@ from localized_fields.fields import LocalizedBleachField
 from localized_fields.value import LocalizedValue
 
 
-class TestModel:
+class ModelTest:
     """Used to declare a bleach-able field on."""
 
     def __init__(self, value):
-        """Initializes a new instance of :see:TestModel.
+        """Initializes a new instance of :see:ModelTest.
 
         Arguments:
             The value to initialize with.
@@ -60,7 +60,7 @@ class LocalizedBleachFieldTestCase(TestCase):
         """Gets a test model and a artifically constructed
         :see:LocalizedBleachField instance to test with."""
 
-        model = TestModel(value)
+        model = ModelTest(value)
 
         field = LocalizedBleachField()
         field.attname = "value"
