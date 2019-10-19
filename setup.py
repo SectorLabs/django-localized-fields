@@ -57,6 +57,8 @@ setup(
         "Topic :: Internet :: WWW/HTTP",
         "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
     ],
+    python_requires=">=3.7",
+    install_requires=["django-postgres-extra>=2.0a7", "deprecation==2.0.7"],
     cmdclass={
         "lint": create_command(
             "Lints the code",
