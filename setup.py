@@ -35,17 +35,17 @@ with open(
 
 
 setup(
-    name='django-localized-fields',
-    version='6.0b1',
-    packages=find_packages(exclude=['tests']),
+    name="django-localized-fields",
+    version="6.0b1",
+    packages=find_packages(exclude=["tests"]),
     include_package_data=True,
-    license='MIT License',
-    description='Implementation of localized model fields using PostgreSQL HStore fields.',
+    license="MIT License",
+    description="Implementation of localized model fields using PostgreSQL HStore fields.",
     long_description=README,
-    url='https://github.com/SectorLabs/django-localized-fields',
-    author='Sector Labs',
-    author_email='open-source@sectorlabs.ro',
-    keywords=['django', 'localized', 'language', 'models', 'fields'],
+    url="https://github.com/SectorLabs/django-localized-fields",
+    author="Sector Labs",
+    author_email="open-source@sectorlabs.ro",
+    keywords=["django", "localized", "language", "models", "fields"],
     classifiers=[
         "Environment :: Web Environment",
         "Framework :: Django",
@@ -77,11 +77,19 @@ setup(
                     "localized_fields",
                     "tests",
                 ],
-                ["autopep8", "-i", "-r", "setup.py", "localized_fields", "tests"],
+                [
+                    "autopep8",
+                    "-i",
+                    "-r",
+                    "setup.py",
+                    "localized_fields",
+                    "tests",
+                ],
             ],
         ),
         "format": create_command(
-            "Formats the code", [["black", "setup.py", "localized_fields", "tests"]]
+            "Formats the code",
+            [["black", "setup.py", "localized_fields", "tests"]],
         ),
         "format_verify": create_command(
             "Checks if the code is auto-formatted",

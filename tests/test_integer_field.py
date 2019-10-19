@@ -1,18 +1,18 @@
-from django.test import TestCase
-from django.db.utils import IntegrityError
 from django.conf import settings
 from django.db import connection
+from django.db.utils import IntegrityError
+from django.test import TestCase
 from django.utils import translation
 
-from localized_fields.value import LocalizedIntegerValue
 from localized_fields.fields import LocalizedIntegerField
+from localized_fields.value import LocalizedIntegerValue
 
 from .fake_model import get_fake_model
 
 
 class LocalizedIntegerFieldTestCase(TestCase):
-    """Tests whether the :see:LocalizedIntegerField
-    and :see:LocalizedIntegerValue works properly."""
+    """Tests whether the :see:LocalizedIntegerField and
+    :see:LocalizedIntegerValue works properly."""
 
     TestModel = None
 
@@ -20,9 +20,7 @@ class LocalizedIntegerFieldTestCase(TestCase):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.TestModel = get_fake_model({
-            'score': LocalizedIntegerField()
-        })
+        cls.TestModel = get_fake_model({"score": LocalizedIntegerField()})
 
     def test_basic(self):
         """Tests the basics of storing integer values."""
@@ -37,8 +35,8 @@ class LocalizedIntegerFieldTestCase(TestCase):
             assert obj.score.get(lang_code) == index + 1
 
     def test_primary_language_required(self):
-        """Tests whether the primary language is required by
-        default and all other languages are optiona."""
+        """Tests whether the primary language is required by default and all
+        other languages are optiona."""
 
         # not filling in anything should raise IntegrityError,
         # the primary language is required
@@ -57,8 +55,8 @@ class LocalizedIntegerFieldTestCase(TestCase):
             obj.save()
 
     def test_default_value_none(self):
-        """Tests whether the default value for optional languages
-        is NoneType."""
+        """Tests whether the default value for optional languages is
+        NoneType."""
 
         obj = self.TestModel()
         obj.score.set(settings.LANGUAGE_CODE, 1234)
@@ -71,9 +69,8 @@ class LocalizedIntegerFieldTestCase(TestCase):
             assert obj.score.get(lang_code) is None
 
     def test_translate(self):
-        """Tests whether casting the value to an integer
-        results in the value being returned in the currently
-        active language as an integer."""
+        """Tests whether casting the value to an integer results in the value
+        being returned in the currently active language as an integer."""
 
         obj = self.TestModel()
         for index, (lang_code, _) in enumerate(settings.LANGUAGES):
@@ -87,10 +84,9 @@ class LocalizedIntegerFieldTestCase(TestCase):
                 assert obj.score.translate() == index + 1
 
     def test_translate_primary_fallback(self):
-        """Tests whether casting the value to an integer
-        results in the value begin returned in the active
-        language and falls back to the primary language
-        if there is no value in that language."""
+        """Tests whether casting the value to an integer results in the value
+        begin returned in the active language and falls back to the primary
+        language if there is no value in that language."""
 
         obj = self.TestModel()
         obj.score.set(settings.LANGUAGE_CODE, 25)
@@ -103,9 +99,8 @@ class LocalizedIntegerFieldTestCase(TestCase):
             assert int(obj.score) == 25
 
     def test_get_default_value(self):
-        """Tests whether getting the value in a specific
-        language properly returns the specified default
-        in case it is not available."""
+        """Tests whether getting the value in a specific language properly
+        returns the specified default in case it is not available."""
 
         obj = self.TestModel()
         obj.score.set(settings.LANGUAGE_CODE, 25)
@@ -115,12 +110,11 @@ class LocalizedIntegerFieldTestCase(TestCase):
         assert obj.score.get(secondary_language, 1337) == 1337
 
     def test_completely_optional(self):
-        """Tests whether having all languages optional
-        works properly."""
+        """Tests whether having all languages optional works properly."""
 
-        model = get_fake_model({
-            'score': LocalizedIntegerField(null=True, required=[], blank=True)
-        })
+        model = get_fake_model(
+            {"score": LocalizedIntegerField(null=True, required=[], blank=True)}
+        )
 
         obj = model()
         obj.save()
@@ -129,19 +123,18 @@ class LocalizedIntegerFieldTestCase(TestCase):
             assert getattr(obj.score, lang_code) is None
 
     def test_store_string(self):
-        """Tests whether the field properly raises
-        an error when trying to store a non-integer."""
+        """Tests whether the field properly raises an error when trying to
+        store a non-integer."""
 
         for lang_code, _ in settings.LANGUAGES:
             obj = self.TestModel()
             with self.assertRaises(IntegrityError):
-                obj.score.set(lang_code, 'haha')
+                obj.score.set(lang_code, "haha")
                 obj.save()
 
     def test_none_if_illegal_value_stored(self):
-        """Tests whether None is returned for a language
-        if the value stored in the database is not an
-        integer."""
+        """Tests whether None is returned for a language if the value stored in
+        the database is not an integer."""
 
         obj = self.TestModel()
         obj.score.set(settings.LANGUAGE_CODE, 25)
@@ -155,12 +148,15 @@ class LocalizedIntegerFieldTestCase(TestCase):
         assert obj.score.get(settings.LANGUAGE_CODE) is None
 
     def test_default_value(self):
-        """Tests whether a default is properly set
-        when specified."""
+        """Tests whether a default is properly set when specified."""
 
-        model = get_fake_model({
-            'score': LocalizedIntegerField(default={settings.LANGUAGE_CODE: 75})
-        })
+        model = get_fake_model(
+            {
+                "score": LocalizedIntegerField(
+                    default={settings.LANGUAGE_CODE: 75}
+                )
+            }
+        )
 
         obj = model.objects.create()
         assert obj.score.get(settings.LANGUAGE_CODE) == 75
@@ -177,16 +173,24 @@ class LocalizedIntegerFieldTestCase(TestCase):
                 assert obj.score.get(lang_code) is None
 
     def test_default_value_update(self):
-        """Tests whether a default is properly set
-        when specified during updates."""
+        """Tests whether a default is properly set when specified during
+        updates."""
 
-        model = get_fake_model({
-            'score': LocalizedIntegerField(default={settings.LANGUAGE_CODE: 75}, null=True)
-        })
+        model = get_fake_model(
+            {
+                "score": LocalizedIntegerField(
+                    default={settings.LANGUAGE_CODE: 75}, null=True
+                )
+            }
+        )
 
-        obj = model.objects.create(score=LocalizedIntegerValue({settings.LANGUAGE_CODE: 35}))
+        obj = model.objects.create(
+            score=LocalizedIntegerValue({settings.LANGUAGE_CODE: 35})
+        )
         assert obj.score.get(settings.LANGUAGE_CODE) == 35
 
-        model.objects.update(score=LocalizedIntegerValue({settings.LANGUAGE_CODE: None}))
+        model.objects.update(
+            score=LocalizedIntegerValue({settings.LANGUAGE_CODE: None})
+        )
         obj.refresh_from_db()
         assert obj.score.get(settings.LANGUAGE_CODE) == 75

@@ -15,10 +15,7 @@ def get_language_codes() -> List[str]:
         in your project.
     """
 
-    return [
-        lang_code
-        for lang_code, _ in settings.LANGUAGES
-    ]
+    return [lang_code for lang_code, _ in settings.LANGUAGES]
 
 
 def resolve_object_property(obj, path: str):
@@ -38,7 +35,7 @@ def resolve_object_property(obj, path: str):
     """
 
     value = obj
-    for path_part in path.split('.'):
+    for path_part in path.split("."):
         value = getattr(value, path_part)
 
     return value

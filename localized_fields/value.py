@@ -1,7 +1,7 @@
-import deprecation
-
-from typing import Optional
 from collections.abc import Iterable
+from typing import Optional
+
+import deprecation
 
 from django.conf import settings
 from django.utils import translation
@@ -9,9 +9,10 @@ from django.utils import translation
 
 class LocalizedValue(dict):
     """Represents the value of a :see:LocalizedField."""
+
     default_value = None
 
-    def __init__(self, keys: dict=None):
+    def __init__(self, keys: dict = None):
         """Initializes a new instance of :see:LocalizedValue.
 
         Arguments:
@@ -24,9 +25,8 @@ class LocalizedValue(dict):
         super().__init__({})
         self._interpret_value(keys)
 
-    def get(self, language: str=None, default: str=None) -> str:
-        """Gets the underlying value in the specified or
-        primary language.
+    def get(self, language: str = None, default: str = None) -> str:
+        """Gets the underlying value in the specified or primary language.
 
         Arguments:
             language:
@@ -65,12 +65,12 @@ class LocalizedValue(dict):
             contained in this instance.
         """
 
-        path = 'localized_fields.value.%s' % self.__class__.__name__
+        path = "localized_fields.value.%s" % self.__class__.__name__
         return path, [self.__dict__], {}
 
     def _interpret_value(self, value):
-        """Interprets a value passed in the constructor as
-        a :see:LocalizedValue.
+        """Interprets a value passed in the constructor as a
+        :see:LocalizedValue.
 
         If string:
             Assumes it's the default language.
@@ -103,11 +103,10 @@ class LocalizedValue(dict):
                 self._interpret_value(val)
 
     def translate(self) -> Optional[str]:
-        """Gets the value in the current language or falls
-        back to the next language if there's no value in the
-        current language."""
+        """Gets the value in the current language or falls back to the next
+        language if there's no value in the current language."""
 
-        fallbacks = getattr(settings, 'LOCALIZED_FIELDS_FALLBACKS', {})
+        fallbacks = getattr(settings, "LOCALIZED_FIELDS_FALLBACKS", {})
 
         language = translation.get_language() or settings.LANGUAGE_CODE
         languages = fallbacks.get(language, [settings.LANGUAGE_CODE])[:]
@@ -121,15 +120,13 @@ class LocalizedValue(dict):
         return None
 
     def __str__(self) -> str:
-        """Gets the value in the current language or falls
-        back to the next language if there's no value in the
-        current language."""
+        """Gets the value in the current language or falls back to the next
+        language if there's no value in the current language."""
 
-        return self.translate() or ''
+        return self.translate() or ""
 
     def __eq__(self, other):
-        """Compares :paramref:self to :paramref:other for
-        equality.
+        """Compares :paramref:self to :paramref:other for equality.
 
         Returns:
             True when :paramref:self is equal to :paramref:other.
@@ -148,8 +145,7 @@ class LocalizedValue(dict):
         return True
 
     def __ne__(self, other):
-        """Compares :paramref:self to :paramerf:other for
-        in-equality.
+        """Compares :paramref:self to :paramerf:other for in-equality.
 
         Returns:
             True when :paramref:self is not equal to :paramref:other.
@@ -174,34 +170,43 @@ class LocalizedValue(dict):
     def __repr__(self):  # pragma: no cover
         """Gets a textual representation of this object."""
 
-        return '%s<%s> 0x%s' % (self.__class__.__name__,
-                                self.__dict__, id(self))
+        return "%s<%s> 0x%s" % (
+            self.__class__.__name__,
+            self.__dict__,
+            id(self),
+        )
 
 
 class LocalizedStringValue(LocalizedValue):
-    default_value = ''
+    default_value = ""
 
 
 class LocalizedFileValue(LocalizedValue):
     def __getattr__(self, name: str):
-        """Proxies access to attributes to attributes of LocalizedFile"""
+        """Proxies access to attributes to attributes of LocalizedFile."""
 
         value = self.get(translation.get_language())
         if hasattr(value, name):
             return getattr(value, name)
-        raise AttributeError("'{}' object has no attribute '{}'".
-                             format(self.__class__.__name__, name))
+        raise AttributeError(
+            "'{}' object has no attribute '{}'".format(
+                self.__class__.__name__, name
+            )
+        )
 
     def __str__(self) -> str:
-        """Returns string representation of value"""
+        """Returns string representation of value."""
 
         return str(super().__str__())
 
-    @deprecation.deprecated(deprecated_in='4.6', removed_in='5.0',
-                            current_version='4.6',
-                            details='Use the translate() function instead.')
+    @deprecation.deprecated(
+        deprecated_in="4.6",
+        removed_in="5.0",
+        current_version="4.6",
+        details="Use the translate() function instead.",
+    )
     def localized(self):
-        """Returns value for current language"""
+        """Returns value for current language."""
 
         return self.get(translation.get_language())
 
@@ -212,11 +217,11 @@ class LocalizedIntegerValue(LocalizedValue):
     default_value = None
 
     def translate(self):
-        """Gets the value in the current language, or
-        in the configured fallbck language."""
+        """Gets the value in the current language, or in the configured fallbck
+        language."""
 
         value = super().translate()
-        if value is None or (isinstance(value, str) and value.strip() == ''):
+        if value is None or (isinstance(value, str) and value.strip() == ""):
             return None
 
         return int(value)
@@ -231,7 +236,7 @@ class LocalizedIntegerValue(LocalizedValue):
         return int(value)
 
     def __str__(self) -> str:
-        """Returns string representation of value"""
+        """Returns string representation of value."""
 
         value = self.translate()
-        return str(value) if value is not None else ''
+        return str(value) if value is not None else ""

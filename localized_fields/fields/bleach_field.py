@@ -7,12 +7,11 @@ from .field import LocalizedField
 
 
 class LocalizedBleachField(LocalizedField):
-    """Custom version of :see:BleachField that
-    is actually a :see:LocalizedField."""
+    """Custom version of :see:BleachField that is actually a
+    :see:LocalizedField."""
 
     def pre_save(self, instance, add: bool):
-        """Ran just before the model is saved, allows us to built
-        the slug.
+        """Ran just before the model is saved, allows us to built the slug.
 
         Arguments:
             instance:
@@ -33,8 +32,7 @@ class LocalizedBleachField(LocalizedField):
                 continue
 
             localized_value.set(
-                lang_code,
-                bleach.clean(value, **get_bleach_default_options())
+                lang_code, bleach.clean(value, **get_bleach_default_options())
             )
 
         return localized_value

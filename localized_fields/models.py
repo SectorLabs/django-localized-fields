@@ -10,7 +10,8 @@ class LocalizedModel(AtomicSlugRetryMixin, PostgresModel):
     from LocalizedModel. However, for certain features, this is required.
 
     It is definitely needed for :see:LocalizedUniqueSlugField, unless you
-    manually inherit from AtomicSlugRetryMixin."""
+    manually inherit from AtomicSlugRetryMixin.
+    """
 
     class Meta:
         abstract = True

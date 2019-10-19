@@ -1,11 +1,11 @@
-from typing import Optional, Union, Dict
+from typing import Dict, Optional, Union
 
 from django.conf import settings
 from django.db.utils import IntegrityError
 
-from .field import LocalizedField
-from ..value import LocalizedValue, LocalizedIntegerValue
 from ..forms import LocalizedIntegerFieldForm
+from ..value import LocalizedIntegerValue, LocalizedValue
+from .field import LocalizedField
 
 
 class LocalizedIntegerField(LocalizedField):
@@ -27,7 +27,9 @@ class LocalizedIntegerField(LocalizedField):
 
         return cls._convert_localized_value(db_value)
 
-    def to_python(self, value: Union[Dict[str, int], int, None]) -> LocalizedIntegerValue:
+    def to_python(
+        self, value: Union[Dict[str, int], int, None]
+    ) -> LocalizedIntegerValue:
         """Converts the value from a database value into a Python value."""
 
         db_value = super().to_python(value)
@@ -55,32 +57,36 @@ class LocalizedIntegerField(LocalizedField):
                 if local_value is not None:
                     int(local_value)
             except (TypeError, ValueError):
-                raise IntegrityError('non-integer value in column "%s.%s" violates '
-                                     'integer constraint' % (self.name, lang_code))
+                raise IntegrityError(
+                    'non-integer value in column "%s.%s" violates '
+                    "integer constraint" % (self.name, lang_code)
+                )
 
             # convert to a string before saving because the underlying
             # type is hstore, which only accept strings
-            prepped_value[lang_code] = str(local_value) if local_value is not None else None
+            prepped_value[lang_code] = (
+                str(local_value) if local_value is not None else None
+            )
 
         return prepped_value
 
     def formfield(self, **kwargs):
         """Gets the form field associated with this field."""
-        defaults = {
-            'form_class': LocalizedIntegerFieldForm
-        }
+        defaults = {"form_class": LocalizedIntegerFieldForm}
 
         defaults.update(kwargs)
         return super().formfield(**defaults)
 
     @staticmethod
-    def _convert_localized_value(value: LocalizedValue) -> LocalizedIntegerValue:
+    def _convert_localized_value(
+        value: LocalizedValue
+    ) -> LocalizedIntegerValue:
         """Converts from :see:LocalizedValue to :see:LocalizedIntegerValue."""
 
         integer_values = {}
         for lang_code, _ in settings.LANGUAGES:
             local_value = value.get(lang_code, None)
-            if local_value is None or local_value.strip() == '':
+            if local_value is None or local_value.strip() == "":
                 local_value = None
 
             try:

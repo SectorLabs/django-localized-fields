@@ -3,8 +3,7 @@ from django.utils import six, translation
 
 
 class LocalizedValueDescriptor:
-    """
-    The descriptor for the localized value attribute on the model instance.
+    """The descriptor for the localized value attribute on the model instance.
     Returns a :see:LocalizedValue when accessed so you can do stuff like::
 
         >>> from myapp.models import MyModel
@@ -60,6 +59,8 @@ class LocalizedValueDescriptor:
     def __set__(self, instance, value):
         if isinstance(value, six.string_types):
             language = translation.get_language() or settings.LANGUAGE_CODE
-            self.__get__(instance).set(language, value)  # pylint: disable=no-member
+            self.__get__(instance).set(
+                language, value
+            )  # pylint: disable=no-member
         else:
             instance.__dict__[self.field.name] = value

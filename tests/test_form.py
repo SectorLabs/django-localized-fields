@@ -9,8 +9,8 @@ class LocalizedFieldFormTestCase(TestCase):
 
     @staticmethod
     def test_init():
-        """Tests whether the constructor correctly
-        creates a field for every language."""
+        """Tests whether the constructor correctly creates a field for every
+        language."""
         # case required for specific language
         form = LocalizedFieldForm(required=[settings.LANGUAGE_CODE])
 
@@ -42,8 +42,7 @@ class LocalizedFieldFormTestCase(TestCase):
 
     @staticmethod
     def test_compress():
-        """Tests whether the :see:compress function
-        is working properly."""
+        """Tests whether the :see:compress function is working properly."""
 
         input_value = [lang_name for _, lang_name in settings.LANGUAGES]
         output_value = LocalizedFieldForm().compress(input_value)

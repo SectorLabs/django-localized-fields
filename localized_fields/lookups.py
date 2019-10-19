@@ -1,15 +1,29 @@
 from django.conf import settings
 from django.contrib.postgres.fields.hstore import KeyTransform
-from django.contrib.postgres.lookups import (SearchLookup, TrigramSimilar,
-                                             Unaccent)
+from django.contrib.postgres.lookups import (
+    SearchLookup,
+    TrigramSimilar,
+    Unaccent,
+)
 from django.db.models.expressions import Col
-from django.db.models.lookups import (Contains, EndsWith, Exact, IContains,
-                                      IEndsWith, IExact, In, IRegex, IsNull,
-                                      IStartsWith, Regex, StartsWith)
+from django.db.models.lookups import (
+    Contains,
+    EndsWith,
+    Exact,
+    IContains,
+    IEndsWith,
+    IExact,
+    In,
+    IRegex,
+    IsNull,
+    IStartsWith,
+    Regex,
+    StartsWith,
+)
 from django.utils import translation
 
 
-class LocalizedLookupMixin():
+class LocalizedLookupMixin:
     def process_lhs(self, qn, connection):
         if isinstance(self.lhs, Col):
             language = translation.get_language() or settings.LANGUAGE_CODE

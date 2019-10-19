@@ -1,16 +1,13 @@
 import copy
 
 from django import forms
-from django.db import models
 from django.conf import settings
-from django.test import TestCase
+from django.db import models
 from django.db.utils import IntegrityError
+from django.test import TestCase
 from django.utils.text import slugify
 
-from localized_fields.fields import (
-    LocalizedField,
-    LocalizedUniqueSlugField
-)
+from localized_fields.fields import LocalizedField, LocalizedUniqueSlugField
 
 from .fake_model import get_fake_model
 
@@ -29,23 +26,25 @@ class LocalizedSlugFieldTestCase(TestCase):
 
         cls.Model = get_fake_model(
             {
-                'title': LocalizedField(),
-                'name': models.CharField(max_length=255),
-                'slug': LocalizedUniqueSlugField(populate_from='title')
+                "title": LocalizedField(),
+                "name": models.CharField(max_length=255),
+                "slug": LocalizedUniqueSlugField(populate_from="title"),
             }
         )
 
     @staticmethod
     def test_unique_slug_with_time():
-        """Tests whether the primary key is included in
-        the slug when the 'use_pk' option is enabled."""
+        """Tests whether the primary key is included in the slug when the
+        'use_pk' option is enabled."""
 
-        title = 'myuniquetitle'
+        title = "myuniquetitle"
 
         PkModel = get_fake_model(
             {
-                'title': LocalizedField(),
-                'slug': LocalizedUniqueSlugField(populate_from='title', include_time=True)
+                "title": LocalizedField(),
+                "slug": LocalizedUniqueSlugField(
+                    populate_from="title", include_time=True
+                ),
             }
         )
 
@@ -53,7 +52,7 @@ class LocalizedSlugFieldTestCase(TestCase):
         obj.title.en = title
         obj.save()
 
-        assert obj.slug.en.startswith('%s-' % title)
+        assert obj.slug.en.startswith("%s-" % title)
 
     @classmethod
     def test_uniue_slug_no_change(cls):
@@ -61,12 +60,14 @@ class LocalizedSlugFieldTestCase(TestCase):
 
         NoChangeSlugModel = get_fake_model(
             {
-                'title': LocalizedField(),
-                'slug': LocalizedUniqueSlugField(populate_from='title', include_time=True)
+                "title": LocalizedField(),
+                "slug": LocalizedUniqueSlugField(
+                    populate_from="title", include_time=True
+                ),
             }
         )
 
-        title = 'myuniquetitle'
+        title = "myuniquetitle"
 
         obj = NoChangeSlugModel()
         obj.title.en = title
@@ -75,7 +76,7 @@ class LocalizedSlugFieldTestCase(TestCase):
 
         old_slug_en = copy.deepcopy(obj.slug.en)
         old_slug_nl = copy.deepcopy(obj.slug.nl)
-        obj.title.nl += 'beer'
+        obj.title.nl += "beer"
         obj.save()
 
         assert old_slug_en == obj.slug.en
@@ -83,18 +84,20 @@ class LocalizedSlugFieldTestCase(TestCase):
 
     @classmethod
     def test_unique_slug_update(cls):
-        obj = cls.Model.objects.create(title={settings.LANGUAGE_CODE: 'mytitle'})
-        assert obj.slug.get() == 'mytitle'
-        obj.title.set(settings.LANGUAGE_CODE, 'othertitle')
+        obj = cls.Model.objects.create(
+            title={settings.LANGUAGE_CODE: "mytitle"}
+        )
+        assert obj.slug.get() == "mytitle"
+        obj.title.set(settings.LANGUAGE_CODE, "othertitle")
         obj.save()
-        assert obj.slug.get() == 'othertitle'
+        assert obj.slug.get() == "othertitle"
 
     @classmethod
     def test_unique_slug_unique_max_retries(cls):
-        """Tests whether the unique slug implementation doesn't
-        try to find a slug forever and gives up after a while."""
+        """Tests whether the unique slug implementation doesn't try to find a
+        slug forever and gives up after a while."""
 
-        title = 'myuniquetitle'
+        title = "myuniquetitle"
 
         obj = cls.Model()
         obj.title.en = title
@@ -111,106 +114,112 @@ class LocalizedSlugFieldTestCase(TestCase):
         """Tests whether the populating feature works correctly."""
 
         obj = cls.Model()
-        obj.title.en = 'this is my title'
+        obj.title.en = "this is my title"
         obj.save()
 
-        assert obj.slug.get('en') == slugify(obj.title)
+        assert obj.slug.get("en") == slugify(obj.title)
 
     @classmethod
     def test_populate_callable(cls):
-        """Tests whether the populating feature works correctly
-        when you specify a callable."""
+        """Tests whether the populating feature works correctly when you
+        specify a callable."""
 
         def generate_slug(instance):
             return instance.title
 
-        get_fake_model({
-            'title': LocalizedField(),
-            'slug': LocalizedUniqueSlugField(populate_from=generate_slug)
-        })
+        get_fake_model(
+            {
+                "title": LocalizedField(),
+                "slug": LocalizedUniqueSlugField(populate_from=generate_slug),
+            }
+        )
 
         obj = cls.Model()
         for lang_code, lang_name in settings.LANGUAGES:
-            obj.title.set(lang_code, 'title %s' % lang_name)
+            obj.title.set(lang_code, "title %s" % lang_name)
 
         obj.save()
 
         for lang_code, lang_name in settings.LANGUAGES:
-            assert obj.slug.get(lang_code) == 'title-%s' % lang_name.lower()
+            assert obj.slug.get(lang_code) == "title-%s" % lang_name.lower()
 
     @staticmethod
     def test_populate_multiple_from_fields():
-        """Tests whether populating the slug from multiple
-        fields works correctly."""
+        """Tests whether populating the slug from multiple fields works
+        correctly."""
 
         model = get_fake_model(
             {
-                'title': LocalizedField(),
-                'name': models.CharField(max_length=255),
-                'slug': LocalizedUniqueSlugField(populate_from=('title', 'name'))
+                "title": LocalizedField(),
+                "name": models.CharField(max_length=255),
+                "slug": LocalizedUniqueSlugField(
+                    populate_from=("title", "name")
+                ),
             }
         )
 
         obj = model()
         for lang_code, lang_name in settings.LANGUAGES:
-            obj.name = 'swen'
-            obj.title.set(lang_code, 'title %s' % lang_name)
+            obj.name = "swen"
+            obj.title.set(lang_code, "title %s" % lang_name)
 
         obj.save()
 
         for lang_code, lang_name in settings.LANGUAGES:
-            assert obj.slug.get(lang_code) == 'title-%s-swen' % lang_name.lower()
+            assert (
+                obj.slug.get(lang_code) == "title-%s-swen" % lang_name.lower()
+            )
 
     @staticmethod
     def test_populate_multiple_from_fields_fk():
-        """Tests whether populating the slug from multiple
-        fields works correctly."""
+        """Tests whether populating the slug from multiple fields works
+        correctly."""
 
-        model_fk = get_fake_model(
-            {
-                'name': LocalizedField(),
-            }
-        )
+        model_fk = get_fake_model({"name": LocalizedField()})
 
         model = get_fake_model(
             {
-                'title': LocalizedField(),
-                'other': models.ForeignKey(model_fk, on_delete=models.CASCADE),
-                'slug': LocalizedUniqueSlugField(populate_from=('title', 'other.name'))
+                "title": LocalizedField(),
+                "other": models.ForeignKey(model_fk, on_delete=models.CASCADE),
+                "slug": LocalizedUniqueSlugField(
+                    populate_from=("title", "other.name")
+                ),
             }
         )
 
-        other = model_fk.objects.create(name={settings.LANGUAGE_CODE: 'swen'})
+        other = model_fk.objects.create(name={settings.LANGUAGE_CODE: "swen"})
 
         obj = model()
         for lang_code, lang_name in settings.LANGUAGES:
             obj.other_id = other.id
-            obj.title.set(lang_code, 'title %s' % lang_name)
+            obj.title.set(lang_code, "title %s" % lang_name)
 
         obj.save()
 
         for lang_code, lang_name in settings.LANGUAGES:
-            assert obj.slug.get(lang_code) == 'title-%s-swen' % lang_name.lower()
+            assert (
+                obj.slug.get(lang_code) == "title-%s-swen" % lang_name.lower()
+            )
 
     @classmethod
     def test_populate_multiple_languages(cls):
-        """Tests whether the populating feature correctly
-        works for all languages."""
+        """Tests whether the populating feature correctly works for all
+        languages."""
 
         obj = cls.Model()
         for lang_code, lang_name in settings.LANGUAGES:
-            obj.title.set(lang_code, 'title %s' % lang_name)
+            obj.title.set(lang_code, "title %s" % lang_name)
 
         obj.save()
 
         for lang_code, lang_name in settings.LANGUAGES:
-            assert obj.slug.get(lang_code) == 'title-%s' % lang_name.lower()
+            assert obj.slug.get(lang_code) == "title-%s" % lang_name.lower()
 
     @classmethod
     def test_unique_slug(cls):
         """Tests whether unique slugs are properly generated."""
 
-        title = 'myuniquetitle'
+        title = "myuniquetitle"
 
         obj = cls.Model()
         obj.title.en = title
@@ -221,38 +230,36 @@ class LocalizedSlugFieldTestCase(TestCase):
             another_obj.title.en = title
             another_obj.save()
 
-            assert another_obj.slug.en == '%s-%d' % (title, i)
+            assert another_obj.slug.en == "%s-%d" % (title, i)
 
     @classmethod
     def test_unique_slug_utf(cls):
-        """Tests whether generating a slug works
-        when the value consists completely out
-        of non-ASCII characters."""
+        """Tests whether generating a slug works when the value consists
+        completely out of non-ASCII characters."""
 
         obj = cls.Model()
-        obj.title.en = 'مكاتب للايجار بشارع بورسعيد'
+        obj.title.en = "مكاتب للايجار بشارع بورسعيد"
         obj.save()
 
-        assert obj.slug.en == 'مكاتب-للايجار-بشارع-بورسعيد'
+        assert obj.slug.en == "مكاتب-للايجار-بشارع-بورسعيد"
 
     @staticmethod
     def test_deconstruct():
-        """Tests whether the :see:deconstruct
-        function properly retains options
+        """Tests whether the :see:deconstruct function properly retains options
         specified in the constructor."""
 
-        field = LocalizedUniqueSlugField(populate_from='title')
+        field = LocalizedUniqueSlugField(populate_from="title")
         _, _, _, kwargs = field.deconstruct()
 
-        assert 'populate_from' in kwargs
-        assert kwargs['populate_from'] == field.populate_from
+        assert "populate_from" in kwargs
+        assert kwargs["populate_from"] == field.populate_from
 
     @staticmethod
     def test_formfield():
-        """Tests whether the :see:formfield method
-        returns a valid form field that is hidden."""
+        """Tests whether the :see:formfield method returns a valid form field
+        that is hidden."""
 
-        form_field = LocalizedUniqueSlugField(populate_from='title').formfield()
+        form_field = LocalizedUniqueSlugField(populate_from="title").formfield()
 
         assert isinstance(form_field, forms.CharField)
         assert isinstance(form_field.widget, forms.HiddenInput)

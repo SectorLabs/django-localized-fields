@@ -1,14 +1,13 @@
 from django.conf import settings
 from django.utils import translation
-
 from psqlextra import expressions
 
 
 class LocalizedRef(expressions.HStoreRef):
-    """Expression that selects the value in a field only in
-    the currently active language."""
+    """Expression that selects the value in a field only in the currently
+    active language."""
 
-    def __init__(self, name: str, lang: str=None):
+    def __init__(self, name: str, lang: str = None):
         """Initializes a new instance of :see:LocalizedRef.
 
         Arguments:

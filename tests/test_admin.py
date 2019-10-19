@@ -4,9 +4,8 @@ from django.contrib.admin.checks import check_admin_app
 from django.db import models
 from django.test import TestCase
 
-from localized_fields.fields import LocalizedField
 from localized_fields.admin import LocalizedFieldsAdminMixin
-
+from localized_fields.fields import LocalizedField
 from tests.fake_model import get_fake_model
 
 
@@ -22,16 +21,13 @@ class LocalizedFieldsAdminMixinTestCase(TestCase):
 
         super(LocalizedFieldsAdminMixinTestCase, cls).setUpClass()
 
-        cls.TestRelModel = get_fake_model(
-            {
-                'description': LocalizedField()
-            }
-        )
+        cls.TestRelModel = get_fake_model({"description": LocalizedField()})
         cls.TestModel = get_fake_model(
             {
-                'title': LocalizedField(),
-                'rel': models.ForeignKey(cls.TestRelModel,
-                                         on_delete=models.CASCADE)
+                "title": LocalizedField(),
+                "rel": models.ForeignKey(
+                    cls.TestRelModel, on_delete=models.CASCADE
+                ),
             }
         )
 
@@ -43,8 +39,8 @@ class LocalizedFieldsAdminMixinTestCase(TestCase):
 
     @classmethod
     def test_model_admin(cls):
-        """Tests whether :see:LocalizedFieldsAdminMixin
-        mixin are works with admin.ModelAdmin"""
+        """Tests whether :see:LocalizedFieldsAdminMixin mixin are works with
+        admin.ModelAdmin."""
 
         @admin.register(cls.TestModel)
         class TestModelAdmin(LocalizedFieldsAdminMixin, admin.ModelAdmin):
@@ -54,34 +50,32 @@ class LocalizedFieldsAdminMixinTestCase(TestCase):
 
     @classmethod
     def test_stackedmodel_admin(cls):
-        """Tests whether :see:LocalizedFieldsAdminMixin mixin are works
-        with admin.StackedInline"""
+        """Tests whether :see:LocalizedFieldsAdminMixin mixin are works with
+        admin.StackedInline."""
 
-        class TestModelStackedInline(LocalizedFieldsAdminMixin,
-                                     admin.StackedInline):
+        class TestModelStackedInline(
+            LocalizedFieldsAdminMixin, admin.StackedInline
+        ):
             model = cls.TestModel
 
         @admin.register(cls.TestRelModel)
         class TestRelModelAdmin(admin.ModelAdmin):
-            inlines = [
-                TestModelStackedInline,
-            ]
+            inlines = [TestModelStackedInline]
 
         assert len(check_admin_app(apps.get_app_configs())) == 0
 
     @classmethod
     def test_tabularmodel_admin(cls):
-        """Tests whether :see:LocalizedFieldsAdminMixin mixin are works
-        with admin.TabularInline"""
+        """Tests whether :see:LocalizedFieldsAdminMixin mixin are works with
+        admin.TabularInline."""
 
-        class TestModelTabularInline(LocalizedFieldsAdminMixin,
-                                     admin.TabularInline):
+        class TestModelTabularInline(
+            LocalizedFieldsAdminMixin, admin.TabularInline
+        ):
             model = cls.TestModel
 
         @admin.register(cls.TestRelModel)
         class TestRelModelAdmin(admin.ModelAdmin):
-            inlines = [
-                TestModelTabularInline,
-            ]
+            inlines = [TestModelTabularInline]
 
         assert len(check_admin_app(apps.get_app_configs())) == 0

@@ -1,6 +1,6 @@
 from ..forms import LocalizedCharFieldForm
-from .field import LocalizedField
 from ..value import LocalizedStringValue
+from .field import LocalizedField
 
 
 class LocalizedCharField(LocalizedField):
@@ -8,9 +8,7 @@ class LocalizedCharField(LocalizedField):
 
     def formfield(self, **kwargs):
         """Gets the form field associated with this field."""
-        defaults = {
-            'form_class': LocalizedCharFieldForm
-        }
+        defaults = {"form_class": LocalizedCharFieldForm}
 
         defaults.update(kwargs)
         return super().formfield(**defaults)

@@ -1,22 +1,22 @@
 import json
 
-from typing import Union, List, Optional
+from typing import List, Optional, Union
 
 from django.conf import settings
 from django.db.utils import IntegrityError
-
 from psqlextra.fields import HStoreField
 
+from ..descriptor import LocalizedValueDescriptor
 from ..forms import LocalizedFieldForm
 from ..value import LocalizedValue
-from ..descriptor import LocalizedValueDescriptor
 
 
 class LocalizedField(HStoreField):
     """A field that has the same value in multiple languages.
 
-    Internally this is stored as a :see:HStoreField where there
-    is a key for every language."""
+    Internally this is stored as a :see:HStoreField where there is a key
+    for every language.
+    """
 
     Meta = None
 
@@ -27,7 +27,9 @@ class LocalizedField(HStoreField):
     # The descriptor to use for accessing the attribute off of the class.
     descriptor_class = LocalizedValueDescriptor
 
-    def __init__(self, *args, required: Union[bool, List[str]]=None, **kwargs):
+    def __init__(
+        self, *args, required: Union[bool, List[str]] = None, **kwargs
+    ):
         """Initializes a new instance of :see:LocalizedField."""
 
         super(LocalizedField, self).__init__(*args, required=required, **kwargs)
@@ -54,8 +56,7 @@ class LocalizedField(HStoreField):
 
     @classmethod
     def from_db_value(cls, value, *_) -> Optional[LocalizedValue]:
-        """Turns the specified database value into its Python
-        equivalent.
+        """Turns the specified database value into its Python equivalent.
 
         Arguments:
             value:
@@ -68,7 +69,7 @@ class LocalizedField(HStoreField):
         """
 
         if not value:
-            if getattr(settings, 'LOCALIZED_FIELDS_EXPERIMENTAL', False):
+            if getattr(settings, "LOCALIZED_FIELDS_EXPERIMENTAL", False):
                 return None
             else:
                 return cls.attr_class()
@@ -98,8 +99,7 @@ class LocalizedField(HStoreField):
         return cls.attr_class(value)
 
     def to_python(self, value: Union[dict, str, None]) -> LocalizedValue:
-        """Turns the specified database value into its Python
-        equivalent.
+        """Turns the specified database value into its Python equivalent.
 
         Arguments:
             value:
@@ -124,8 +124,7 @@ class LocalizedField(HStoreField):
         return self.attr_class(deserialized_value)
 
     def get_prep_value(self, value: LocalizedValue) -> dict:
-        """Turns the specified value into something the database
-        can store.
+        """Turns the specified value into something the database can store.
 
         If an illegal value (non-LocalizedValue instance) is
         specified, we'll treat it as an empty :see:LocalizedValue
@@ -161,8 +160,8 @@ class LocalizedField(HStoreField):
         )
 
     def clean(self, value, *_):
-        """Cleans the specified value into something we
-        can store in the database.
+        """Cleans the specified value into something we can store in the
+        database.
 
         For example, when all the language fields are
         left empty, and the field is allowed to be null,
@@ -195,7 +194,7 @@ class LocalizedField(HStoreField):
 
     def validate(self, value: LocalizedValue, *_):
         """Validates that the values has been filled in for all required
-        languages
+        languages.
 
         Exceptions are raises in order to notify the user
         of invalid values.
@@ -212,15 +211,17 @@ class LocalizedField(HStoreField):
             lang_val = getattr(value, settings.LANGUAGE_CODE)
 
             if lang_val is None:
-                raise IntegrityError('null value in column "%s.%s" violates '
-                                     'not-null constraint' % (self.name, lang))
+                raise IntegrityError(
+                    'null value in column "%s.%s" violates '
+                    "not-null constraint" % (self.name, lang)
+                )
 
     def formfield(self, **kwargs):
         """Gets the form field associated with this field."""
 
         defaults = dict(
             form_class=LocalizedFieldForm,
-            required=False if self.blank else self.required
+            required=False if self.blank else self.required,
         )
         defaults.update(kwargs)
         return super().formfield(**defaults)

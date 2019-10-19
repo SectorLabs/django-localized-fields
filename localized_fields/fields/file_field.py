@@ -1,31 +1,31 @@
-import json
 import datetime
+import json
 import posixpath
 
 from django.core.files import File
+from django.core.files.storage import default_storage
 from django.db.models.fields.files import FieldFile
 from django.utils import six
-from django.core.files.storage import default_storage
 from django.utils.encoding import force_str, force_text
 
 from localized_fields.fields import LocalizedField
 from localized_fields.fields.field import LocalizedValueDescriptor
 from localized_fields.value import LocalizedValue
 
-from ..value import LocalizedFileValue
 from ..forms import LocalizedFileFieldForm
+from ..value import LocalizedFileValue
 
 
 class LocalizedFieldFile(FieldFile):
-
     def __init__(self, instance, field, name, lang):
         super().__init__(instance, field, name)
         self.lang = lang
 
     def save(self, name, content, save=True):
         name = self.field.generate_filename(self.instance, name, self.lang)
-        self.name = self.storage.save(name, content,
-                                      max_length=self.field.max_length)
+        self.name = self.storage.save(
+            name, content, max_length=self.field.max_length
+        )
         self._committed = True
 
         if save:
@@ -37,7 +37,7 @@ class LocalizedFieldFile(FieldFile):
         if not self:
             return
 
-        if hasattr(self, '_file'):
+        if hasattr(self, "_file"):
             self.close()
             del self.file
 
@@ -60,24 +60,29 @@ class LocalizedFileValueDescriptor(LocalizedValueDescriptor):
                 file = self.field.value_class(instance, self.field, file, lang)
                 value.set(lang, file)
 
-            elif isinstance(file, File) and \
-                    not isinstance(file, LocalizedFieldFile):
-                file_copy = self.field.value_class(instance, self.field,
-                                                   file.name, lang)
+            elif isinstance(file, File) and not isinstance(
+                file, LocalizedFieldFile
+            ):
+                file_copy = self.field.value_class(
+                    instance, self.field, file.name, lang
+                )
                 file_copy.file = file
                 file_copy._committed = False
                 value.set(lang, file_copy)
 
-            elif isinstance(file, LocalizedFieldFile) and \
-                    not hasattr(file, 'field'):
+            elif isinstance(file, LocalizedFieldFile) and not hasattr(
+                file, "field"
+            ):
                 file.instance = instance
                 file.field = self.field
                 file.storage = self.field.storage
                 file.lang = lang
 
             # Make sure that the instance is correct.
-            elif isinstance(file, LocalizedFieldFile) \
-                    and instance is not file.instance:
+            elif (
+                isinstance(file, LocalizedFieldFile)
+                and instance is not file.instance
+            ):
                 file.instance = instance
                 file.lang = lang
         return value
@@ -88,8 +93,9 @@ class LocalizedFileField(LocalizedField):
     attr_class = LocalizedFileValue
     value_class = LocalizedFieldFile
 
-    def __init__(self, verbose_name=None, name=None, upload_to='', storage=None,
-                 **kwargs):
+    def __init__(
+        self, verbose_name=None, name=None, upload_to="", storage=None, **kwargs
+    ):
 
         self.storage = storage or default_storage
         self.upload_to = upload_to
@@ -98,9 +104,9 @@ class LocalizedFileField(LocalizedField):
 
     def deconstruct(self):
         name, path, args, kwargs = super().deconstruct()
-        kwargs['upload_to'] = self.upload_to
+        kwargs["upload_to"] = self.upload_to
         if self.storage is not default_storage:
-            kwargs['storage'] = self.storage
+            kwargs["storage"] = self.storage
         return name, path, args, kwargs
 
     def get_prep_value(self, value):
@@ -110,7 +116,7 @@ class LocalizedFileField(LocalizedField):
             prep_value = LocalizedValue()
             for k, v in value.__dict__.items():
                 if v is None:
-                    prep_value.set(k, '')
+                    prep_value.set(k, "")
                 else:
                     # Need to convert File objects provided via a form to
                     # unicode for database insertion
@@ -141,18 +147,17 @@ class LocalizedFileField(LocalizedField):
         if isinstance(data, LocalizedValue):
             for k, v in data.__dict__.items():
                 if v is not None and not v:
-                    data.set(k, '')
+                    data.set(k, "")
             setattr(instance, self.name, data)
 
     def formfield(self, **kwargs):
-        defaults = {'form_class': LocalizedFileFieldForm}
+        defaults = {"form_class": LocalizedFileFieldForm}
         defaults.update(kwargs)
         return super().formfield(**defaults)
 
     def value_to_string(self, obj):
         value = self.value_from_object(obj)
         if isinstance(value, LocalizedFileValue):
-            return json.dumps({k: v.name for k, v
-                               in value.__dict__.items()})
+            return json.dumps({k: v.name for k, v in value.__dict__.items()})
         else:
             return super().value_to_string(obj)
