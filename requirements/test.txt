@@ -16,6 +16,7 @@ pytest-django==3.6.0
 pytest-cov==2.8.1
 
 # Test support
+dj-database-url==0.4.2
 django-autoslug==1.9.3
 django-bleach==0.3.0
 psycopg2==2.7.3.2
