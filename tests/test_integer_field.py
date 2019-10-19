@@ -1,3 +1,5 @@
+import django
+
 from django.conf import settings
 from django.db import connection
 from django.db.utils import IntegrityError
@@ -194,3 +196,33 @@ class LocalizedIntegerFieldTestCase(TestCase):
         )
         obj.refresh_from_db()
         assert obj.score.get(settings.LANGUAGE_CODE) == 75
+
+    def test_order_by(self):
+        """Tests whether ordering by a :see:LocalizedIntegerField key works
+        expected."""
+
+        # using key transforms (score__en) in order_by(..) is only
+        # supported since Django 2.1
+        # https://github.com/django/django/commit/2162f0983de0dfe2178531638ce7ea56f54dd4e7#diff-0edd853580d56db07e4020728d59e193
+
+        if django.VERSION < (2, 1):
+            return
+
+        model = get_fake_model(
+            {
+                "score": LocalizedIntegerField(
+                    default={settings.LANGUAGE_CODE: 1337}, null=True
+                )
+            }
+        )
+
+        model.objects.create(score=dict(en=982))
+        model.objects.create(score=dict(en=382))
+        model.objects.create(score=dict(en=1331))
+
+        res = list(
+            model.objects.values_list("score__en", flat=True).order_by(
+                "-score__en"
+            )
+        )
+        assert res == [1331, 982, 382]

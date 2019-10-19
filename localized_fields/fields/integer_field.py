@@ -1,6 +1,7 @@
 from typing import Dict, Optional, Union
 
 from django.conf import settings
+from django.contrib.postgres.fields.hstore import KeyTransform
 from django.db.utils import IntegrityError
 
 from ..forms import LocalizedIntegerFieldForm
@@ -8,16 +9,41 @@ from ..value import LocalizedIntegerValue, LocalizedValue
 from .field import LocalizedField
 
 
+class LocalizedIntegerFieldKeyTransform(KeyTransform):
+    """Transform that selects a single key from a hstore value and casts it to
+    an integer."""
+
+    def as_sql(self, compiler, connection):
+        sql, params = super().as_sql(compiler, connection)
+        return f"{sql}::integer", params
+
+
 class LocalizedIntegerField(LocalizedField):
     """Stores integers as a localized value."""
 
     attr_class = LocalizedIntegerValue
+
+    def get_transform(self, name):
+        """Gets the transformation to apply when selecting this value.
+
+        This is where the SQL expression to grab a single is added and
+        the cast to integer so that sorting by a hstore value works as
+        expected.
+        """
+
+        def _transform(*args, **kwargs):
+            return LocalizedIntegerFieldKeyTransform(name, *args, **kwargs)
+
+        return _transform
 
     @classmethod
     def from_db_value(cls, value, *_) -> Optional[LocalizedIntegerValue]:
         db_value = super().from_db_value(value)
         if db_value is None:
             return db_value
+
+        if isinstance(db_value, str):
+            return int(db_value)
 
         # if we were used in an expression somehow then it might be
         # that we're returning an individual value or an array, so
