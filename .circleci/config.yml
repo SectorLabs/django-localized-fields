@@ -27,7 +27,7 @@ jobs:
             - store_test_results:
                 path: reports
 
-    lint:
+    analysis:
         docker:
             - image: python:3.7-alpine
         steps:
@@ -50,4 +50,4 @@ workflows:
     build:
         jobs:
             - test-python37
-            - lint
+            - analysis
