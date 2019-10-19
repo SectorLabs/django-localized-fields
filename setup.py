@@ -45,7 +45,16 @@ setup(
     url="https://github.com/SectorLabs/django-localized-fields",
     author="Sector Labs",
     author_email="open-source@sectorlabs.ro",
-    keywords=["django", "localized", "language", "models", "fields"],
+    keywords=[
+        "django",
+        "localized",
+        "language",
+        "models",
+        "fields",
+        "postgres",
+        "hstore",
+        "i18n",
+    ],
     classifiers=[
         "Environment :: Web Environment",
         "Framework :: Django",
