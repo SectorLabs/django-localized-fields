@@ -13,14 +13,19 @@ jobs:
             - run:
                 name: Install packages
                 command: apk add postgresql-libs gcc musl-dev postgresql-dev git
+
             - run:
                 name: Install Python packages
                 command: pip install -r requirements/test.txt
+
             - run:
                 name: Run tests
                 command: tox -e 'py37-dj{20,21,22}'
                 environment:
                     DATABASE_URL: 'postgres://localizedfields:localizedfields@localhost:5432/localizedfields'
+
+            - store_test_results:
+                path: reports
 
     lint:
         docker:
@@ -30,12 +35,14 @@ jobs:
             - run:
                 name: Install packages
                 command: apk add postgresql-libs gcc musl-dev postgresql-dev git
+
             - run:
                 name: Install Python packages
                 command: pip install -r requirements/test.txt
+
             - run:
-                name: Lint code
-                command: python setup.py lint
+                name: Verify formatting / linting
+                command: python setup.py verify
 
 
 workflows:

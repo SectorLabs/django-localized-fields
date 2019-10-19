@@ -1,6 +1,7 @@
 # Ignore virtual environments
 env/
 .env/
+venv/
 
 # Ignore Python byte code cache
 *.pyc
@@ -9,7 +10,7 @@ __pycache__
 
 # Ignore coverage reports
 .coverage
-htmlcov
+reports/
 
 # Ignore build results
 *.egg-info/
