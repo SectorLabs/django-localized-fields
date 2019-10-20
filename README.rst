@@ -32,7 +32,7 @@ Installation
 
     .. code-block:: bash
 
-        $ pip install django-localized-fields==5.4
+        $ pip install django-localized-fields==5.4.1
 
 2. Add ``localized_fields`` and ``django.contrib.postgres`` to your ``INSTALLED_APPS``:
 
