@@ -39,7 +39,7 @@
 3. Create a postgres user for use in tests (skip if your default user is a postgres superuser):
 
        λ createuser --superuser psqlextra --pwprompt
-       λ export DATABASE_URL=postgres://psqlextra:<password>@localhost/psqlextra
+       λ export DATABASE_URL=postgres://localized_fields:<password>@localhost/localized_fields
 
    Hint: if you're using virtualenvwrapper, you might find it beneficial to put
    the ``export`` line in ``$VIRTUAL_ENV/bin/postactivate`` so that it's always
