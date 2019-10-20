@@ -74,4 +74,5 @@ workflows:
     build:
         jobs:
             - test-python37
+            - test-python38
             - analysis
