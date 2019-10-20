@@ -173,6 +173,18 @@ class LocalizedValueTestCase(TestCase):
                 assert localized_value.translate() == "ro"
 
     @staticmethod
+    def test_translate_custom_language():
+        """Tests whether the :see:LocalizedValue class's translate() ignores
+        the active language when one is specified explicitely."""
+
+        localized_value = LocalizedValue(
+            {settings.LANGUAGE_CODE: settings.LANGUAGE_CODE, "ro": "ro"}
+        )
+
+        with translation.override("en"):
+            assert localized_value.translate("ro") == "ro"
+
+    @staticmethod
     def test_deconstruct():
         """Tests whether the :see:LocalizedValue class's :see:deconstruct
         function works properly."""

@@ -102,17 +102,32 @@ class LocalizedValue(dict):
             for val in value:
                 self._interpret_value(val)
 
-    def translate(self) -> Optional[str]:
-        """Gets the value in the current language or falls back to the next
-        language if there's no value in the current language."""
+    def translate(self, language: Optional[str] = None) -> Optional[str]:
+        """Gets the value in the specified language (or active language).
 
-        fallbacks = getattr(settings, "LOCALIZED_FIELDS_FALLBACKS", {})
+        Arguments:
+            language:
+                The language to get the value in. If not specified,
+                the currently active language is used.
 
-        language = translation.get_language() or settings.LANGUAGE_CODE
-        languages = fallbacks.get(language, [settings.LANGUAGE_CODE])[:]
-        languages.insert(0, language)
+        Returns:
+            The value in the specified (or active) language. If no value
+            is available in the specified language, the value is returned
+            in one of the fallback languages.
+        """
 
-        for lang_code in languages:
+        target_language = (
+            language or translation.get_language() or settings.LANGUAGE_CODE
+        )
+
+        fallback_config = getattr(settings, "LOCALIZED_FIELDS_FALLBACKS", {})
+
+        target_languages = fallback_config.get(
+            target_language, [settings.LANGUAGE_CODE]
+        )
+        target_languages.insert(0, target_language)
+
+        for lang_code in target_languages:
             value = self.get(lang_code)
             if value:
                 return value or None
