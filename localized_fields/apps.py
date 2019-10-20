@@ -12,7 +12,7 @@ class LocalizedFieldsConfig(AppConfig):
     name = "localized_fields"
 
     def ready(self):
-        if getattr(settings, "LOCALIZED_FIELDS_EXPERIMENTAL", False):
+        if getattr(settings, "LOCALIZED_FIELDS_EXPERIMENTAL", True):
             for _, clazz in inspect.getmembers(lookups):
                 if not inspect.isclass(clazz) or clazz is LocalizedLookupMixin:
                     continue

@@ -69,7 +69,7 @@ class LocalizedField(HStoreField):
         """
 
         if not value:
-            if getattr(settings, "LOCALIZED_FIELDS_EXPERIMENTAL", False):
+            if getattr(settings, "LOCALIZED_FIELDS_EXPERIMENTAL", True):
                 return None
             else:
                 return cls.attr_class()
