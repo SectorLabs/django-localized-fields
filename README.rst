@@ -16,7 +16,7 @@ This package requires Python 3.5 or newer, Django 1.11 or newer and PostgreSQL 9
 
 ----
 
-**This README is for v5.x. Check out the ``master`` branch for v6.x and newer.**
+**This README is for v5.x. Check out the master branch for v6.x and newer.**
 
 ----
 
