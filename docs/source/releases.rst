@@ -15,3 +15,8 @@ Bug fixes
 *********
 
 * Fixes a bug where ``LocalizedIntegerField`` could not be used in ``order_by``.
+
+Other
+*****
+
+* ``LocalizedValue.translate()`` can now takes an optional ``language`` parameter.
