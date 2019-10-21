@@ -59,7 +59,7 @@ Uniqueness
 
 .. note::
 
-    Uniqueness is enforced by PostgreSQL by creating unique indexes on hstore keys. Keep this is mind when setting up unique constraints. If you already have a unique constraint in place, you do not have to add an additional index as uniqueness is enforced by creating an index.
+    Uniqueness is enforced by PostgreSQL by creating unique indexes on hstore keys. Keep this in mind when setting up unique constraints. If you already have a unique constraint in place, you do not have to add an additional index as uniqueness is enforced by creating an index.
 
 
 * Enforce uniqueness for one or more languages:
