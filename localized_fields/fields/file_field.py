@@ -5,7 +5,6 @@ import posixpath
 from django.core.files import File
 from django.core.files.storage import default_storage
 from django.db.models.fields.files import FieldFile
-from django.utils import six
 from django.utils.encoding import force_str, force_text
 
 from localized_fields.fields import LocalizedField
@@ -56,7 +55,7 @@ class LocalizedFileValueDescriptor(LocalizedValueDescriptor):
     def __get__(self, instance, cls=None):
         value = super().__get__(instance, cls)
         for lang, file in value.__dict__.items():
-            if isinstance(file, six.string_types) or file is None:
+            if isinstance(file, str) or file is None:
                 file = self.field.value_class(instance, self.field, file, lang)
                 value.set(lang, file)
 
@@ -120,7 +119,7 @@ class LocalizedFileField(LocalizedField):
                 else:
                     # Need to convert File objects provided via a form to
                     # unicode for database insertion
-                    prep_value.set(k, six.text_type(v))
+                    prep_value.set(k, str(v))
             return super().get_prep_value(prep_value)
         return super().get_prep_value(value)
 
