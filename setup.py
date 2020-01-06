@@ -42,6 +42,7 @@ setup(
     license="MIT License",
     description="Implementation of localized model fields using PostgreSQL HStore fields.",
     long_description=README,
+    long_description_content_type="text/markdown",
     url="https://github.com/SectorLabs/django-localized-fields",
     author="Sector Labs",
     author_email="open-source@sectorlabs.ro",
