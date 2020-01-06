@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.utils import six, translation
+from django.utils import translation
 
 
 class LocalizedValueDescriptor:
@@ -57,7 +57,7 @@ class LocalizedValueDescriptor:
         return instance.__dict__[self.field.name]
 
     def __set__(self, instance, value):
-        if isinstance(value, six.string_types):
+        if isinstance(value, str):
             language = translation.get_language() or settings.LANGUAGE_CODE
             self.__get__(instance).set(
                 language, value
