@@ -1,11 +1,22 @@
-import bleach
+"""isort:skip_file."""
+
+import sys
+
+import pytest
 
 from django.conf import settings
 from django.test import TestCase
-from django_bleach.utils import get_bleach_default_options
 
 from localized_fields.fields import LocalizedBleachField
 from localized_fields.value import LocalizedValue
+
+try:
+    import bleach
+
+    from django_bleach.utils import get_bleach_default_options
+except ImportError:
+    if sys.version_info >= (3, 9):
+        pytest.skip("feature not ready for python 3.9", allow_module_level=True)
 
 
 class ModelTest:

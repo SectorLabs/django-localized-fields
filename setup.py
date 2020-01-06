@@ -36,7 +36,7 @@ with open(
 
 setup(
     name="django-localized-fields",
-    version="6.0b1",
+    version="6.0b2",
     packages=find_packages(exclude=["tests"]),
     include_package_data=True,
     license="MIT License",
@@ -62,16 +62,38 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
         "Programming Language :: Python",
-        "Programming Language :: Python :: 3.5",
+        "Programming Language :: Python :: 3.6",
         "Topic :: Internet :: WWW/HTTP",
         "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
     ],
-    python_requires=">=3.7",
+    python_requires=">=3.6",
     install_requires=[
         "Django>=2.0",
-        "django-postgres-extra>=2.0a7,<3.0",
+        "django-postgres-extra>=2.0a14,<3.0",
         "deprecation==2.0.7",
     ],
+    extras_require={
+        ':python_version <= "3.6"': ["dataclasses"],
+        "docs": ["Sphinx==2.2.0", "sphinx-rtd-theme==0.4.3"],
+        "test": [
+            "tox==3.14.3",
+            "pytest==5.3.2",
+            "pytest-django==3.7.0",
+            "pytest-cov==2.8.1",
+            "dj-database-url==0.5.0",
+            "django-autoslug==1.9.6",
+            "django-bleach==0.6.1",
+            "psycopg2==2.8.4",
+        ],
+        "analysis": [
+            "black==19.3b0",
+            "flake8==3.7.7",
+            "autoflake==1.3",
+            "autopep8==1.4.4",
+            "isort==4.3.20",
+            "sl-docformatter==1.4",
+        ],
+    },
     cmdclass={
         "lint": create_command(
             "Lints the code",
