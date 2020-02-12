@@ -203,7 +203,7 @@ class LocalizedIntegerFieldTestCase(TestCase):
         def func():
             return output
 
-        model = get_fake_model({"test": LocalizedIntegerValue(default=func)})
+        model = get_fake_model({"test": LocalizedIntegerField(default=func)})
         obj = model.objects.create()
 
         assert obj.test["en"] == output["en"]
