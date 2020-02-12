@@ -90,6 +90,9 @@ class LocalizedValue(dict):
         for lang_code, _ in settings.LANGUAGES:
             self.set(lang_code, self.default_value)
 
+        if callable(value):
+            value = value()
+
         if isinstance(value, str):
             self.set(settings.LANGUAGE_CODE, value)
 
