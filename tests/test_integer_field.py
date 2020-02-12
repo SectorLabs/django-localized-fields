@@ -198,15 +198,15 @@ class LocalizedIntegerFieldTestCase(TestCase):
         assert obj.score.get(settings.LANGUAGE_CODE) == 75
 
     def test_callable_default_value(self):
-        output = {'en': 5}
+        output = {"en": 5}
 
         def func():
             return output
 
         model = get_fake_model({"test": LocalizedIntegerValue(default=func)})
-        obj = model()
+        obj = model.objects.create()
 
-        assert obj.test['en'] == output['en']
+        assert obj.test["en"] == output["en"]
 
     def test_order_by(self):
         """Tests whether ordering by a :see:LocalizedIntegerField key works
@@ -237,4 +237,3 @@ class LocalizedIntegerFieldTestCase(TestCase):
             )
         )
         assert res == [1331, 982, 382]
-

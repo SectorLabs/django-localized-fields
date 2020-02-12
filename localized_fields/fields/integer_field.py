@@ -105,7 +105,7 @@ class LocalizedIntegerField(LocalizedField):
 
     @staticmethod
     def _convert_localized_value(
-        value: LocalizedValue
+        value: LocalizedValue,
     ) -> LocalizedIntegerValue:
         """Converts from :see:LocalizedValue to :see:LocalizedIntegerValue."""
 
