@@ -5,6 +5,7 @@ from .file_field import LocalizedFileField
 from .integer_field import LocalizedIntegerField
 from .text_field import LocalizedTextField
 from .uniqueslug_field import LocalizedUniqueSlugField
+from .float_field import LocalizedFloatField
 
 __all__ = [
     "LocalizedField",
@@ -14,6 +15,7 @@ __all__ = [
     "LocalizedTextField",
     "LocalizedFileField",
     "LocalizedIntegerField",
+    "LocalizedFloatField"
 ]
 
 try:
