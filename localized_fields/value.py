@@ -206,7 +206,31 @@ class LocalizedFileValue(LocalizedValue):
         return self.get(translation.get_language())
 
 
-class LocalizedIntegerValue(LocalizedValue):
+class LocalizedNumericValue(LocalizedValue):
+    def __int__(self):
+        """Gets the value in the current language as an integer."""
+        value = self.translate()
+        if value is None:
+            return self.default_value
+
+        return int(value)
+
+    def __str__(self) -> str:
+        """Returns string representation of value"""
+
+        value = self.translate()
+        return str(value) if value is not None else ''
+
+    def __float__(self):
+        """Gets the value in the current language as a float"""
+        value = self.translate()
+        if value is None:
+            return self.default_value
+
+        return float(value)
+
+
+class LocalizedIntegerValue(LocalizedNumericValue):
     """All values are integers."""
 
     default_value = None
@@ -221,23 +245,8 @@ class LocalizedIntegerValue(LocalizedValue):
 
         return int(value)
 
-    def __int__(self):
-        """Gets the value in the current language as an integer."""
 
-        value = self.translate()
-        if value is None:
-            return self.default_value
-
-        return int(value)
-
-    def __str__(self) -> str:
-        """Returns string representation of value"""
-
-        value = self.translate()
-        return str(value) if value is not None else ''
-
-
-class LocalizedFloatValue(LocalizedValue):
+class LocalizedFloatValue(LocalizedNumericValue):
     """All values are floats"""
 
     default_value = None
@@ -247,26 +256,8 @@ class LocalizedFloatValue(LocalizedValue):
         Gets the value in the current language, or in the configured
         fallback language.
         """
-
         value = super().translate()
         if value is None or (isinstance(value, str) and value.strip() == ''):
             return None
 
         return float(value)
-
-    def __float__(self):
-        """
-        Gets the value in the current language as a float
-        """
-        value = self.translate()
-        if value is None:
-            return self.default_value
-
-        return float(value)
-
-    def __str__(self) -> str:
-        """
-        Returns the string repsentation of value
-        """
-        value = self.translate
-        return str(value) if value is not None else ''
