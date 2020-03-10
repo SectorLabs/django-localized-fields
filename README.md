@@ -47,7 +47,7 @@
 
 4. Install the development/test dependencies:
 
-       λ pip install .[test] .[analysis]
+       λ pip install ".[test]" ".[analysis]"
 
 5. Run the tests:
 
