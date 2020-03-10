@@ -242,10 +242,10 @@ class LocalizedNumericValue(LocalizedValue):
         """Returns string representation of value."""
 
         value = self.translate()
-        return str(value) if value is not None else ''
+        return str(value) if value is not None else ""
 
     def __float__(self):
-        """Gets the value in the current language as a float"""
+        """Gets the value in the current language as a float."""
         value = self.translate()
         if value is None:
             return self.default_value
@@ -259,28 +259,26 @@ class LocalizedIntegerValue(LocalizedNumericValue):
     default_value = None
 
     def translate(self):
-        """Gets the value in the current language, or
-        in the configured fallbck language."""
+        """Gets the value in the current language, or in the configured fallbck
+        language."""
 
         value = super().translate()
-        if value is None or (isinstance(value, str) and value.strip() == ''):
+        if value is None or (isinstance(value, str) and value.strip() == ""):
             return None
 
         return int(value)
 
 
 class LocalizedFloatValue(LocalizedNumericValue):
-    """All values are floats"""
+    """All values are floats."""
 
     default_value = None
 
     def translate(self):
-        """
-        Gets the value in the current language, or in the configured
-        fallback language.
-        """
+        """Gets the value in the current language, or in the configured
+        fallback language."""
         value = super().translate()
-        if value is None or (isinstance(value, str) and value.strip() == ''):
+        if value is None or (isinstance(value, str) and value.strip() == ""):
             return None
 
         return float(value)

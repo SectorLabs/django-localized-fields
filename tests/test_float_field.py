@@ -1,7 +1,7 @@
-from django.test import TestCase
-from django.db.utils import IntegrityError
 from django.conf import settings
 from django.db import connection
+from django.db.utils import IntegrityError
+from django.test import TestCase
 from django.utils import translation
 
 from localized_fields.fields import LocalizedFloatField
@@ -10,8 +10,8 @@ from .fake_model import get_fake_model
 
 
 class LocalizedFloatFieldTestCase(TestCase):
-    """Tests whether the :see:LocalizedFloatField
-    and :see:LocalizedFloatValue works properly."""
+    """Tests whether the :see:LocalizedFloatField and :see:LocalizedFloatValue
+    works properly."""
 
     TestModel = None
 
@@ -19,9 +19,7 @@ class LocalizedFloatFieldTestCase(TestCase):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.TestModel = get_fake_model({
-            'score': LocalizedFloatField()
-        })
+        cls.TestModel = get_fake_model({"score": LocalizedFloatField()})
 
     def test_basic(self):
         """Tests the basics of storing float values."""
@@ -36,8 +34,8 @@ class LocalizedFloatFieldTestCase(TestCase):
             assert obj.score.get(lang_code) == index + 1.0
 
     def test_primary_language_required(self):
-        """Tests whether the primary language is required by
-        default and all other languages are optiona."""
+        """Tests whether the primary language is required by default and all
+        other languages are optiona."""
 
         # not filling in anything should raise IntegrityError,
         # the primary language is required
@@ -56,8 +54,8 @@ class LocalizedFloatFieldTestCase(TestCase):
             obj.save()
 
     def test_default_value_none(self):
-        """Tests whether the default value for optional languages
-        is NoneType."""
+        """Tests whether the default value for optional languages is
+        NoneType."""
 
         obj = self.TestModel()
         obj.score.set(settings.LANGUAGE_CODE, 1234.0)
@@ -70,9 +68,8 @@ class LocalizedFloatFieldTestCase(TestCase):
             assert obj.score.get(lang_code) is None
 
     def test_translate(self):
-        """Tests whether casting the value to an float
-        results in the value being returned in the currently
-        active language as an float."""
+        """Tests whether casting the value to an float results in the value
+        being returned in the currently active language as an float."""
 
         obj = self.TestModel()
         for index, (lang_code, _) in enumerate(settings.LANGUAGES):
@@ -86,10 +83,9 @@ class LocalizedFloatFieldTestCase(TestCase):
                 assert obj.score.translate() == index + 1.0
 
     def test_translate_primary_fallback(self):
-        """Tests whether casting the value to an float
-        results in the value begin returned in the active
-        language and falls back to the primary language
-        if there is no value in that language."""
+        """Tests whether casting the value to an float results in the value
+        begin returned in the active language and falls back to the primary
+        language if there is no value in that language."""
 
         obj = self.TestModel()
         obj.score.set(settings.LANGUAGE_CODE, 25.0)
@@ -102,9 +98,8 @@ class LocalizedFloatFieldTestCase(TestCase):
             assert float(obj.score) == 25.0
 
     def test_get_default_value(self):
-        """Tests whether getting the value in a specific
-        language properly returns the specified default
-        in case it is not available."""
+        """Tests whether getting the value in a specific language properly
+        returns the specified default in case it is not available."""
 
         obj = self.TestModel()
         obj.score.set(settings.LANGUAGE_CODE, 25.0)
@@ -114,12 +109,11 @@ class LocalizedFloatFieldTestCase(TestCase):
         assert obj.score.get(secondary_language, 1337.0) == 1337.0
 
     def test_completely_optional(self):
-        """Tests whether having all languages optional
-        works properly."""
+        """Tests whether having all languages optional works properly."""
 
-        model = get_fake_model({
-            'score': LocalizedFloatField(null=True, required=[], blank=True)
-        })
+        model = get_fake_model(
+            {"score": LocalizedFloatField(null=True, required=[], blank=True)}
+        )
 
         obj = model()
         obj.save()
@@ -128,19 +122,18 @@ class LocalizedFloatFieldTestCase(TestCase):
             assert getattr(obj.score, lang_code) is None
 
     def test_store_string(self):
-        """Tests whether the field properly raises
-        an error when trying to store a non-float."""
+        """Tests whether the field properly raises an error when trying to
+        store a non-float."""
 
         for lang_code, _ in settings.LANGUAGES:
             obj = self.TestModel()
             with self.assertRaises(IntegrityError):
-                obj.score.set(lang_code, 'haha')
+                obj.score.set(lang_code, "haha")
                 obj.save()
 
     def test_none_if_illegal_value_stored(self):
-        """Tests whether None is returned for a language
-        if the value stored in the database is not an
-        float."""
+        """Tests whether None is returned for a language if the value stored in
+        the database is not an float."""
 
         obj = self.TestModel()
         obj.score.set(settings.LANGUAGE_CODE, 25.0)
@@ -154,12 +147,15 @@ class LocalizedFloatFieldTestCase(TestCase):
         assert obj.score.get(settings.LANGUAGE_CODE) is None
 
     def test_default_value(self):
-        """Tests whether a default is properly set
-        when specified."""
+        """Tests whether a default is properly set when specified."""
 
-        model = get_fake_model({
-            'score': LocalizedFloatField(default={settings.LANGUAGE_CODE: 75.0})
-        })
+        model = get_fake_model(
+            {
+                "score": LocalizedFloatField(
+                    default={settings.LANGUAGE_CODE: 75.0}
+                )
+            }
+        )
 
         obj = model.objects.create()
         assert obj.score.get(settings.LANGUAGE_CODE) == 75.0

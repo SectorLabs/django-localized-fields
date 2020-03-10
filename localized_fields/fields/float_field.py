@@ -1,11 +1,11 @@
-from typing import Optional, Union, Dict
+from typing import Dict, Optional, Union
 
 from django.conf import settings
 from django.db.utils import IntegrityError
 
-from .field import LocalizedField
-from ..value import LocalizedValue, LocalizedFloatValue
 from ..forms import LocalizedIntegerFieldForm
+from ..value import LocalizedFloatValue, LocalizedValue
+from .field import LocalizedField
 
 
 class LocalizedFloatField(LocalizedField):
@@ -27,7 +27,9 @@ class LocalizedFloatField(LocalizedField):
 
         return cls._convert_localized_value(db_value)
 
-    def to_python(self, value: Union[Dict[str, int], int, None]) -> LocalizedFloatValue:
+    def to_python(
+        self, value: Union[Dict[str, int], int, None]
+    ) -> LocalizedFloatValue:
         """Converts the value from a database value into a Python value."""
 
         db_value = super().to_python(value)
@@ -55,20 +57,22 @@ class LocalizedFloatField(LocalizedField):
                 if local_value is not None:
                     float(local_value)
             except (TypeError, ValueError):
-                raise IntegrityError('non-float value in column "%s.%s" violates '
-                                     'float constraint' % (self.name, lang_code))
+                raise IntegrityError(
+                    'non-float value in column "%s.%s" violates '
+                    "float constraint" % (self.name, lang_code)
+                )
 
             # convert to a string before saving because the underlying
             # type is hstore, which only accept strings
-            prepped_value[lang_code] = str(local_value) if local_value is not None else None
+            prepped_value[lang_code] = (
+                str(local_value) if local_value is not None else None
+            )
 
         return prepped_value
 
     def formfield(self, **kwargs):
         """Gets the form field associated with this field."""
-        defaults = {
-            'form_class': LocalizedIntegerFieldForm
-        }
+        defaults = {"form_class": LocalizedIntegerFieldForm}
 
         defaults.update(kwargs)
         return super().formfield(**defaults)
@@ -80,7 +84,7 @@ class LocalizedFloatField(LocalizedField):
         float_values = {}
         for lang_code, _ in settings.LANGUAGES:
             local_value = value.get(lang_code, None)
-            if local_value is None or local_value.strip() == '':
+            if local_value is None or local_value.strip() == "":
                 local_value = None
 
             try:
