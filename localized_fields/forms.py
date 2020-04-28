@@ -33,6 +33,10 @@ class LocalizedFieldForm(forms.MultiValueField):
         """Initializes a new instance of :see:LocalizedFieldForm."""
 
         fields = []
+        """
+        Do not print initial value in html in the form of a hidden input. This will result in loss of information
+        """
+        kwargs["show_hidden_initial"] = False
 
         for lang_code, _ in settings.LANGUAGES:
             field_options = dict(
