@@ -11,27 +11,6 @@ from ..forms import LocalizedFieldForm
 from ..value import LocalizedValue
 
 
-class FormClassFactory:
-    """When mixing callables as defaults and localized fields, Django will
-    render the default language value in the input form of the admin interface,
-    causing the printed hidden value to be diff-ed with the value provided in
-    the form, instead of a real instance of LocalizedField."""
-
-    def __init__(self, form_class):
-        self.form_class = form_class
-
-    def produce(self, **kwargs):
-        """Remove the parameter which triggers the issue.
-
-        Django should be able to determine the initial value without
-        printing it. That's how it worked before without any problems
-        """
-        if kwargs.get("show_hidden_initial"):
-            del kwargs["show_hidden_initial"]
-
-        return self.form_class(**kwargs)
-
-
 class LocalizedField(HStoreField):
     """A field that has the same value in multiple languages.
 
@@ -241,7 +220,7 @@ class LocalizedField(HStoreField):
         """Gets the form field associated with this field."""
 
         defaults = dict(
-            form_class=FormClassFactory(LocalizedFieldForm).produce,
+            form_class=LocalizedFieldForm,
             required=False if self.blank else self.required,
         )
         defaults.update(kwargs)
