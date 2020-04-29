@@ -34,7 +34,7 @@ Installation
 
     .. note::
 
-        Already using a custom back-end? Set ``POSTGRES_EXTRA_DB_BACKEND_BASE`` to your custom back-end. See django-postgres-extra's documentation for more details: `Using a custom database back-end <https://django-postgres-extra.readthedocs.io/db-engine/#using-a-custom-database-back-end>`_.
+        Already using a custom back-end? Set ``POSTGRES_EXTRA_DB_BACKEND_BASE`` to your custom back-end. See django-postgres-extra's documentation for more details: `Using a custom database back-end <https://django-postgres-extra.readthedocs.io/en/latest/db-engine/#using-a-custom-database-back-end>`_.
 
 4. Set ``LANGUAGES`` and ``LANGUAGE_CODE``:
 
