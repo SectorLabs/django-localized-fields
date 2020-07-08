@@ -48,3 +48,71 @@ class LocalizedLookupsTestCase(TestCase):
 
         # ensure that hstore lookups still work
         assert self.TestModel.objects.filter(text__ro="text_ro").exists()
+
+
+class LocalizedRefLookupsTestCase(TestCase):
+    """Tests whether ref lookups properly work with."""
+
+    TestModel1 = None
+
+    @classmethod
+    def setUpClass(cls):
+        """Creates the test model in the database."""
+        super(LocalizedRefLookupsTestCase, cls).setUpClass()
+        cls.TestModel = get_fake_model({"text": LocalizedField()})
+        cls.TestModel.objects.create(
+            text=LocalizedValue(dict(en="text_en", ro="text_ro", nl="text_nl"))
+        )
+
+    def test_active_ref_lookup(self):
+        """Tests whether active_ref lookup properly works."""
+
+        # assert that it properly lookups the currently active language
+        for lang_code, _ in settings.LANGUAGES:
+            translation.activate(lang_code)
+            assert self.TestModel.objects.filter(
+                text__active_ref=f"text_{lang_code}"
+            ).exists()
+
+        # ensure that the default language is used in case no
+        # language is active at all
+        translation.deactivate_all()
+        assert self.TestModel.objects.filter(
+            text__active_ref="text_en"
+        ).exists()
+
+    def test_translated_ref_lookup(self):
+        """Tests whether translated_ref lookup properly works."""
+
+        # assert that it properly lookups the currently active language
+        for lang_code, _ in settings.LANGUAGES:
+            translation.activate(lang_code)
+            assert self.TestModel.objects.filter(
+                text__translated_ref=f"text_{lang_code}"
+            ).exists()
+
+        # ensure that the default language is used in case no
+        # language is active at all
+        translation.deactivate_all()
+        assert self.TestModel.objects.filter(
+            text__translated_ref="text_en"
+        ).exists()
+
+        fallbacks = {"cs": ["ru", "ro"], "pl": ["nl", "ro"]}
+
+        with override_settings(LOCALIZED_FIELDS_FALLBACKS=fallbacks):
+            with translation.override("cs"):
+                assert self.TestModel.objects.filter(
+                    text__translated_ref=f"text_ro"
+                ).exists()
+
+            with translation.override("pl"):
+                assert self.TestModel.objects.filter(
+                    text__translated_ref=f"text_nl"
+                ).exists()
+
+            # ensure that the default language is used in case no fallback is set
+            with translation.override("ru"):
+                assert self.TestModel.objects.filter(
+                    text__translated_ref="text_en"
+                ).exists()
