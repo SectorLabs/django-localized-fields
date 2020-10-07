@@ -70,7 +70,7 @@ setup(
     python_requires=">=3.6",
     install_requires=[
         "Django>=2.0",
-        "django-postgres-extra>=2.0a14,<3.0",
+        "django-postgres-extra>=2.0,<3.0",
         "deprecation==2.0.7",
     ],
     extras_require={
