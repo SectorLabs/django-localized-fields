@@ -13,7 +13,7 @@
 
 ---
 
-:warning: **This README is for v6 which is currently under development. See the `v5.x` branch for v5.x.**
+:warning: **This README is for v6. See the `v5.x` branch for v5.x.**
 
 ---
 
