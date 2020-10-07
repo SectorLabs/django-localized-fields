@@ -5,7 +5,7 @@ import posixpath
 from django.core.files import File
 from django.core.files.storage import default_storage
 from django.db.models.fields.files import FieldFile
-from django.utils.encoding import force_str, force_text
+from django.utils.encoding import force_str
 
 from localized_fields.fields import LocalizedField
 from localized_fields.fields.field import LocalizedValueDescriptor
@@ -137,7 +137,7 @@ class LocalizedFileField(LocalizedField):
             filename = self.upload_to(instance, filename, lang)
         else:
             now = datetime.datetime.now()
-            dirname = force_text(now.strftime(force_str(self.upload_to)))
+            dirname = force_str(now.strftime(force_str(self.upload_to)))
             dirname = dirname.format(lang=lang)
             filename = posixpath.join(dirname, filename)
         return self.storage.generate_filename(filename)
