@@ -20,7 +20,7 @@ jobs:
 
             - run:
                 name: Run tests
-                command: tox -e 'py36-dj{20,21,22,30}'
+                command: tox -e 'py36-dj{20,21,22,30,31}'
                 environment:
                     DATABASE_URL: 'postgres://localizedfields:localizedfields@localhost:5432/localizedfields'
 
@@ -47,7 +47,7 @@ jobs:
 
             - run:
                 name: Run tests
-                command: tox -e 'py37-dj{20,21,22,30}'
+                command: tox -e 'py37-dj{20,21,22,30,31}'
                 environment:
                     DATABASE_URL: 'postgres://localizedfields:localizedfields@localhost:5432/localizedfields'
 
@@ -74,7 +74,7 @@ jobs:
 
             - run:
                 name: Run tests
-                command: tox -e 'py38-dj{20,21,22,30}'
+                command: tox -e 'py38-dj{20,21,22,30,31}'
                 environment:
                     DATABASE_URL: 'postgres://localizedfields:localizedfields@localhost:5432/localizedfields'
 
@@ -101,7 +101,7 @@ jobs:
 
             - run:
                 name: Run tests
-                command: tox -e 'py39-dj{21,22,30}'
+                command: tox -e 'py39-dj{21,22,30,31}'
                 environment:
                     DATABASE_URL: 'postgres://localizedfields:localizedfields@localhost:5432/localizedfields'
 
