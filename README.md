@@ -3,8 +3,8 @@
 | :white_check_mark: | **Tests** | [![CircleCI](https://circleci.com/gh/SectorLabs/django-localized-fields/tree/master.svg?style=svg)](https://circleci.com/gh/SectorLabs/django-localized-fields/tree/master) |
 | :memo: | **License** | [![License](https://img.shields.io/:license-mit-blue.svg)](http://doge.mit-license.org) |
 | :package: | **PyPi** | [![PyPi](https://badge.fury.io/py/django-localized-fields.svg)](https://pypi.python.org/pypi/django-localized-fields) |
-| <img src="https://icon-library.net/images/django-icon/django-icon-0.jpg" width="22px" height="22px" align="center" /> | **Django Versions** | 2.0, 2.1, 2.2, 3.0 |
-| <img src="http://www.iconarchive.com/download/i73027/cornmanthe3rd/plex/Other-python.ico" width="22px" height="22px" align="center" /> | **Python Versions** | 3.6, 3.7, 3.8 |
+| <img src="https://icon-library.net/images/django-icon/django-icon-0.jpg" width="22px" height="22px" align="center" /> | **Django Versions** | 2.0, 2.1, 2.2, 3.0, 3.1 |
+| <img src="http://www.iconarchive.com/download/i73027/cornmanthe3rd/plex/Other-python.ico" width="22px" height="22px" align="center" /> | **Python Versions** | 3.6, 3.7, 3.8, 3.9 |
 | :book: | **Documentation** | [Read The Docs](https://django-localized-fields.readthedocs.io) |
 | :warning: | **Upgrade** | [Upgrade fom v5.x](https://django-localized-fields.readthedocs.io/en/latest/releases.html#v6-0)
 | :checkered_flag: | **Installation** | [Installation Guide](https://django-localized-fields.readthedocs.io/en/latest/installation.html) |
