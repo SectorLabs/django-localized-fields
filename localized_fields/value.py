@@ -128,9 +128,8 @@ class LocalizedValue(dict):
         target_languages = fallback_config.get(
             target_language, [settings.LANGUAGE_CODE]
         )
-        target_languages.insert(0, target_language)
 
-        for lang_code in target_languages:
+        for lang_code in [target_language] + target_languages:
             value = self.get(lang_code)
             if value:
                 return value or None
