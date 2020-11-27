@@ -21,12 +21,18 @@ class LocalizedUniqueSlugField(LocalizedAutoSlugField):
     When in doubt, use this over :see:LocalizedAutoSlugField.
     Inherit from :see:AtomicSlugRetryMixin in your model to
     make this field work properly.
+
+    By default, this creates a new slug if the field(s) specified
+    in `populate_from` are changed. Set `immutable=True` to get
+    immutable slugs.
     """
 
     def __init__(self, *args, **kwargs):
         """Initializes a new instance of :see:LocalizedUniqueSlugField."""
 
         kwargs["uniqueness"] = kwargs.pop("uniqueness", get_language_codes())
+
+        self.immutable = kwargs.pop("immutable", False)
 
         super(LocalizedUniqueSlugField, self).__init__(*args, **kwargs)
 
@@ -42,6 +48,10 @@ class LocalizedUniqueSlugField(LocalizedAutoSlugField):
 
         kwargs["populate_from"] = self.populate_from
         kwargs["include_time"] = self.include_time
+
+        if self.immutable is True:
+            kwargs["immutable"] = self.immutable
+
         return name, path, args, kwargs
 
     def pre_save(self, instance, add: bool):
@@ -76,10 +86,14 @@ class LocalizedUniqueSlugField(LocalizedAutoSlugField):
 
             slug = slugify(value, allow_unicode=True)
 
+            current_slug = getattr(instance, self.name).get(lang_code)
+            if current_slug and self.immutable:
+                slugs.set(lang_code, current_slug)
+                continue
+
             # verify whether it's needed to re-generate a slug,
             # if not, re-use the same slug
             if instance.pk is not None:
-                current_slug = getattr(instance, self.name).get(lang_code)
                 if current_slug is not None:
                     current_slug_end_index = current_slug.rfind("-")
                     stripped_slug = current_slug[0:current_slug_end_index]

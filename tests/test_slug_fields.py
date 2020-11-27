@@ -216,6 +216,32 @@ class LocalizedSlugFieldTestCase(TestCase):
             assert obj.slug.get(lang_code) == "title-%s" % lang_name.lower()
 
     @classmethod
+    def test_allows_override_when_immutable(cls):
+        """Tests whether setting a value manually works and does not get
+        overriden."""
+
+        Model = get_fake_model(
+            {
+                "title": LocalizedField(),
+                "name": models.CharField(max_length=255),
+                "slug": LocalizedUniqueSlugField(
+                    populate_from="title", immutable=True
+                ),
+            }
+        )
+
+        obj = Model()
+
+        for lang_code, lang_name in settings.LANGUAGES:
+            obj.slug.set(lang_code, "my value %s" % lang_code)
+            obj.title.set(lang_code, "my title %s" % lang_code)
+
+        obj.save()
+
+        for lang_code, lang_name in settings.LANGUAGES:
+            assert obj.slug.get(lang_code) == "my value %s" % lang_code
+
+    @classmethod
     def test_unique_slug(cls):
         """Tests whether unique slugs are properly generated."""
 
