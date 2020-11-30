@@ -36,7 +36,7 @@ with open(
 
 setup(
     name="django-localized-fields",
-    version="6.1",
+    version="6.2rc1",
     packages=find_packages(exclude=["tests"]),
     include_package_data=True,
     license="MIT License",
