@@ -1,5 +1,7 @@
 import copy
 
+import pytest
+
 from django import forms
 from django.conf import settings
 from django.db import models
@@ -214,6 +216,27 @@ class LocalizedSlugFieldTestCase(TestCase):
 
         for lang_code, lang_name in settings.LANGUAGES:
             assert obj.slug.get(lang_code) == "title-%s" % lang_name.lower()
+
+    @classmethod
+    def test_disable(cls):
+        """Tests whether disabling auto-slugging works."""
+
+        Model = get_fake_model(
+            {
+                "title": LocalizedField(),
+                "slug": LocalizedUniqueSlugField(
+                    populate_from="title", enabled=False
+                ),
+            }
+        )
+
+        obj = Model()
+        obj.title = "test"
+
+        # should raise IntegrityError because auto-slugging
+        # is disabled and the slug field is NULL
+        with pytest.raises(IntegrityError):
+            obj.save()
 
     @classmethod
     def test_allows_override_when_immutable(cls):

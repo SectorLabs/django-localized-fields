@@ -32,6 +32,7 @@ class LocalizedUniqueSlugField(LocalizedAutoSlugField):
 
         kwargs["uniqueness"] = kwargs.pop("uniqueness", get_language_codes())
 
+        self.enabled = kwargs.pop("enabled", True)
         self.immutable = kwargs.pop("immutable", False)
 
         super(LocalizedUniqueSlugField, self).__init__(*args, **kwargs)
@@ -68,6 +69,9 @@ class LocalizedUniqueSlugField(LocalizedAutoSlugField):
         Returns:
             The localized slug that was generated.
         """
+
+        if not self.enabled:
+            return getattr(instance, self.name)
 
         if not isinstance(instance, AtomicSlugRetryMixin):
             raise ImproperlyConfigured(
