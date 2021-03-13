@@ -50,6 +50,9 @@ class LocalizedUniqueSlugField(LocalizedAutoSlugField):
         kwargs["populate_from"] = self.populate_from
         kwargs["include_time"] = self.include_time
 
+        if self.enabled is False:
+            kwargs["enabled"] = self.enabled
+
         if self.immutable is True:
             kwargs["immutable"] = self.immutable
 

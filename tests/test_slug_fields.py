@@ -297,10 +297,13 @@ class LocalizedSlugFieldTestCase(TestCase):
         """Tests whether the :see:deconstruct function properly retains options
         specified in the constructor."""
 
-        field = LocalizedUniqueSlugField(populate_from="title")
+        field = LocalizedUniqueSlugField(
+            enabled=False, immutable=True, populate_from="title"
+        )
         _, _, _, kwargs = field.deconstruct()
 
-        assert "populate_from" in kwargs
+        assert not kwargs["enabled"]
+        assert kwargs["immutable"]
         assert kwargs["populate_from"] == field.populate_from
 
     @staticmethod
