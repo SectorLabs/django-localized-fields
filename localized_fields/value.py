@@ -136,6 +136,15 @@ class LocalizedValue(dict):
 
         return None
 
+    def is_empty(self) -> bool:
+        """Gets whether all the languages contain the default value."""
+
+        for lang_code, _ in settings.LANGUAGES:
+            if self.get(lang_code) != self.default_value:
+                return False
+
+        return True
+
     def __str__(self) -> str:
         """Gets the value in the current language or falls back to the next
         language if there's no value in the current language."""

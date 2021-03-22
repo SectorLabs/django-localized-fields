@@ -39,6 +39,17 @@ class LocalizedValueTestCase(TestCase):
             assert getattr(value, lang_code) is None
 
     @staticmethod
+    def test_is_empty():
+        """Tests whether a newly constructed :see:LocalizedValue without any
+        content is considered "empty"."""
+
+        value = LocalizedValue()
+        assert value.is_empty()
+
+        value.set(settings.LANGUAGE_CODE, "my value")
+        assert not value.is_empty()
+
+    @staticmethod
     def test_init_array():
         """Tests whether the __init__ function of :see:LocalizedValue properly
         handles an array.
