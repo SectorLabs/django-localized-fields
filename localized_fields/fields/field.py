@@ -28,18 +28,26 @@ class LocalizedField(HStoreField):
     descriptor_class = LocalizedValueDescriptor
 
     def __init__(
-        self, *args, required: Union[bool, List[str]] = None, **kwargs
+        self,
+        *args,
+        required: Optional[Union[bool, List[str]]] = None,
+        blank: bool = False,
+        **kwargs
     ):
         """Initializes a new instance of :see:LocalizedField."""
 
-        super(LocalizedField, self).__init__(*args, required=required, **kwargs)
-
-        if (self.required is None and self.blank) or self.required is False:
+        if (required is None and blank) or required is False:
             self.required = []
-        elif self.required is None and not self.blank:
+        elif required is None and not blank:
             self.required = [settings.LANGUAGE_CODE]
-        elif self.required is True:
+        elif required is True:
             self.required = [lang_code for lang_code, _ in settings.LANGUAGES]
+        else:
+            self.required = required
+
+        super(LocalizedField, self).__init__(
+            *args, required=self.required, blank=blank, **kwargs
+        )
 
     def contribute_to_class(self, model, name, **kwargs):
         """Adds this field to the specifed model.
