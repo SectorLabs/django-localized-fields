@@ -16,13 +16,13 @@ from .field import LocalizedField
 class LocalizedAutoSlugField(LocalizedField):
     """Automatically provides slugs for a localized field upon saving."""
 
-    warnings.warn(
-        "LocalizedAutoSlug is deprecated and will be removed in the next major version.",
-        DeprecationWarning,
-    )
-
     def __init__(self, *args, **kwargs):
         """Initializes a new instance of :see:LocalizedAutoSlugField."""
+
+        warnings.warn(
+            "LocalizedAutoSlug is deprecated and will be removed in the next major version.",
+            DeprecationWarning,
+        )
 
         self.populate_from = kwargs.pop("populate_from", None)
         self.include_time = kwargs.pop("include_time", False)
