@@ -1,4 +1,5 @@
 from .autoslug_field import LocalizedAutoSlugField
+from .boolean_field import LocalizedBooleanField
 from .char_field import LocalizedCharField
 from .field import LocalizedField
 from .file_field import LocalizedFileField
@@ -16,6 +17,7 @@ __all__ = [
     "LocalizedFileField",
     "LocalizedIntegerField",
     "LocalizedFloatField",
+    "LocalizedBooleanField",
 ]
 
 try:

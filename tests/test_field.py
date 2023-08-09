@@ -121,7 +121,7 @@ class LocalizedFieldTestCase(TestCase):
 
     @staticmethod
     def test_get_prep_value():
-        """"Tests whether the :see:get_prep_value function produces the
+        """Tests whether the :see:get_prep_value function produces the
         expected dictionary."""
 
         input_data = get_init_values()
