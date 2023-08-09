@@ -38,7 +38,7 @@
 
 3. Create a postgres user for use in tests (skip if your default user is a postgres superuser):
 
-       λ createuser --superuser psqlextra --pwprompt
+       λ createuser --superuser localized_fields --pwprompt
        λ export DATABASE_URL=postgres://localized_fields:<password>@localhost/localized_fields
 
    Hint: if you're using virtualenvwrapper, you might find it beneficial to put
