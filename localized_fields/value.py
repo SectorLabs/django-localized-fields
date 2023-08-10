@@ -238,18 +238,26 @@ class LocalizedFileValue(LocalizedValue):
 
 
 class LocalizedBooleanValue(LocalizedValue):
-    def __bool__(self):
-        """Gets the value in the current language as a boolean."""
-        value = self.translate()
+    def translate(self):
+        """Gets the value in the current language, or in the configured fallbck
+        language."""
 
-        if value is None:
-            return self.default_value
-        elif isinstance(value, bool):
+        value = super().translate()
+        if value is None or (isinstance(value, str) and value.strip() == ""):
+            return None
+
+        if isinstance(value, bool):
             return value
 
         if value.lower() == "true":
             return True
         return False
+
+    def __bool__(self):
+        """Gets the value in the current language as a boolean."""
+        value = self.translate()
+
+        return value
 
     def __str__(self):
         """Returns string representation of value."""
