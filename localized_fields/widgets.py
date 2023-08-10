@@ -120,6 +120,18 @@ class AdminLocalizedFieldWidget(LocalizedFieldWidget):
     widget = widgets.AdminTextareaWidget
 
 
+class AdminLocalizedBooleanFieldWidget(LocalizedFieldWidget):
+    widget = forms.Select
+
+    def __init__(self, *args, **kwargs):
+        """Initializes a new instance of :see:LocalizedBooleanFieldWidget."""
+
+        super().__init__(*args, **kwargs)
+
+        for widget in self.widgets:
+            widget.choices = [("False", False), ("True", True)]
+
+
 class AdminLocalizedCharFieldWidget(AdminLocalizedFieldWidget):
     widget = widgets.AdminTextInputWidget
 

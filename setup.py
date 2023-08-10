@@ -90,7 +90,7 @@ setup(
             "psycopg2==2.8.4",
         ],
         "analysis": [
-            "black==19.3b0",
+            "black==22.3.0",
             "flake8==3.7.7",
             "autoflake==1.3",
             "autopep8==1.4.4",

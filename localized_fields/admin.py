@@ -1,5 +1,6 @@
 from . import widgets
 from .fields import (
+    LocalizedBooleanField,
     LocalizedCharField,
     LocalizedField,
     LocalizedFileField,
@@ -11,6 +12,7 @@ FORMFIELD_FOR_LOCALIZED_FIELDS_DEFAULTS = {
     LocalizedCharField: {"widget": widgets.AdminLocalizedCharFieldWidget},
     LocalizedTextField: {"widget": widgets.AdminLocalizedFieldWidget},
     LocalizedFileField: {"widget": widgets.AdminLocalizedFileFieldWidget},
+    LocalizedBooleanField: {"widget": widgets.AdminLocalizedBooleanFieldWidget},
 }
 
 

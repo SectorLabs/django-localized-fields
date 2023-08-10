@@ -6,12 +6,14 @@ from django.core.exceptions import ValidationError
 from django.forms.widgets import FILE_INPUT_CONTRADICTION
 
 from .value import (
+    LocalizedBooleanValue,
     LocalizedFileValue,
     LocalizedIntegerValue,
     LocalizedStringValue,
     LocalizedValue,
 )
 from .widgets import (
+    AdminLocalizedBooleanFieldWidget,
     AdminLocalizedIntegerFieldWidget,
     LocalizedCharFieldWidget,
     LocalizedFieldWidget,
@@ -100,6 +102,15 @@ class LocalizedIntegerFieldForm(LocalizedFieldForm):
 
     widget = AdminLocalizedIntegerFieldWidget
     value_class = LocalizedIntegerValue
+
+
+class LocalizedBooleanFieldForm(LocalizedFieldForm, forms.BooleanField):
+    """Form for a localized boolean field, allows editing the field in multiple
+    languages."""
+
+    widget = AdminLocalizedBooleanFieldWidget
+    field_class = forms.fields.BooleanField
+    value_class = LocalizedBooleanValue
 
 
 class LocalizedFileFieldForm(LocalizedFieldForm, forms.FileField):
