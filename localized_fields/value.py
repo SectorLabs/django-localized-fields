@@ -239,10 +239,8 @@ class LocalizedFileValue(LocalizedValue):
 
 class LocalizedBooleanValue(LocalizedValue):
     def __bool__(self):
-        """Gets the value in the current language as a boolean,"""
+        """Gets the value in the current language as a boolean."""
         value = self.translate()
-        if value is None or (isinstance(value, str) and value.strip() == ""):
-            return False
 
         return value
 

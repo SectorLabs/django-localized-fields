@@ -1,5 +1,3 @@
-import re
-
 from typing import Dict, Optional, Union
 
 from django.conf import settings
@@ -15,9 +13,6 @@ class LocalizedBooleanField(LocalizedField):
 
     attr_class = LocalizedBooleanValue
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
     @classmethod
     def from_db_value(cls, value, *_) -> Optional[LocalizedBooleanValue]:
         db_value = super().from_db_value(value)
@@ -26,13 +21,10 @@ class LocalizedBooleanField(LocalizedField):
             return db_value
 
         if isinstance(db_value, str):
-            if db_value == "true":
+            if db_value.lower() == "true":
                 return True
             return False
 
-        # if we were used in an expression somehow then it might be
-        # that we're returning an individual value or an array, so
-        # we should not convert that into an :see:LocalizedBooleanValue
         if not isinstance(db_value, LocalizedValue):
             return db_value
 
@@ -64,8 +56,12 @@ class LocalizedBooleanField(LocalizedField):
         # make sure all values are proper values to be converted to bool
         for lang_code, _ in settings.LANGUAGES:
             local_value = prepped_value[lang_code]
+            print(type(local_value))
 
-            if local_value is not None and local_value not in ("False", "True"):
+            if local_value is not None and local_value.lower() not in (
+                "false",
+                "true",
+            ):
                 raise IntegrityError(
                     'non-boolean value in column "%s.%s" violates '
                     "boolean constraint" % (self.name, lang_code)
@@ -97,13 +93,19 @@ class LocalizedBooleanField(LocalizedField):
             local_value = value.get(lang_code, None)
 
             if isinstance(local_value, str):
-                if re.match("False", local_value, re.IGNORECASE):
+                if local_value.lower() == "false":
                     local_value = False
-                elif re.match("True", local_value, re.IGNORECASE):
+                elif local_value.lower() == "true":
                     local_value = True
                 else:
-                    local_value = None
+                    raise ValueError(
+                        f"Could not convert value {local_value} to boolean."
+                    )
 
                 integer_values[lang_code] = local_value
+            elif local_value is not None:
+                raise TypeError(
+                    f"Expected value of type str instead of {type(local_value)}."
+                )
 
         return LocalizedBooleanValue(integer_values)

@@ -148,8 +148,8 @@ class LocalizedBooleanFieldTestCase(TestCase):
             table_name = self.TestModel._meta.db_table
             cursor.execute("update %s set translated = 'en=>haha'" % table_name)
 
-        obj.refresh_from_db()
-        assert obj.translated.get(settings.LANGUAGE_CODE) is None
+        with self.assertRaises(ValueError):
+            obj.refresh_from_db()
 
     def test_default_value(self):
         """Tests whether a default is properly set when specified."""
