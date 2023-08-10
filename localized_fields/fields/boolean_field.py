@@ -56,7 +56,6 @@ class LocalizedBooleanField(LocalizedField):
         # make sure all values are proper values to be converted to bool
         for lang_code, _ in settings.LANGUAGES:
             local_value = prepped_value[lang_code]
-            print(type(local_value))
 
             if local_value is not None and local_value.lower() not in (
                 "false",

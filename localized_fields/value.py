@@ -242,7 +242,14 @@ class LocalizedBooleanValue(LocalizedValue):
         """Gets the value in the current language as a boolean."""
         value = self.translate()
 
-        return value
+        if value is None:
+            return self.default_value
+        elif isinstance(value, bool):
+            return value
+
+        if value.lower() == "true":
+            return True
+        return False
 
     def __str__(self):
         """Returns string representation of value."""
