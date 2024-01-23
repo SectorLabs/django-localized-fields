@@ -9,12 +9,22 @@ class LocalizedBleachField(LocalizedField):
     """Custom version of :see:BleachField that is actually a
     :see:LocalizedField."""
 
+    DEFAULT_SHOULD_ESCAPE = True
+
     def __init__(self, *args, escape=True, **kwargs):
         """Initializes a new instance of :see:LocalizedBleachField."""
 
         self.escape = escape
 
         super().__init__(*args, **kwargs)
+
+    def deconstruct(self):
+        name, path, args, kwargs = super().deconstruct()
+
+        if self.escape != self.DEFAULT_SHOULD_ESCAPE:
+            kwargs["escape"] = self.escape
+
+        return name, path, args, kwargs
 
     def pre_save(self, instance, add: bool):
         """Ran just before the model is saved, allows us to built the slug.
