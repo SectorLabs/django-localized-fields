@@ -14,7 +14,7 @@ class LocalizedBleachField(LocalizedField):
 
         self.escape = escape
 
-        super(LocalizedBleachField, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def pre_save(self, instance, add: bool):
         """Ran just before the model is saved, allows us to built the slug.
