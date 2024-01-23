@@ -1,3 +1,5 @@
+import html
+
 from django.conf import settings
 
 from .field import LocalizedField
@@ -6,6 +8,13 @@ from .field import LocalizedField
 class LocalizedBleachField(LocalizedField):
     """Custom version of :see:BleachField that is actually a
     :see:LocalizedField."""
+
+    def __init__(self, *args, escape=True, **kwargs):
+        """Initializes a new instance of :see:LocalizedBleachField."""
+
+        self.escape = escape
+
+        super(LocalizedBleachField, self).__init__(*args, **kwargs)
 
     def pre_save(self, instance, add: bool):
         """Ran just before the model is saved, allows us to built the slug.
@@ -42,8 +51,14 @@ class LocalizedBleachField(LocalizedField):
             if not value:
                 continue
 
+            cleaned_value = bleach.clean(
+                value if self.escape else html.unescape(value),
+                **get_bleach_default_options()
+            )
+
             localized_value.set(
-                lang_code, bleach.clean(value, **get_bleach_default_options())
+                lang_code,
+                cleaned_value if self.escape else html.unescape(cleaned_value),
             )
 
         return localized_value

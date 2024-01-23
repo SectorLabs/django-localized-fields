@@ -1,6 +1,7 @@
 """isort:skip_file."""
 
 import sys
+import html
 
 import pytest
 
@@ -66,14 +67,24 @@ class LocalizedBleachFieldTestCase(TestCase):
         bleached_value = field.pre_save(model, False)
         self._validate(value, bleached_value)
 
+    def test_pre_save_do_not_escape(self):
+        """Tests whether the :see:pre_save function works properly when field
+        escape argument is set to False."""
+
+        value = self._get_test_value()
+        model, field = self._get_test_model(value, escape=False)
+
+        bleached_value = field.pre_save(model, False)
+        self._validate(value, bleached_value, False)
+
     @staticmethod
-    def _get_test_model(value):
-        """Gets a test model and a artifically constructed
+    def _get_test_model(value, escape=True):
+        """Gets a test model and an artificially constructed
         :see:LocalizedBleachField instance to test with."""
 
         model = ModelTest(value)
 
-        field = LocalizedBleachField()
+        field = LocalizedBleachField(escape=escape)
         field.attname = "value"
         return model, field
 
@@ -89,7 +100,7 @@ class LocalizedBleachFieldTestCase(TestCase):
         return value
 
     @staticmethod
-    def _validate(non_bleached_value, bleached_value):
+    def _validate(non_bleached_value, bleached_value, escaped_value=True):
         """Validates whether the specified non-bleached value ended up being
         correctly bleached.
 
@@ -100,14 +111,20 @@ class LocalizedBleachFieldTestCase(TestCase):
             bleached_value:
                 The value after bleaching.
         """
-
         for lang_code, _ in settings.LANGUAGES:
             if not non_bleached_value.get(lang_code):
                 assert not bleached_value.get(lang_code)
                 continue
 
-            expected_value = bleach.clean(
-                non_bleached_value.get(lang_code), get_bleach_default_options()
+            cleaned_value = bleach.clean(
+                non_bleached_value.get(lang_code)
+                if escaped_value
+                else html.unescape(non_bleached_value.get(lang_code)),
+                get_bleach_default_options(),
+            )
+
+            expected_value = (
+                cleaned_value if escaped_value else html.unescape(cleaned_value)
             )
 
             assert bleached_value.get(lang_code) == expected_value
