@@ -74,7 +74,7 @@ setup(
     install_requires=[
         "Django>=2.0",
         "django-postgres-extra>=2.0,<3.0",
-        "deprecation==2.0.7",
+        "deprecation>=2.0.7",
     ],
     extras_require={
         ':python_version <= "3.6"': ["dataclasses"],
