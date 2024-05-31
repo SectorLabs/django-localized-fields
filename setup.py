@@ -36,7 +36,7 @@ with open(
 
 setup(
     name="django-localized-fields",
-    version="7.0b1",
+    version="6.8b4",
     packages=find_packages(exclude=["tests"]),
     include_package_data=True,
     license="MIT License",
@@ -63,6 +63,8 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
         "Programming Language :: Python",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
@@ -70,9 +72,9 @@ setup(
         "Topic :: Internet :: WWW/HTTP",
         "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
     ],
-    python_requires=">=3.8",
+    python_requires=">=3.6",
     install_requires=[
-        "Django>=3.2",
+        "Django>=2.0",
         "django-postgres-extra>=2.0,<3.0",
         "deprecation>=2.0.7",
     ],
