@@ -4,7 +4,7 @@ jobs:
     test-python38:
         docker:
             - image: python:3.8-alpine
-            - image: postgres:11.0
+            - image: postgres:12.0
               environment:
                   POSTGRES_DB: 'localizedfields'
                   POSTGRES_USER: 'localizedfields'
@@ -31,7 +31,7 @@ jobs:
     test-python39:
         docker:
             - image: python:3.9-alpine
-            - image: postgres:11.0
+            - image: postgres:12.0
               environment:
                   POSTGRES_DB: 'localizedfields'
                   POSTGRES_USER: 'localizedfields'
@@ -58,7 +58,7 @@ jobs:
     test-python310:
         docker:
             - image: python:3.10-alpine
-            - image: postgres:11.0
+            - image: postgres:12.0
               environment:
                   POSTGRES_DB: 'localizedfields'
                   POSTGRES_USER: 'localizedfields'
@@ -84,7 +84,7 @@ jobs:
     test-python311:
         docker:
             - image: python:3.11-alpine
-            - image: postgres:11.0
+            - image: postgres:12.0
               environment:
                   POSTGRES_DB: 'localizedfields'
                   POSTGRES_USER: 'localizedfields'
@@ -110,7 +110,7 @@ jobs:
     test-python312:
         docker:
             - image: python:3.12-alpine
-            - image: postgres:11.0
+            - image: postgres:12.0
               environment:
                   POSTGRES_DB: 'localizedfields'
                   POSTGRES_USER: 'localizedfields'
