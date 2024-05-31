@@ -34,7 +34,7 @@
 
 .localized-fields-widget.tabs .localized-fields-widget.tab label {
     padding: 5px 10px;
-    display: inline-block;
+    display: inline;
     text-decoration: none;
     color: #fff;
     width: initial;
