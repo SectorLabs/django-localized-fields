@@ -83,7 +83,7 @@ setup(
         "test": [
             "tox==4.15.0",
             "pytest==8.2.1",
-            "pytest-django==4.8.0",
+            "pytest-django==4.5.2",
             "pytest-cov==5.0.0",
             "dj-database-url==2.2.0",
             "django-autoslug==1.9.9",
