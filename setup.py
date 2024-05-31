@@ -82,7 +82,7 @@ setup(
         "docs": ["Sphinx==2.2.0", "sphinx-rtd-theme==0.4.3"],
         "test": [
             "tox==4.15.0",
-            "pytest==8.2.1",
+            "pytest==7.0.1",
             "pytest-django==4.5.2",
             "pytest-cov==5.0.0",
             "dj-database-url==2.2.0",
