@@ -88,7 +88,7 @@ setup(
             "dj-database-url==2.2.0",
             "django-autoslug==1.9.9",
             "django-bleach==3.1.0",
-            "psycopg2==2.9.9",
+            "psycopg2==2.9.8",
         ],
         "analysis": [
             "black==22.3.0",
