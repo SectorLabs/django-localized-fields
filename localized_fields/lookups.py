@@ -43,6 +43,10 @@ class LocalizedLookupMixin:
         return super().process_lhs(qn, connection)
 
     def get_prep_lookup(self):
+        # Django 4.0 removed the ability for isnull fields to be something other than a bool
+        # We should NOT convert them to strings
+        if isinstance(self.rhs, bool):
+            return self.rhs
         return str(self.rhs)
 
 
