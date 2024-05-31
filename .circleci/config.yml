@@ -155,7 +155,9 @@ workflows:
     version: 2
     build:
         jobs:
-            - test-python37
             - test-python38
             - test-python39
+            - test-python310
+            - test-python311
+            - test-python312
             - analysis
