@@ -127,7 +127,7 @@ jobs:
 
             - run:
                   name: Run tests
-                  command: tox -e 'py312-dj{42,50}''
+                  command: tox -e 'py312-dj{42,50}'
                   environment:
                       DATABASE_URL: 'postgres://localizedfields:localizedfields@localhost:5432/localizedfields'
 
