@@ -86,7 +86,7 @@ setup(
             "pytest==7.0.1",
             "pytest-django==4.5.2",
             "pytest-cov==2.12.1",
-            "dj-database-url==2.2.0",
+            "dj-database-url==0.5.0",
             "django-autoslug==1.9.9",
             "django-bleach==0.9.0",
             "psycopg2==2.9.8",
