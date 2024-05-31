@@ -84,7 +84,7 @@ setup(
             "tox==3.28.0",
             "pytest==7.0.1",
             "pytest-django==4.5.2",
-            "pytest-cov==5.0.0",
+            "pytest-cov==2.12.1",
             "dj-database-url==2.2.0",
             "django-autoslug==1.9.9",
             "django-bleach==3.1.0",
