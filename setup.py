@@ -36,7 +36,7 @@ with open(
 
 setup(
     name="django-localized-fields",
-    version="6.8b3",
+    version="7.0b1",
     packages=find_packages(exclude=["tests"]),
     include_package_data=True,
     license="MIT License",
@@ -81,7 +81,7 @@ setup(
         ':python_version <= "3.6"': ["dataclasses"],
         "docs": ["Sphinx==2.2.0", "sphinx-rtd-theme==0.4.3"],
         "test": [
-            "tox==4.15.0",
+            "tox==3.28.0",
             "pytest==7.0.1",
             "pytest-django==4.5.2",
             "pytest-cov==5.0.0",
