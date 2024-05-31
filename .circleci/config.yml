@@ -107,32 +107,7 @@ jobs:
 
             - store_test_results:
                   path: reports
-    test-python312:
-        docker:
-            - image: python:3.12-alpine
-            - image: postgres:12.0
-              environment:
-                  POSTGRES_DB: 'localizedfields'
-                  POSTGRES_USER: 'localizedfields'
-                  POSTGRES_PASSWORD: 'localizedfields'
-        steps:
-            - checkout
-            - run:
-                  name: Install packages
-                  command: apk add postgresql-libs gcc musl-dev postgresql-dev git
 
-            - run:
-                  name: Install Python packages
-                  command: pip install --progress-bar off .[test]
-
-            - run:
-                  name: Run tests
-                  command: tox -e 'py312-dj{42,50}'
-                  environment:
-                      DATABASE_URL: 'postgres://localizedfields:localizedfields@localhost:5432/localizedfields'
-
-            - store_test_results:
-                  path: reports
     analysis:
         docker:
             - image: python:3.8-alpine
@@ -159,5 +134,4 @@ workflows:
             - test-python39
             - test-python310
             - test-python311
-            - test-python312
             - analysis
