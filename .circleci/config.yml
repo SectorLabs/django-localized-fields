@@ -3,7 +3,7 @@ jobs:
     test-python36:
         docker:
             - image: python:3.6-alpine
-            - image: postgres:11.0
+            - image: postgres:12.0
               environment:
                   POSTGRES_DB: 'localizedfields'
                   POSTGRES_USER: 'localizedfields'
@@ -11,26 +11,25 @@ jobs:
         steps:
             - checkout
             - run:
-                name: Install packages
-                command: apk add postgresql-libs gcc musl-dev postgresql-dev git
+                  name: Install packages
+                  command: apk add postgresql-libs gcc musl-dev postgresql-dev git
 
             - run:
-                name: Install Python packages
-                command: pip install --progress-bar off .[test]
+                  name: Install Python packages
+                  command: pip install --progress-bar off .[test]
 
             - run:
-                name: Run tests
-                command: tox -e 'py36-dj{20,21,22,30,31}'
-                environment:
-                    DATABASE_URL: 'postgres://localizedfields:localizedfields@localhost:5432/localizedfields'
+                  name: Run tests
+                  command: tox -e 'py36-dj{20,21,22,30,31,32}'
+                  environment:
+                      DATABASE_URL: 'postgres://localizedfields:localizedfields@localhost:5432/localizedfields'
 
             - store_test_results:
-                path: reports
-
+                  path: reports
     test-python37:
         docker:
             - image: python:3.7-alpine
-            - image: postgres:11.0
+            - image: postgres:12.0
               environment:
                   POSTGRES_DB: 'localizedfields'
                   POSTGRES_USER: 'localizedfields'
@@ -38,26 +37,25 @@ jobs:
         steps:
             - checkout
             - run:
-                name: Install packages
-                command: apk add postgresql-libs gcc musl-dev postgresql-dev git
+                  name: Install packages
+                  command: apk add postgresql-libs gcc musl-dev postgresql-dev git
 
             - run:
-                name: Install Python packages
-                command: pip install --progress-bar off .[test]
+                  name: Install Python packages
+                  command: pip install --progress-bar off .[test]
 
             - run:
-                name: Run tests
-                command: tox -e 'py37-dj{20,21,22,30,31}'
-                environment:
-                    DATABASE_URL: 'postgres://localizedfields:localizedfields@localhost:5432/localizedfields'
+                  name: Run tests
+                  command: tox -e 'py37-dj{20,21,22,30,31,32}'
+                  environment:
+                      DATABASE_URL: 'postgres://localizedfields:localizedfields@localhost:5432/localizedfields'
 
             - store_test_results:
-                path: reports
-
+                  path: reports
     test-python38:
         docker:
             - image: python:3.8-alpine
-            - image: postgres:11.0
+            - image: postgres:12.0
               environment:
                   POSTGRES_DB: 'localizedfields'
                   POSTGRES_USER: 'localizedfields'
@@ -74,7 +72,7 @@ jobs:
 
             - run:
                 name: Run tests
-                command: tox -e 'py38-dj{20,21,22,30,31}'
+                command: tox -e 'py38-dj{20,21,22,30,31,32,40,41,42}'
                 environment:
                     DATABASE_URL: 'postgres://localizedfields:localizedfields@localhost:5432/localizedfields'
 
@@ -84,7 +82,7 @@ jobs:
     test-python39:
         docker:
             - image: python:3.9-alpine
-            - image: postgres:11.0
+            - image: postgres:12.0
               environment:
                   POSTGRES_DB: 'localizedfields'
                   POSTGRES_USER: 'localizedfields'
@@ -101,16 +99,69 @@ jobs:
 
             - run:
                 name: Run tests
-                command: tox -e 'py39-dj{21,22,30,31}'
+                command: tox -e 'py39-dj{30,31,32,40,41,42}'
                 environment:
                     DATABASE_URL: 'postgres://localizedfields:localizedfields@localhost:5432/localizedfields'
 
             - store_test_results:
                 path: reports
 
+    test-python310:
+        docker:
+            - image: python:3.10-alpine
+            - image: postgres:12.0
+              environment:
+                  POSTGRES_DB: 'localizedfields'
+                  POSTGRES_USER: 'localizedfields'
+                  POSTGRES_PASSWORD: 'localizedfields'
+        steps:
+            - checkout
+            - run:
+                  name: Install packages
+                  command: apk add postgresql-libs gcc musl-dev postgresql-dev git
+
+            - run:
+                  name: Install Python packages
+                  command: pip install --progress-bar off .[test]
+
+            - run:
+                  name: Run tests
+                  command: tox -e 'py310-dj{32,40,41,42,50}'
+                  environment:
+                      DATABASE_URL: 'postgres://localizedfields:localizedfields@localhost:5432/localizedfields'
+
+            - store_test_results:
+                  path: reports
+    test-python311:
+        docker:
+            - image: python:3.11-alpine
+            - image: postgres:12.0
+              environment:
+                  POSTGRES_DB: 'localizedfields'
+                  POSTGRES_USER: 'localizedfields'
+                  POSTGRES_PASSWORD: 'localizedfields'
+        steps:
+            - checkout
+            - run:
+                  name: Install packages
+                  command: apk add postgresql-libs gcc musl-dev postgresql-dev git
+
+            - run:
+                  name: Install Python packages
+                  command: pip install --progress-bar off .[test]
+
+            - run:
+                  name: Run tests
+                  command: tox -e 'py311-dj{42,50}'
+                  environment:
+                      DATABASE_URL: 'postgres://localizedfields:localizedfields@localhost:5432/localizedfields'
+
+            - store_test_results:
+                  path: reports
+
     analysis:
         docker:
-            - image: python:3.7-alpine
+            - image: python:3.8-alpine
         steps:
             - checkout
             - run:
@@ -134,4 +185,6 @@ workflows:
             - test-python37
             - test-python38
             - test-python39
+            - test-python310
+            - test-python311
             - analysis
