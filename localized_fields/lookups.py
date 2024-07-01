@@ -23,6 +23,7 @@ from django.db.models.lookups import (
     StartsWith,
 )
 from django.utils import translation
+from psqlextra.expressions import HStoreColumn
 
 from .fields import LocalizedField
 
@@ -37,14 +38,33 @@ except ImportError:
 
 class LocalizedLookupMixin:
     def process_lhs(self, qn, connection):
-        if isinstance(self.lhs, Col):
-            language = translation.get_language() or settings.LANGUAGE_CODE
-            self.lhs = KeyTransform(language, self.lhs)
+        # If the LHS is already a reference to a specific hstore key, there
+        # is nothing to be done since it already references as specific language.
+        if isinstance(self.lhs, HStoreColumn) or isinstance(
+            self.lhs, KeyTransform
+        ):
+            return super().process_lhs(qn, connection)
+
+        # If this is something custom expression, we don't really know how to
+        # handle that, so we better do nothing.
+        if not isinstance(self.lhs, Col):
+            return super().process_lhs(qn, connection)
+
+        # Select the key for the current language. We do this so that
+        #
+        # myfield__<lookup>=
+        #
+        # Is converted into:
+        #
+        # myfield__<lookup>__<current language>=
+        language = translation.get_language() or settings.LANGUAGE_CODE
+        self.lhs = KeyTransform(language, self.lhs)
+
         return super().process_lhs(qn, connection)
 
     def get_prep_lookup(self):
-        # Django 4.0 removed the ability for isnull fields to be something other than a bool
-        # We should NOT convert them to strings
+        # Django 4.0 removed the ability for isnull fields to be something
+        # other than a bool We should NOT convert them to strings
         if isinstance(self.rhs, bool):
             return self.rhs
         return str(self.rhs)
