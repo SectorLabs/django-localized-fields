@@ -3,6 +3,7 @@ from django.conf import settings
 from django.test import TestCase, override_settings
 from django.utils import translation
 
+from localized_fields.expressions import LocalizedRef
 from localized_fields.fields import LocalizedField
 from localized_fields.value import LocalizedValue
 
@@ -48,6 +49,18 @@ class LocalizedLookupsTestCase(TestCase):
 
         # ensure that hstore lookups still work
         assert self.TestModel.objects.filter(text__ro="text_ro").exists()
+
+    def test_localized_lookup_specific_isnull(self):
+        self.TestModel.objects.create(
+            text=LocalizedValue(dict(en="text_en", ro="text_ro", nl=None))
+        )
+
+        translation.activate("nl")
+        assert (
+            self.TestModel.objects.annotate(text_localized=LocalizedRef("text"))
+            .filter(text_localized__isnull=True)
+            .exists()
+        )
 
 
 class LocalizedRefLookupsTestCase(TestCase):
