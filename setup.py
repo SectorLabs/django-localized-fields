@@ -98,6 +98,7 @@ setup(
             "autopep8==1.4.4",
             "isort==4.3.20",
             "sl-docformatter==1.4",
+            "click==8.0.2",
         ],
     },
     cmdclass={
