@@ -38,6 +38,7 @@
     text-decoration: none;
     color: #fff;
     width: initial;
+    cursor: pointer;
 }
 
 .localized-fields-widget.tabs .localized-fields-widget.tab.active,
