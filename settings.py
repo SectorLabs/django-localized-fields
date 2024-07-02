@@ -1,3 +1,4 @@
+import django
 import dj_database_url
 
 DEBUG = True
@@ -50,6 +51,12 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
 ]
+
+# See: https://github.com/psycopg/psycopg2/issues/1293
+if django.VERSION >= (3, 1):
+    USE_TZ = True
+    USE_I18N = True
+    TIME_ZONE = 'UTC'
 
 # set to a lower number than the default, since
 # we want the tests to be fast, default is 100
