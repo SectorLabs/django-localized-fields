@@ -78,9 +78,6 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Install packages
-        run: apt-get update && apt-get install -y --no-install-recommends libpq-dev build-essential
-
       - name: Install Python packages
         run: pip install --progress-bar off '.[test]'
 
