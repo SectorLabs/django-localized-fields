@@ -1,6 +1,6 @@
 |  |  |                                                                                                                                                                             |
 |--------------------|---------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| :white_check_mark: | **Tests** | [![CircleCI](https://circleci.com/gh/SectorLabs/django-localized-fields/tree/master.svg?style=svg)](https://circleci.com/gh/SectorLabs/django-localized-fields/tree/master) |
+| :white_check_mark: | **Tests** | [![Verify](https://github.com/SectorLabs/django-localized-fields/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/SectorLabs/django-localized-fields/actions/workflows/test.yml) |
 | :memo: | **License** | [![License](https://img.shields.io/:license-mit-blue.svg)](http://doge.mit-license.org)                                                                                     |
 | :package: | **PyPi** | [![PyPi](https://badge.fury.io/py/django-localized-fields.svg)](https://pypi.python.org/pypi/django-localized-fields)                                                       |
 | <img src="https://cdn.iconscout.com/icon/free/png-256/django-1-282754.png" width="22px" height="22px" align="center" /> | **Django Versions** | 2.0, 2.1, 2.2, 3.0, 3.1, 3.2, 4.0, 4.1, 4.2, 5.0                                                                                                                            |

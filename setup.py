@@ -80,7 +80,12 @@ setup(
     ],
     extras_require={
         ':python_version <= "3.6"': ["dataclasses"],
-        "docs": ["Sphinx==2.2.0", "sphinx-rtd-theme==0.4.3"],
+        "docs": [
+            "Sphinx==8.2.3",
+            "sphinx-rtd-theme==3.0.2",
+            "docutils==0.21.2",
+            "Jinja2==3.1.6",
+        ],
         "test": [
             "tox==3.28.0",
             "pytest==7.0.1",
