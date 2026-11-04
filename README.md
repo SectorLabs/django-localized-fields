@@ -53,7 +53,7 @@
 
        λ tox
 
-   tox installs the matching Django and django-bleach versions for each environment. Running `poe test` directly skips the `LocalizedBleachField` tests unless django-bleach is installed.
+   tox installs the matching Django and django-bleach versions for each environment.
 
 6. Auto-format code, sort imports and auto-fix linting errors:
 

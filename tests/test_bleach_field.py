@@ -1,15 +1,13 @@
 import html
 
-import pytest
+import bleach
 
 from django.conf import settings
 from django.test import TestCase
+from django_bleach.utils import get_bleach_default_options
 
 from localized_fields.fields import LocalizedBleachField
 from localized_fields.value import LocalizedValue
-
-bleach = pytest.importorskip("bleach")
-django_bleach_utils = pytest.importorskip("django_bleach.utils")
 
 
 class ModelTest:
@@ -112,7 +110,7 @@ class LocalizedBleachFieldTestCase(TestCase):
                 non_bleached_value.get(lang_code)
                 if escaped_value
                 else html.unescape(non_bleached_value.get(lang_code)),
-                **django_bleach_utils.get_bleach_default_options(),
+                **get_bleach_default_options(),
             )
 
             expected_value = (

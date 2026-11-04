@@ -67,6 +67,7 @@ test = [
     "tox==3.28.0; python_version <= '3.8'",
     "dj-database-url==0.5.0",
     "django-autoslug==1.9.9",
+    "django-bleach>=2.0.0,!=3.0.0",
 ]
 analysis = [
     "black==22.3.0",
