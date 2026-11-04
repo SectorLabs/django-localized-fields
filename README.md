@@ -20,7 +20,7 @@
 ## Working with the code
 ### Prerequisites
 
-* PostgreSQL 12 or newer.
+* PostgreSQL 12 or newer (Django 5.1 needs PostgreSQL 13 or newer, Django 5.2 needs 14 or newer).
 * Django 2.0 or newer.
 * Python 3.7 or newer.
 

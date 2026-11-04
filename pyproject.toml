@@ -93,7 +93,7 @@ line-length = 80
 executor.type = "simple"
 
 [tool.poe.tasks]
-_autoflake = "python3 -m autoflake --remove-all-unused-imports -i -r localized_fields tests"
+_autoflake = "autoflake --remove-all-unused-imports -i -r localized_fields tests"
 _autopep8 = "autopep8 -i -r localized_fields tests"
 _isort_localized_fields = "isort localized_fields"
 _isort_tests = "isort tests"
@@ -101,7 +101,7 @@ _isort_verify_localized_fields = "isort -c localized_fields"
 _isort_verify_tests = "isort -c tests"
 
 [tool.poe.tasks.lint]
-cmd = "python3 -m flake8 localized_fields tests"
+cmd = "flake8 localized_fields tests"
 help = "Lints all the code."
 
 [tool.poe.tasks.lint_fix]
