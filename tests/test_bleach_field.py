@@ -1,23 +1,13 @@
-"""isort:skip_file."""
-
-import sys
 import html
 
-import pytest
+import bleach
 
 from django.conf import settings
 from django.test import TestCase
+from django_bleach.utils import get_bleach_default_options
 
 from localized_fields.fields import LocalizedBleachField
 from localized_fields.value import LocalizedValue
-
-try:
-    import bleach
-
-    from django_bleach.utils import get_bleach_default_options
-except ImportError:
-    if sys.version_info >= (3, 9):
-        pytest.skip("feature not ready for python 3.9", allow_module_level=True)
 
 
 class ModelTest:
@@ -120,7 +110,7 @@ class LocalizedBleachFieldTestCase(TestCase):
                 non_bleached_value.get(lang_code)
                 if escaped_value
                 else html.unescape(non_bleached_value.get(lang_code)),
-                get_bleach_default_options(),
+                **get_bleach_default_options(),
             )
 
             expected_value = (

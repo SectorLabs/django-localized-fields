@@ -38,18 +38,13 @@ class LocalizedBleachField(LocalizedField):
                 to the database or an update.
         """
 
-        # the bleach library vendors dependencies and the html5lib
-        # dependency is incompatible with python 3.9, until that's
-        # fixed, you cannot use LocalizedBleachField with python 3.9
-        # sympton:
-        #   ImportError: cannot import name 'Mapping' from 'collections'
         try:
             import bleach
 
             from django_bleach.utils import get_bleach_default_options
         except ImportError:
             raise UserWarning(
-                "LocalizedBleachField is not compatible with Python 3.9 yet."
+                "LocalizedBleachField requires django-bleach, install it with `pip install django-bleach`."
             )
 
         localized_value = getattr(instance, self.attname)

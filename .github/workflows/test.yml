@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
 
     container:
-      image: public.ecr.aws/docker/library/python:3.8.20-bookworm
+      image: public.ecr.aws/docker/library/python:3.11.17-bookworm
 
     steps:
       - name: Checkout
@@ -29,10 +29,10 @@ jobs:
           persist-credentials: false
 
       - name: Install Python packages
-        run: pip install --progress-bar off '.[analysis]'
+        run: pip install --progress-bar off '.[dev, analysis]'
 
       - name: Verify formatting / linting
-        run: python setup.py verify
+        run: poe verify
 
   run-tests:
     name: Run Tests (Python ${{ matrix.python-version }})
@@ -43,25 +43,37 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - python-version: "3.6"
-            python-image: "3.6.15-bullseye"
           - python-version: "3.7"
             python-image: "3.7.17-bookworm"
+            postgres-image: "12.22-bookworm"
           - python-version: "3.8"
             python-image: "3.8.20-bookworm"
+            postgres-image: "12.22-bookworm"
           - python-version: "3.9"
             python-image: "3.9.25-bookworm"
+            postgres-image: "12.22-bookworm"
           - python-version: "3.10"
             python-image: "3.10.22-bookworm"
+            postgres-image: "16.14-bookworm"
           - python-version: "3.11"
             python-image: "3.11.17-bookworm"
+            postgres-image: "16.14-bookworm"
+          - python-version: "3.12"
+            python-image: "3.12.15-bookworm"
+            postgres-image: "16.14-bookworm"
+          - python-version: "3.13"
+            python-image: "3.13.17-bookworm"
+            postgres-image: "16.14-bookworm"
+          - python-version: "3.14"
+            python-image: "3.14.9-bookworm"
+            postgres-image: "16.14-bookworm"
 
     container:
       image: public.ecr.aws/docker/library/python:${{ matrix.python-image }}
 
     services:
       postgres:
-        image: public.ecr.aws/docker/library/postgres:12.22-bookworm
+        image: public.ecr.aws/docker/library/postgres:${{ matrix.postgres-image }}
         env:
           POSTGRES_DB: "localizedfields"
           POSTGRES_USER: "localizedfields"
@@ -79,7 +91,7 @@ jobs:
           persist-credentials: false
 
       - name: Install Python packages
-        run: pip install --progress-bar off '.[test]'
+        run: pip install --progress-bar off '.[dev, test]'
 
       - name: Run tests
         shell: bash
