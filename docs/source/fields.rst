@@ -46,6 +46,37 @@ Use this for multi-line text content.
 Follows the same convention as `django.db.models.TextField`_ to store empty strings for "no data" and not NULL.
 
 
+LocalizedBleachField
+--------------------
+
+Localized field that sanitizes the value in every language with `bleach`_ before saving it. Requires `django-bleach`_, and uses the bleach options from its ``BLEACH_*`` settings.
+
+.. code-block:: python
+
+    from localized_fields.fields import LocalizedBleachField
+
+    class MyModel(models.Model):
+         description = LocalizedBleachField(escape=False, max_clean_passes=5)
+
+``escape`` (default ``True``)
+    When ``True``, the value is stored as bleach returns it. Allowed tags stay markup, and any other ``<``, ``>`` and ``&`` are escaped, for example ``&lt;`` instead of ``<``.
+    When ``False``, the value is unescaped before cleaning and the cleaned value is unescaped again before it is stored, so those characters are stored unescaped.
+
+``max_clean_passes`` (default ``None``)
+    When ``None``, the value is cleaned once.
+
+    When set to a number, the value is unescaped and cleaned repeatedly until it stops changing, at most that many times. Use this when values can contain markup that was escaped more than once, which a single pass only partially decodes and can leave as markup after a later unescape. If the value still changes after the last pass, the field stores an empty string for that language.
+
+    This decodes escaped input with either ``escape`` value. ``escape`` then only decides how the cleaned result is stored. For example, with ``escape=True`` and ``b`` as an allowed tag, the input ``&lt;b&gt;bold&lt;/b&gt; & more`` is stored as ``&lt;b&gt;bold&lt;/b&gt; &amp; more`` without ``max_clean_passes``, but as ``<b>bold</b> &amp; more`` with it.
+
+    Each pass removes up to two levels of escaping, so with ``5``, text escaped up to 10 times is still decoded. Ordinary text needs at most one pass that changes it.
+
+    Repeated cleaning only removes markup when ``BLEACH_STRIP_TAGS = True``. With the default ``False``, bleach escapes disallowed tags instead of removing them, and with ``escape=False`` they are unescaped back into markup before the value is stored.
+
+.. _bleach: https://bleach.readthedocs.io/
+.. _django-bleach: https://django-bleach.readthedocs.io/
+
+
 LocalizedFileField
 ------------------
 
