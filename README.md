@@ -3,8 +3,8 @@
 | :white_check_mark: | **Tests** | [![Verify](https://github.com/SectorLabs/django-localized-fields/actions/workflows/test.yml/badge.svg?branch=master)](https://github.com/SectorLabs/django-localized-fields/actions/workflows/test.yml) |
 | :memo: | **License** | [![License](https://img.shields.io/:license-mit-blue.svg)](http://doge.mit-license.org)                                                                                     |
 | :package: | **PyPi** | [![PyPi](https://badge.fury.io/py/django-localized-fields.svg)](https://pypi.python.org/pypi/django-localized-fields)                                                       |
-| <img src="https://cdn.iconscout.com/icon/free/png-256/django-1-282754.png" width="22px" height="22px" align="center" /> | **Django Versions** | 2.0, 2.1, 2.2, 3.0, 3.1, 3.2, 4.0, 4.1, 4.2, 5.0                                                                                                                            |
-| <img src="http://www.iconarchive.com/download/i73027/cornmanthe3rd/plex/Other-python.ico" width="22px" height="22px" align="center" /> | **Python Versions** | 3.6, 3.7, 3.8, 3.9, 3.10, 3.11                                                                                                                                              |
+| <img src="https://cdn.iconscout.com/icon/free/png-256/django-1-282754.png" width="22px" height="22px" align="center" /> | **Django Versions** | 2.0, 2.1, 2.2, 3.0, 3.1, 3.2, 4.0, 4.1, 4.2, 5.0, 5.1, 5.2                                                                                                                  |
+| <img src="http://www.iconarchive.com/download/i73027/cornmanthe3rd/plex/Other-python.ico" width="22px" height="22px" align="center" /> | **Python Versions** | 3.7, 3.8, 3.9, 3.10, 3.11, 3.12, 3.13, 3.14                                                                                                                                 |
 | :book: | **Documentation** | [Read The Docs](https://django-localized-fields.readthedocs.io)                                                                                                             |
 | :warning: | **Upgrade** | [Upgrade fom v5.x](https://django-localized-fields.readthedocs.io/en/latest/releases.html#v6-0)                                                                             
 | :checkered_flag: | **Installation** | [Installation Guide](https://django-localized-fields.readthedocs.io/en/latest/installation.html)                                                                            |
@@ -22,7 +22,7 @@
 
 * PostgreSQL 12 or newer.
 * Django 2.0 or newer.
-* Python 3.6 or newer.
+* Python 3.7 or newer.
 
 ### Getting started
 
@@ -45,14 +45,16 @@
    the ``export`` line in ``$VIRTUAL_ENV/bin/postactivate`` so that it's always
    available when using this virtualenv.
 
-4. Install the development/test dependencies:
+4. Install the development/test dependencies (the analysis tools need Python 3.9 or newer):
 
-       λ pip install ".[test]" ".[analysis]"
+       λ pip install ".[dev]" ".[test]" ".[analysis]"
 
 5. Run the tests:
 
        λ tox
 
-7. Auto-format code, sort imports and auto-fix linting errors:
+   tox installs the matching Django and django-bleach versions for each environment. Running `poe test` directly skips the `LocalizedBleachField` tests unless django-bleach is installed.
 
-       λ python setup.py fix
+6. Auto-format code, sort imports and auto-fix linting errors:
+
+       λ poe fix

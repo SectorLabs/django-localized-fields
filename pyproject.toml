@@ -1,2 +1,145 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "django-localized-fields"
+version = "6.8"
+description = "Implementation of localized model fields using PostgreSQL HStore fields."
+readme = "README.md"
+license = {text = "MIT License"}
+authors = [{name = "Sector Labs", email = "open-source@sectorlabs.ro"}]
+keywords = [
+    "django",
+    "localized",
+    "language",
+    "models",
+    "fields",
+    "postgres",
+    "hstore",
+    "i18n",
+]
+classifiers = [
+    "Environment :: Web Environment",
+    "Framework :: Django",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Internet :: WWW/HTTP",
+    "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+]
+requires-python = ">=3.7"
+dependencies = [
+    "Django>=2.0",
+    "django-postgres-extra>=2.0,<3.0",
+    "deprecation>=2.0.7",
+]
+
+[project.urls]
+Homepage = "https://github.com/SectorLabs/django-localized-fields"
+
+[project.optional-dependencies]
+dev = [
+    "poethepoet==0.34.0; python_version >= '3.9'",
+    "poethepoet==0.30.0; python_version >= '3.8' and python_version < '3.9'",
+    "poethepoet==0.19.0; python_version >= '3.7' and python_version < '3.8'",
+]
+test = [
+    "psycopg2==2.9.11; python_version >= '3.9'",
+    "psycopg2==2.9.10; python_version >= '3.8' and python_version < '3.9'",
+    "psycopg2==2.9.9; python_version < '3.8'",
+    "pytest==8.4.0; python_version > '3.8'",
+    "pytest==7.0.1; python_version <= '3.8'",
+    "pytest-django==4.11.1; python_version > '3.7'",
+    "pytest-django==4.5.2; python_version <= '3.7'",
+    "pytest-cov==6.1.1; python_version > '3.8'",
+    "pytest-cov==4.0.0; python_version <= '3.8'",
+    "tox==4.26.0; python_version > '3.8'",
+    "tox==3.28.0; python_version <= '3.8'",
+    "dj-database-url==0.5.0",
+    "django-autoslug==1.9.9",
+]
+analysis = [
+    "black==22.3.0",
+    "flake8==7.2.0",
+    "autoflake==2.3.1",
+    "autopep8==2.3.2",
+    "isort==6.0.1",
+    "docformatter==1.7.7",
+]
+docs = [
+    "Sphinx==8.2.3",
+    "sphinx-rtd-theme==3.0.2",
+    "docutils==0.21.2",
+    "Jinja2==3.1.6",
+]
+
+[tool.setuptools.packages.find]
+include = ["localized_fields", "localized_fields.*"]
+
 [tool.black]
 line-length = 80
+
+[tool.poe]
+executor.type = "simple"
+
+[tool.poe.tasks]
+_autoflake = "python3 -m autoflake --remove-all-unused-imports -i -r localized_fields tests"
+_autopep8 = "autopep8 -i -r localized_fields tests"
+_isort_localized_fields = "isort localized_fields"
+_isort_tests = "isort tests"
+_isort_verify_localized_fields = "isort -c localized_fields"
+_isort_verify_tests = "isort -c tests"
+
+[tool.poe.tasks.lint]
+cmd = "python3 -m flake8 localized_fields tests"
+help = "Lints all the code."
+
+[tool.poe.tasks.lint_fix]
+sequence = ["_autoflake", "_autopep8"]
+help = "Auto-fixes linter errors."
+
+[tool.poe.tasks.format]
+cmd = "black localized_fields tests"
+help = "Auto-formats the code."
+
+[tool.poe.tasks.format_verify]
+cmd = "black --check localized_fields tests"
+help = "Verifies that the code was formatted properly."
+
+[tool.poe.tasks.format_docstrings]
+cmd = "docformatter -r -i localized_fields tests"
+help = "Auto-formats doc strings."
+
+[tool.poe.tasks.format_docstrings_verify]
+cmd = "docformatter -r -c localized_fields tests"
+help = "Verifies all doc strings are properly formatted."
+
+[tool.poe.tasks.sort_imports]
+sequence = ["_isort_localized_fields", "_isort_tests"]
+help = "Auto-sorts the imports."
+
+[tool.poe.tasks.sort_imports_verify]
+sequence = ["_isort_verify_localized_fields", "_isort_verify_tests"]
+help = "Verifies that the imports are properly sorted."
+
+[tool.poe.tasks.fix]
+sequence = ["format", "format_docstrings", "sort_imports", "lint_fix", "lint"]
+help = "Automatically format code and fix linting errors."
+
+[tool.poe.tasks.verify]
+sequence = ["format_verify", "format_docstrings_verify", "sort_imports_verify", "lint"]
+help = "Verifies whether the code is auto-formatted and has no linting errors."
+
+[tool.poe.tasks.test]
+cmd = "pytest --cov=localized_fields --cov-report=term --cov-report=xml:reports/xml --cov-report=html:reports/html --junitxml=reports/junit/tests.xml --reuse-db"
+help = "Runs all the tests."
