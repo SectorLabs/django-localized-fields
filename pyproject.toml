@@ -57,7 +57,7 @@ test = [
     "psycopg2==2.9.11; python_version >= '3.9'",
     "psycopg2==2.9.10; python_version >= '3.8' and python_version < '3.9'",
     "psycopg2==2.9.9; python_version < '3.8'",
-    "pytest==8.4.0; python_version > '3.8'",
+    "pytest==9.0.3; python_version > '3.8'",
     "pytest==7.0.1; python_version <= '3.8'",
     "pytest-django==4.11.1; python_version > '3.7'",
     "pytest-django==4.5.2; python_version <= '3.7'",
