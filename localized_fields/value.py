@@ -54,7 +54,7 @@ class LocalizedValue(dict):
         """
 
         self[language] = value
-        self.__dict__.update(self)
+        self.__dict__[language] = value
         return self
 
     def deconstruct(self) -> dict:
