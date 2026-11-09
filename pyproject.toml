@@ -70,7 +70,7 @@ test = [
     "django-bleach>=2.0.0,!=3.0.0",
 ]
 analysis = [
-    "black==22.3.0",
+    "black==26.10.1",
     "flake8==7.2.0",
     "autoflake==2.3.1",
     "autopep8==2.3.2",
